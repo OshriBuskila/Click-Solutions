@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Click Solutions</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="logo">Click<span>Solutions</span></a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="btn btn-primary nav-cta">Get Started</button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#about" class="mobile-link">About</a></li>
+      <li><a href="#features" class="mobile-link">Features</a></li>
+      <li><a href="#contact" class="mobile-link">Contact</a></li>
+      <li><a href="#" class="btn btn-primary" style="display:inline-block;margin-top:8px;">Get Started</a></li>
+    </ul>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-badge">✦ Welcome to Click Solutions</div>
+      <h1 class="hero-title">Build something <span class="gradient-text">remarkable</span> today.</h1>
+      <p class="hero-sub">A clean, modern foundation for your next big idea. Fast, responsive, and ready to customize.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg">Get Started →</button>
+        <button class="btn btn-ghost btn-lg">Learn More</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><strong>100%</strong><span>Responsive</span></div>
+        <div class="divider"></div>
+        <div class="stat"><strong>0</strong><span>Dependencies</span></div>
+        <div class="divider"></div>
+        <div class="stat"><strong>∞</strong><span>Possibilities</span></div>
+      </div>
+    </div>
+    <div class="hero-blob blob-1"></div>
+    <div class="hero-blob blob-2"></div>
+  </section>
+
+  <!-- About -->
+  <section class="about section" id="about">
+    <div class="container">
+      <div class="section-label">About Us</div>
+      <h2 class="section-title">Built for <em>real</em> results.</h2>
+      <p class="section-sub">Click Solutions is committed to delivering clean, high-performance digital experiences. We believe great design and great code go hand in hand.</p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">🚀</div>
+          <h3>Fast &amp; Lightweight</h3>
+          <p>No frameworks, no bloat. Pure HTML, CSS, and JavaScript that loads in milliseconds.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎨</div>
+          <h3>Beautiful Design</h3>
+          <p>Carefully crafted aesthetics with smooth animations and a polished look out of the box.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📱</div>
+          <h3>Fully Responsive</h3>
+          <p>Looks perfect on every device — from a 4K monitor to the smallest phone screen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features section" id="features">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything you need to <span class="gradient-text">start building</span>.</h2>
+      <div class="features-list">
+        <div class="feature-item">
+          <div class="feature-num">01</div>
+          <div>
+            <h3>Semantic HTML5</h3>
+            <p>Structured, accessible markup that search engines and screen readers love.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">02</div>
+          <div>
+            <h3>CSS Custom Properties</h3>
+            <p>Easily theme the entire site by changing a handful of variables.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">03</div>
+          <div>
+            <h3>Smooth Animations</h3>
+            <p>Scroll-triggered fade-ins and micro-interactions for a premium feel.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">04</div>
+          <div>
+            <h3>Mobile-First Nav</h3>
+            <p>A collapsible hamburger menu with silky transitions on smaller screens.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">05</div>
+          <div>
+            <h3>Dark-Mode Ready</h3>
+            <p>CSS variables and media queries set up so dark mode is just a few lines away.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-num">06</div>
+          <div>
+            <h3>Git &amp; GitHub Integrated</h3>
+            <p>Version-controlled from day one and hosted on GitHub for easy collaboration.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact section" id="contact">
+    <div class="container contact-inner">
+      <div>
+        <div class="section-label">Contact</div>
+        <h2 class="section-title">Let's work <span class="gradient-text">together</span>.</h2>
+        <p class="section-sub">Have a project in mind? We'd love to hear from you.</p>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-group">
+          <input type="text" id="name" placeholder="Your Name" required />
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" placeholder="Email Address" required />
+        </div>
+        <div class="form-group">
+          <textarea id="message" rows="4" placeholder="Your message…" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Send Message →</button>
+        <p class="form-success" id="formSuccess">✓ Message sent! We'll be in touch soon.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="#" class="logo">Click<span>Solutions</span></a>
+      <p class="footer-copy">&copy; 2026 Click Solutions. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#features">Features</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
