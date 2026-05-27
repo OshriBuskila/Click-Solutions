@@ -515,6 +515,134 @@
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
     /* ═══════════════════════════════════════
+       STACK MARQUEE
+    ═══════════════════════════════════════ */
+    .stack{
+      background:#050505;
+      padding:0;
+      overflow:hidden;
+      position:relative;
+      border-top:1px solid rgba(196,241,44,.08);
+      border-bottom:1px solid rgba(196,241,44,.08);
+    }
+    /* scanline texture overlay */
+    .stack::before{
+      content:'';
+      position:absolute;inset:0;
+      background:repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,.18) 2px,
+        rgba(0,0,0,.18) 4px
+      );
+      pointer-events:none;
+      z-index:2;
+    }
+    .stack-header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:38px clamp(20px,5vw,80px) 0;
+      position:relative;z-index:3;
+    }
+    .stack-title{
+      font-family:var(--font-en);
+      font-size:clamp(11px,1.5vw,13px);
+      font-weight:700;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(250,250,247,.18);
+    }
+    .stack-live{
+      display:flex;align-items:center;gap:7px;
+      font-family:var(--font-mo);font-size:10px;letter-spacing:.1em;
+      color:rgba(196,241,44,.55);
+    }
+    .stack-live-dot{
+      width:7px;height:7px;border-radius:50%;
+      background:var(--neon);
+      box-shadow:0 0 8px rgba(196,241,44,.8);
+      animation:livePulse 1.6s ease-in-out infinite;
+    }
+    @keyframes livePulse{
+      0%,100%{opacity:1;transform:scale(1)}
+      50%{opacity:.4;transform:scale(.75)}
+    }
+    .stack-count{
+      font-family:var(--font-mo);font-size:9px;
+      color:rgba(250,250,247,.16);
+      letter-spacing:.05em;
+    }
+    /* marquee wrapper */
+    .stack-marquee-wrap{
+      margin:28px 0 38px;
+      display:flex;flex-direction:column;gap:0;
+      position:relative;z-index:3;
+    }
+    .stack-row{
+      overflow:hidden;
+      padding:10px 0;
+      mask-image:linear-gradient(to right,transparent 0%,#000 10%,#000 90%,transparent 100%);
+      -webkit-mask-image:linear-gradient(to right,transparent 0%,#000 10%,#000 90%,transparent 100%);
+    }
+    .stack-row--alt{
+      border-top:1px solid rgba(196,241,44,.05);
+      border-bottom:1px solid rgba(196,241,44,.05);
+    }
+    .stack-track{
+      display:flex;align-items:center;gap:0;
+      width:max-content;
+      will-change:transform;
+    }
+    .stack-row:not(.stack-row--rev) .stack-track{
+      animation:mqFwd 28s linear infinite;
+    }
+    .stack-row--rev .stack-track{
+      animation:mqRev 22s linear infinite;
+    }
+    @keyframes mqFwd{
+      from{transform:translateX(0)}
+      to{transform:translateX(-50%)}
+    }
+    @keyframes mqRev{
+      from{transform:translateX(-50%)}
+      to{transform:translateX(0)}
+    }
+    /* pause on hover */
+    .stack-row:hover .stack-track{animation-play-state:paused}
+
+    .mq-item{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:0 32px;
+      font-family:var(--font-en);
+      font-size:clamp(13px,1.8vw,16px);
+      font-weight:600;
+      letter-spacing:.06em;
+      white-space:nowrap;
+      color:rgba(250,250,247,.22);
+      position:relative;
+      transition:color .25s;
+      cursor:default;
+    }
+    .mq-item::after{
+      content:'✦';
+      font-size:7px;
+      color:rgba(196,241,44,.2);
+      margin-left:32px;
+    }
+    .mq-item--hi{color:rgba(250,250,247,.72)}
+    .mq-item--neon{color:var(--neon);text-shadow:0 0 18px rgba(196,241,44,.35)}
+    .mq-item--mid{color:rgba(250,250,247,.42)}
+    .mq-item:hover{color:rgba(250,250,247,.95)}
+    /* category dot prefix */
+    .mq-dot{
+      width:5px;height:5px;border-radius:50%;
+      flex-shrink:0;
+    }
+    .mq-dot--ai{background:var(--neon);box-shadow:0 0 6px rgba(196,241,44,.6)}
+    .mq-dot--auto{background:rgba(120,180,255,.7)}
+    .mq-dot--biz{background:rgba(255,160,80,.6)}
+
+    /* ═══════════════════════════════════════
        PROCESS
     ═══════════════════════════════════════ */
     .process{background:var(--paper);padding:92px 0;border-top:1px solid var(--ink4)}
@@ -1162,6 +1290,105 @@
 
     </div>
   </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     STACK MARQUEE
+═══════════════════════════════════════ -->
+<section class="stack" id="stack" aria-label="הכלים שאנחנו עובדים איתם">
+
+  <div class="stack-header">
+    <span class="stack-title">THE STACK &nbsp;/&nbsp; כלים שאנחנו עובדים איתם</span>
+    <div style="display:flex;align-items:center;gap:18px">
+      <span class="stack-count">24+ TOOLS</span>
+      <span class="stack-live">
+        <span class="stack-live-dot"></span>
+        LIVE
+      </span>
+    </div>
+  </div>
+
+  <div class="stack-marquee-wrap">
+
+    <!-- ROW 1: forward scroll — AI models & automation -->
+    <div class="stack-row">
+      <div class="stack-track">
+        <!-- set A -->
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>ChatGPT</span>
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>Claude</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--auto"></span>n8n</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--auto"></span>Make.com</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--biz"></span>HubSpot</span>
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>Gemini</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--auto"></span>Zapier</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--biz"></span>Salesforce</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--ai"></span>Perplexity</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--auto"></span>Airtable</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--biz"></span>Notion</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--ai"></span>Midjourney</span>
+        <!-- set B (duplicate for seamless loop) -->
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>ChatGPT</span>
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>Claude</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--auto"></span>n8n</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--auto"></span>Make.com</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--biz"></span>HubSpot</span>
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>Gemini</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--auto"></span>Zapier</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--biz"></span>Salesforce</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--ai"></span>Perplexity</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--auto"></span>Airtable</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--biz"></span>Notion</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--ai"></span>Midjourney</span>
+      </div>
+    </div>
+
+    <!-- ROW 2: reverse scroll — creative, biz & dev tools -->
+    <div class="stack-row stack-row--alt stack-row--rev">
+      <div class="stack-track">
+        <!-- set A -->
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>ElevenLabs</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--biz"></span>Monday.com</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--auto"></span>Slack</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--biz"></span>ActiveCampaign</span>
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>Runway</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--auto"></span>Typeform</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--biz"></span>Webflow</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--ai"></span>Anthropic API</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--biz"></span>Intercom</span>
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>Grok</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--auto"></span>Gong</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--ai"></span>Cohere</span>
+        <!-- set B (duplicate) -->
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>ElevenLabs</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--biz"></span>Monday.com</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--auto"></span>Slack</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--biz"></span>ActiveCampaign</span>
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>Runway</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--auto"></span>Typeform</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--biz"></span>Webflow</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--ai"></span>Anthropic API</span>
+        <span class="mq-item mq-item--mid"><span class="mq-dot mq-dot--biz"></span>Intercom</span>
+        <span class="mq-item mq-item--neon"><span class="mq-dot mq-dot--ai"></span>Grok</span>
+        <span class="mq-item"><span class="mq-dot mq-dot--auto"></span>Gong</span>
+        <span class="mq-item mq-item--hi"><span class="mq-dot mq-dot--ai"></span>Cohere</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- legend -->
+  <div style="display:flex;align-items:center;justify-content:center;gap:28px;padding:0 0 26px;position:relative;z-index:3">
+    <span style="display:flex;align-items:center;gap:7px;font-family:var(--font-mo);font-size:9px;color:rgba(250,250,247,.22);letter-spacing:.06em">
+      <span style="width:5px;height:5px;border-radius:50%;background:var(--neon);box-shadow:0 0 6px rgba(196,241,44,.6);display:inline-block"></span>AI &amp; LLM
+    </span>
+    <span style="display:flex;align-items:center;gap:7px;font-family:var(--font-mo);font-size:9px;color:rgba(250,250,247,.22);letter-spacing:.06em">
+      <span style="width:5px;height:5px;border-radius:50%;background:rgba(120,180,255,.7);display:inline-block"></span>AUTOMATION
+    </span>
+    <span style="display:flex;align-items:center;gap:7px;font-family:var(--font-mo);font-size:9px;color:rgba(250,250,247,.22);letter-spacing:.06em">
+      <span style="width:5px;height:5px;border-radius:50%;background:rgba(255,160,80,.6);display:inline-block"></span>BUSINESS
+    </span>
+  </div>
+
 </section>
 
 <!-- ═══════════════════════════════════════
