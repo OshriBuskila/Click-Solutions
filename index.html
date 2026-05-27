@@ -421,33 +421,98 @@
       background:rgba(196,241,44,.03);
       box-shadow:0 0 60px rgba(196,241,44,.06) inset;
     }
-    .svc-badge{
-      display:inline-block;font-family:var(--font-mo);font-size:9px;
-      letter-spacing:1.5px;text-transform:uppercase;
-      background:var(--neon);color:var(--ink);padding:3px 8px;
-      margin-bottom:20px;font-weight:700;
-    }
-    .svc-num{
-      font-family:var(--font-en);font-size:48px;font-weight:700;
-      letter-spacing:-.05em;color:rgba(196,241,44,.2);
-      line-height:1;margin-bottom:16px;
-      transition:color .35s;
-    }
-    .svc-card:hover .svc-num{color:rgba(196,241,44,.45)}
-    .svc-icon{
-      width:44px;height:44px;margin-bottom:18px;
-      display:flex;align-items:center;justify-content:center;
-      border:1.5px solid rgba(196,241,44,.2);
-      transition:border-color .35s,box-shadow .35s,transform .35s;
-    }
-    .svc-card:hover .svc-icon{
-      border-color:rgba(196,241,44,.6);
-      box-shadow:0 0 20px rgba(196,241,44,.2);
-      transform:scale(1.08) rotate(3deg);
-    }
-    .svc-icon svg{width:22px;height:22px;stroke:var(--neon);fill:none;stroke-width:1.8;transition:stroke-dashoffset .6s var(--ease)}
     .svc-title{font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--fg);margin-bottom:10px}
     .svc-desc{font-size:14px;color:var(--fg2);line-height:1.7}
+    .svc-chip{
+      display:block;font-family:var(--font-mo);font-size:9px;
+      letter-spacing:1.5px;text-transform:uppercase;
+      color:rgba(196,241,44,.4);
+      margin-top:18px;border-top:1px solid rgba(196,241,44,.07);padding-top:12px;
+    }
+
+    /* ── Visual panel (top bleed on each service card) ── */
+    .svc-visual{
+      margin:-34px -30px 28px;
+      height:168px;overflow:hidden;position:relative;
+      background:#0D0D0D;
+      border-bottom:1px solid rgba(196,241,44,.08);
+    }
+    .svc-visual::after{
+      content:'';position:absolute;bottom:0;left:0;right:0;height:28px;
+      background:linear-gradient(to bottom,transparent,#0D0D0D);
+      pointer-events:none;z-index:1;
+    }
+
+    /* ── Card 1: neural net SVG primitives ── */
+    .nn-label{
+      font-family:'JetBrains Mono',monospace;font-size:7px;
+      fill:rgba(250,250,247,.25);letter-spacing:1.5px;text-anchor:middle;
+    }
+    .synapse{stroke:rgba(196,241,44,.11);stroke-width:.8;fill:none}
+    .neuron{fill:#0D0D0D;stroke:rgba(196,241,44,.32);stroke-width:1.5}
+    .neuron--out{stroke:var(--neon);stroke-width:1.8;filter:drop-shadow(0 0 4px rgba(196,241,44,.5))}
+
+    /* ── Card 2: automation pipeline ── */
+    .svc-visual--pipeline{
+      display:flex;flex-direction:column;justify-content:center;
+      padding:0 22px;direction:ltr;
+    }
+    .pipe-row{display:flex;align-items:center}
+    .pipe-node{
+      font-family:var(--font-mo);font-size:8.5px;
+      letter-spacing:1.5px;text-transform:uppercase;
+      color:rgba(196,241,44,.5);
+      border:1px solid rgba(196,241,44,.2);
+      padding:8px 11px;background:#0D0D0D;
+      position:relative;z-index:2;flex-shrink:0;white-space:nowrap;
+    }
+    .pipe-node--cap{
+      border-color:rgba(196,241,44,.5);color:var(--neon);
+      box-shadow:0 0 14px rgba(196,241,44,.15);
+    }
+    .pipe-edge{flex:1;height:1px;background:rgba(196,241,44,.12);position:relative;overflow:hidden}
+    .pipe-edge::after{
+      content:'';position:absolute;top:0;left:-60%;width:60%;height:1px;
+      background:linear-gradient(90deg,transparent,var(--neon),transparent);
+      animation:pipeEdge 2.4s ease-in-out infinite;
+    }
+    .pipe-edge:nth-child(2)::after{animation-delay:0s}
+    .pipe-edge:nth-child(4)::after{animation-delay:.8s}
+    @keyframes pipeEdge{0%{left:-60%}100%{left:100%}}
+    .pipe-stats{
+      display:flex;justify-content:space-around;
+      margin-top:14px;padding-top:12px;
+      border-top:1px solid rgba(196,241,44,.07);
+    }
+    .pipe-stat{display:flex;flex-direction:column;align-items:center;gap:3px}
+    .ps-val{font-family:var(--font-mo);font-size:14px;font-weight:700;color:var(--neon);letter-spacing:-.5px}
+    .ps-unit{font-family:var(--font-mo);font-size:7.5px;color:rgba(250,250,247,.28);letter-spacing:1px;text-transform:uppercase}
+
+    /* ── Card 3: code editor ── */
+    .svc-visual--code{
+      padding:14px 18px 10px;
+      font-family:var(--font-mo);font-size:10px;line-height:1.65;direction:ltr;
+    }
+    .code-bar{
+      display:flex;align-items:center;gap:5px;
+      margin-bottom:8px;padding-bottom:8px;
+      border-bottom:1px solid rgba(196,241,44,.07);
+    }
+    .code-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+    .code-dot:nth-child(1){background:rgba(255,95,86,.45)}
+    .code-dot:nth-child(2){background:rgba(255,189,68,.45)}
+    .code-dot:nth-child(3){background:rgba(39,201,63,.45)}
+    .code-fname{font-size:9px;color:rgba(250,250,247,.25);letter-spacing:.5px;margin-left:auto}
+    .code-line{display:flex;gap:14px}
+    .cl-num{color:rgba(250,250,247,.15);user-select:none;min-width:14px;text-align:right;flex-shrink:0}
+    .c-kw{color:rgba(196,241,44,.85)}
+    .c-fn{color:rgba(130,200,255,.8)}
+    .c-attr{color:rgba(255,160,80,.8)}
+    .c-str{color:rgba(255,110,110,.75)}
+    .c-tx{color:rgba(250,250,247,.65)}
+    .c-cm{color:rgba(250,250,247,.22)}
+    .c-cur{display:inline-block;width:5px;height:10px;background:var(--neon);vertical-align:middle;animation:blink .9s step-end infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
     /* ═══════════════════════════════════════
        PROCESS
@@ -868,12 +933,73 @@
 
     <div class="services-grid">
 
+      <!-- ── Card 1: AI Neural Network ── -->
       <div class="svc-card reveal" id="svc1">
-        <span class="svc-badge">SVC-01</span>
-        <div class="svc-num">01</div>
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        <div class="svc-visual" aria-hidden="true">
+          <svg viewBox="0 0 260 148" style="width:100%;height:100%;display:block">
+            <defs>
+              <path id="sp1" d="M30,40 L130,58 L236,60"/>
+              <path id="sp2" d="M30,76 L130,84 L236,60"/>
+              <path id="sp3" d="M30,112 L130,32 L236,98"/>
+              <path id="sp4" d="M30,76 L130,110 L236,98"/>
+            </defs>
+            <!-- layer labels -->
+            <text x="30"  y="14" class="nn-label">INPUT</text>
+            <text x="130" y="14" class="nn-label">HIDDEN</text>
+            <text x="236" y="14" class="nn-label">OUTPUT</text>
+            <!-- synapses: input → hidden -->
+            <line x1="30" y1="40"  x2="124" y2="32"  class="synapse"/>
+            <line x1="30" y1="40"  x2="124" y2="58"  class="synapse"/>
+            <line x1="30" y1="40"  x2="124" y2="84"  class="synapse"/>
+            <line x1="30" y1="40"  x2="124" y2="110" class="synapse"/>
+            <line x1="30" y1="76"  x2="124" y2="32"  class="synapse"/>
+            <line x1="30" y1="76"  x2="124" y2="58"  class="synapse"/>
+            <line x1="30" y1="76"  x2="124" y2="84"  class="synapse"/>
+            <line x1="30" y1="76"  x2="124" y2="110" class="synapse"/>
+            <line x1="30" y1="112" x2="124" y2="32"  class="synapse"/>
+            <line x1="30" y1="112" x2="124" y2="58"  class="synapse"/>
+            <line x1="30" y1="112" x2="124" y2="84"  class="synapse"/>
+            <line x1="30" y1="112" x2="124" y2="110" class="synapse"/>
+            <!-- synapses: hidden → output -->
+            <line x1="136" y1="32"  x2="230" y2="60" class="synapse"/>
+            <line x1="136" y1="32"  x2="230" y2="98" class="synapse"/>
+            <line x1="136" y1="58"  x2="230" y2="60" class="synapse"/>
+            <line x1="136" y1="58"  x2="230" y2="98" class="synapse"/>
+            <line x1="136" y1="84"  x2="230" y2="60" class="synapse"/>
+            <line x1="136" y1="84"  x2="230" y2="98" class="synapse"/>
+            <line x1="136" y1="110" x2="230" y2="60" class="synapse"/>
+            <line x1="136" y1="110" x2="230" y2="98" class="synapse"/>
+            <!-- input neurons -->
+            <circle cx="30" cy="40"  r="7" class="neuron"/>
+            <circle cx="30" cy="76"  r="7" class="neuron"/>
+            <circle cx="30" cy="112" r="7" class="neuron"/>
+            <!-- hidden neurons -->
+            <circle cx="130" cy="32"  r="7" class="neuron"/>
+            <circle cx="130" cy="58"  r="7" class="neuron"/>
+            <circle cx="130" cy="84"  r="7" class="neuron"/>
+            <circle cx="130" cy="110" r="7" class="neuron"/>
+            <!-- output neurons (glowing) -->
+            <circle cx="236" cy="60" r="8" class="neuron neuron--out"/>
+            <circle cx="236" cy="98" r="8" class="neuron neuron--out"/>
+            <circle cx="236" cy="60" r="3" fill="rgba(196,241,44,.35)"/>
+            <circle cx="236" cy="98" r="3" fill="rgba(196,241,44,.35)"/>
+            <!-- animated signals -->
+            <circle r="2.5" fill="#C4F12C" opacity="0">
+              <animateMotion dur="2s" repeatCount="indefinite" begin="0s"><mpath href="#sp1"/></animateMotion>
+              <animate attributeName="opacity" values="0;0;1;1;1;0" keyTimes="0;.05;.12;.88;.95;1" dur="2s" repeatCount="indefinite" begin="0s"/>
+            </circle>
+            <circle r="2.5" fill="#C4F12C" opacity="0">
+              <animateMotion dur="2s" repeatCount="indefinite" begin=".5s"><mpath href="#sp2"/></animateMotion>
+              <animate attributeName="opacity" values="0;0;1;1;1;0" keyTimes="0;.05;.12;.88;.95;1" dur="2s" repeatCount="indefinite" begin=".5s"/>
+            </circle>
+            <circle r="2.5" fill="#C4F12C" opacity="0">
+              <animateMotion dur="2s" repeatCount="indefinite" begin="1s"><mpath href="#sp3"/></animateMotion>
+              <animate attributeName="opacity" values="0;0;1;1;1;0" keyTimes="0;.05;.12;.88;.95;1" dur="2s" repeatCount="indefinite" begin="1s"/>
+            </circle>
+            <circle r="2.5" fill="#C4F12C" opacity="0">
+              <animateMotion dur="2s" repeatCount="indefinite" begin="1.5s"><mpath href="#sp4"/></animateMotion>
+              <animate attributeName="opacity" values="0;0;1;1;1;0" keyTimes="0;.05;.12;.88;.95;1" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+            </circle>
           </svg>
         </div>
         <h3 class="svc-title">הדרכות, סדנאות וייעוץ AI</h3>
@@ -882,15 +1008,33 @@
           במדויק לתהליכי העבודה של המחלקות השונות בארגון, מתוך הבנה ששילוב נכון של
           כלי AI דורש הובלה מקצועית.
         </p>
+        <span class="svc-chip">AI Training &amp; Advisory</span>
       </div>
 
+      <!-- ── Card 2: Automation Pipeline ── -->
       <div class="svc-card reveal" id="svc2" style="transition-delay:.1s">
-        <span class="svc-badge">SVC-02</span>
-        <div class="svc-num">02</div>
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07M8.46 8.46a5 5 0 000 7.07"/>
-          </svg>
+        <div class="svc-visual svc-visual--pipeline" aria-hidden="true">
+          <div class="pipe-row">
+            <div class="pipe-node pipe-node--cap">TRIGGER</div>
+            <div class="pipe-edge"></div>
+            <div class="pipe-node">EXECUTE</div>
+            <div class="pipe-edge"></div>
+            <div class="pipe-node pipe-node--cap">DELIVER</div>
+          </div>
+          <div class="pipe-stats">
+            <div class="pipe-stat">
+              <span class="ps-val">247</span>
+              <span class="ps-unit">tasks/day</span>
+            </div>
+            <div class="pipe-stat">
+              <span class="ps-val">99.8%</span>
+              <span class="ps-unit">uptime</span>
+            </div>
+            <div class="pipe-stat">
+              <span class="ps-val">&lt;3ms</span>
+              <span class="ps-unit">latency</span>
+            </div>
+          </div>
         </div>
         <h3 class="svc-title">אוטומציות וייעול תהליכים</h3>
         <p class="svc-desc">
@@ -898,15 +1042,24 @@
           מערכות (CRM, דוא"ל, הנהלת חשבונות), ותהליכי זרימת מידע אוטומטיים המונעים
           טעויות ומחסכים מאות שעות בחודש.
         </p>
+        <span class="svc-chip">Process Automation</span>
       </div>
 
+      <!-- ── Card 3: Code Editor ── -->
       <div class="svc-card reveal" id="svc3" style="transition-delay:.2s">
-        <span class="svc-badge">SVC-03</span>
-        <div class="svc-num">03</div>
-        <div class="svc-icon">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
-          </svg>
+        <div class="svc-visual svc-visual--code" aria-hidden="true">
+          <div class="code-bar">
+            <span class="code-dot"></span>
+            <span class="code-dot"></span>
+            <span class="code-dot"></span>
+            <span class="code-fname">Dashboard.tsx</span>
+          </div>
+          <div class="code-line"><span class="cl-num">1</span><span class="c-kw">import</span><span class="c-tx"> { </span><span class="c-fn">Dashboard</span><span class="c-tx"> } from </span><span class="c-str">'@click/ui'</span></div>
+          <div class="code-line"><span class="cl-num">2</span><span class="c-cm">// AI-powered CRM interface</span></div>
+          <div class="code-line"><span class="cl-num">3</span><span class="c-kw">const</span><span class="c-tx"> App = () </span><span class="c-kw">=&gt;</span><span class="c-tx"> (</span></div>
+          <div class="code-line"><span class="cl-num">4</span><span class="c-tx">  &lt;</span><span class="c-fn">Dashboard</span></div>
+          <div class="code-line"><span class="cl-num">5</span><span class="c-tx">    </span><span class="c-attr">theme</span><span class="c-tx">=</span><span class="c-str">"dark"</span><span class="c-tx">  </span><span class="c-attr">data</span><span class="c-tx">={</span><span class="c-fn">live</span><span class="c-tx">}</span></div>
+          <div class="code-line"><span class="cl-num">6</span><span class="c-tx">  /&gt;</span><span class="c-cur"></span></div>
         </div>
         <h3 class="svc-title">פיתוח ממשקים ומערכות</h3>
         <p class="svc-desc">
@@ -914,6 +1067,7 @@
           CRM ואפליקציות פנים-ארגוניות. כל ממשק נבנה מאפס — חווית משתמש + טכנולוגיה
           מדויקת לצרכי העסק.
         </p>
+        <span class="svc-chip">Interface &amp; Systems Dev</span>
       </div>
 
     </div>
