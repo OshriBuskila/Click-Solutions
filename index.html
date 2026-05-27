@@ -651,40 +651,54 @@
        WHY US (dark + glow cards)
     ═══════════════════════════════════════ */
     .why-us{background:var(--ink);padding:92px 0}
-    .diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .diff-card{
-      background:#141414;
-      border:1px solid rgba(196,241,44,.1);
-      padding:30px 28px;
+    /* ── Why Us: Editorial Feature Rows (no cards) ── */
+    .why-features{margin-top:52px}
+    .why-feat{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:clamp(28px,5vw,80px);
+      align-items:center;
+      padding:52px 0;
+      border-top:1px solid rgba(196,241,44,.08);
+      position:relative;
+    }
+    .why-feat:last-child{border-bottom:1px solid rgba(196,241,44,.08)}
+    /* text body */
+    .wf-kicker{font-family:var(--font-mo);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(196,241,44,.4);margin-bottom:10px;display:block}
+    .wf-title{font-size:clamp(21px,2.6vw,30px);font-weight:800;color:var(--fg);letter-spacing:-.025em;line-height:1.18;margin-bottom:12px}
+    .wf-desc{font-size:14px;color:rgba(250,250,247,.62);line-height:1.78}
+    /* visual panel */
+    .wf-visual{display:flex;align-items:center;justify-content:center;min-height:180px;position:relative}
+
+    /* ── Expertise: SVG bridge diagram ── */
+    .bridge-lbl-human{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:rgba(250,250,247,.45);text-anchor:middle;letter-spacing:1px}
+    .bridge-lbl-ai{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:rgba(196,241,44,.7);text-anchor:middle;letter-spacing:1px}
+    .bridge-c-lbl{font-family:'JetBrains Mono',monospace;font-size:6.5px;fill:rgba(196,241,44,.35);text-anchor:middle;letter-spacing:1.5px}
+    @keyframes bdot{0%,100%{opacity:.15}50%{opacity:1}}
+
+    /* ── Custom: Before/After visual ── */
+    .bespoke{font-family:var(--font-mo);font-size:11.5px;line-height:2.15;direction:ltr;width:100%;max-width:290px}
+    .bsp-no{color:rgba(250,250,247,.22);text-decoration:line-through;display:flex;align-items:center;gap:9px}
+    .bsp-x{color:rgba(255,80,80,.32);flex-shrink:0;text-decoration:none;font-style:normal}
+    .bsp-div{margin:12px 0;height:1px;background:linear-gradient(90deg,transparent,rgba(196,241,44,.2),transparent);position:relative}
+    .bsp-div::after{content:'VS';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:8px;letter-spacing:3px;color:rgba(196,241,44,.3);background:var(--ink);padding:0 10px;font-family:'JetBrains Mono',monospace}
+    .bsp-yes{color:rgba(196,241,44,.9);display:flex;align-items:center;gap:9px}
+    .bsp-ck{color:var(--neon);flex-shrink:0;font-weight:700}
+
+    /* ── ROI: metric tiles ── */
+    .roi-tiles{display:flex;gap:12px;direction:ltr}
+    .roi-tile{
+      border:1px solid rgba(196,241,44,.13);
+      padding:22px 14px;display:flex;flex-direction:column;
+      align-items:center;gap:7px;flex:1;
       position:relative;overflow:hidden;
-      transition:border-color .35s var(--ease),transform .35s var(--ease),box-shadow .35s var(--ease);
+      transition:border-color .3s var(--ease),background .3s;
     }
-    .diff-card::before{
-      content:'';
-      position:absolute;inset:0;
-      background:radial-gradient(circle at 50% 0%, rgba(196,241,44,.08) 0%, transparent 60%);
-      opacity:0;transition:opacity .4s;
-    }
-    .diff-card:hover{
-      border-color:rgba(196,241,44,.45);
-      transform:translateY(-6px);
-      box-shadow:0 20px 60px rgba(196,241,44,.08),0 0 0 1px rgba(196,241,44,.2);
-    }
-    .diff-card:hover::before{opacity:1}
-    .diff-icon-wrap{
-      width:48px;height:48px;
-      border:1.5px solid rgba(196,241,44,.2);
-      display:flex;align-items:center;justify-content:center;
-      margin-bottom:20px;
-      transition:border-color .35s,box-shadow .35s;
-    }
-    .diff-card:hover .diff-icon-wrap{
-      border-color:var(--neon);
-      box-shadow:0 0 20px rgba(196,241,44,.25);
-    }
-    .diff-icon-wrap svg{width:22px;height:22px;stroke:var(--neon);fill:none;stroke-width:1.8}
-    .diff-title{font-size:17px;font-weight:700;color:var(--fg);margin-bottom:10px;letter-spacing:-.01em}
-    .diff-desc{font-size:13.5px;color:var(--fg2);line-height:1.72}
+    .roi-tile:hover{border-color:rgba(196,241,44,.4);background:rgba(196,241,44,.03)}
+    .roi-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon),transparent);transform:scaleX(0);transition:transform .4s var(--ease)}
+    .roi-tile:hover::before{transform:scaleX(1)}
+    .roi-val{font-family:var(--font-en);font-size:30px;font-weight:700;color:var(--neon);letter-spacing:-.04em;line-height:1}
+    .roi-lbl{font-family:var(--font-mo);font-size:8px;color:rgba(250,250,247,.35);text-align:center;line-height:1.6;letter-spacing:.5px;direction:rtl}
 
     /* ═══════════════════════════════════════
        CONTACT
@@ -811,11 +825,14 @@
     @media(max-width:900px){
       .nav-links,.nav-phone,.nav-cta{display:none}
       .hamburger{display:block}
-      .services-grid,.process-grid,.diff-grid{grid-template-columns:1fr}
+      .services-grid,.process-grid{grid-template-columns:1fr}
       .stats-grid{grid-template-columns:1fr 1fr}
       .svc-card,.process-step{border-left:none;border-top:1px solid rgba(196,241,44,.10)}
       .svc-card:first-child,.process-step:first-child{border-top:none}
-      .diff-card{transform:none!important}
+      .why-feat{grid-template-columns:1fr;gap:28px;padding:36px 0}
+      .wf-visual{min-height:auto}
+      .roi-tiles{flex-wrap:wrap}
+      .roi-tile{min-width:80px}
       .contact-grid{grid-template-columns:1fr;gap:40px}
       .footer-main{grid-template-columns:1fr 1fr;gap:28px}
     }
@@ -1290,39 +1307,92 @@
       </p>
     </div>
 
-    <div class="diff-grid">
-      <div class="diff-card reveal">
-        <div class="diff-icon-wrap">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    <div class="why-features">
+
+      <!-- ── Row 1: Expertise — Human ↔ AI Bridge ── -->
+      <div class="why-feat reveal">
+        <div class="wf-body">
+          <span class="wf-kicker">// expertise &amp; leadership</span>
+          <h3 class="wf-title">מומחיות והובלה</h3>
+          <p class="wf-desc">
+            ניסיון עשיר כמרצים ומומחים מובילים בהנגשת AI. מגשרים על הפער שבין
+            הטכנולוגיה המורכבת למשתמש הקצה — סילבוסים ברורים, מקצועיים ומעוררי השראה.
+          </p>
         </div>
-        <h3 class="diff-title">מומחיות והובלה</h3>
-        <p class="diff-desc">
-          ניסיון עשיר כמרצים ומומחים מובילים בהנגשת AI. מגשרים על הפער שבין הטכנולוגיה המורכבת
-          למשתמש הקצה — סילבוסים ברורים, מקצועיים ומעוררי השראה.
-        </p>
+        <div class="wf-visual" aria-hidden="true">
+          <svg viewBox="0 0 300 160" style="width:100%;max-width:340px;height:auto;display:block">
+            <!-- Human side -->
+            <circle cx="58"  cy="80" r="42" fill="none" stroke="rgba(250,250,247,.14)" stroke-width="1.5"/>
+            <circle cx="58"  cy="80" r="26" fill="none" stroke="rgba(250,250,247,.07)" stroke-width="1"/>
+            <text x="58" y="75" class="bridge-lbl-human">HUMAN</text>
+            <text x="58" y="89" class="bridge-lbl-human">EXPERTISE</text>
+            <!-- AI side -->
+            <circle cx="242" cy="80" r="42" fill="none" stroke="rgba(196,241,44,.35)" stroke-width="1.5"/>
+            <circle cx="242" cy="80" r="26" fill="none" stroke="rgba(196,241,44,.15)" stroke-width="1"/>
+            <text x="242" y="75" class="bridge-lbl-ai">AI</text>
+            <text x="242" y="89" class="bridge-lbl-ai">TOOLS</text>
+            <!-- Connection line -->
+            <line x1="100" y1="80" x2="200" y2="80" stroke="rgba(196,241,44,.18)" stroke-width="1" stroke-dasharray="5 3"/>
+            <!-- Animated bridge dots -->
+            <circle cx="125" cy="80" r="3" fill="var(--neon)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:0s;opacity:.2"/>
+            <circle cx="150" cy="80" r="4" fill="var(--neon)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:.5s;opacity:.2"/>
+            <circle cx="175" cy="80" r="3" fill="var(--neon)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:1s;opacity:.2"/>
+            <!-- Bridge label -->
+            <text x="150" y="67" class="bridge-c-lbl">CLICK SOLUTIONS</text>
+          </svg>
+        </div>
       </div>
 
-      <div class="diff-card reveal" style="transition-delay:.1s">
-        <div class="diff-icon-wrap">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z"/></svg>
+      <!-- ── Row 2: Custom — Generic vs Tailored ── -->
+      <div class="why-feat reveal" style="transition-delay:.1s">
+        <div class="wf-body">
+          <span class="wf-kicker">// tailored to you</span>
+          <h3 class="wf-title">חליפה תפורה למידותיכם</h3>
+          <p class="wf-desc">
+            אין פתרונות מדף גנריים. כל מערכת מידע, תהליך אוטומציה או סדנה נתפרים
+            באופן ייעודי לתהליכים הייחודיים ולמטרות של הארגון שלכם.
+          </p>
         </div>
-        <h3 class="diff-title">חליפה תפורה למידותיכם</h3>
-        <p class="diff-desc">
-          אין פתרונות מדף גנריים. כל מערכת מידע, תהליך אוטומציה או סדנה נתפרים באופן ייעודי
-          לתהליכים הייחודיים ולמטרות של הארגון שלכם.
-        </p>
+        <div class="wf-visual" aria-hidden="true">
+          <div class="bespoke">
+            <div class="bsp-no"><span class="bsp-x">✗</span> Generic off-the-shelf</div>
+            <div class="bsp-no"><span class="bsp-x">✗</span> One-size-fits-all</div>
+            <div class="bsp-no"><span class="bsp-x">✗</span> Template-driven SaaS</div>
+            <div class="bsp-div"></div>
+            <div class="bsp-yes"><span class="bsp-ck">✓</span> Built for your workflows</div>
+            <div class="bsp-yes"><span class="bsp-ck">✓</span> Your processes. Your goals.</div>
+          </div>
+        </div>
       </div>
 
-      <div class="diff-card reveal" style="transition-delay:.2s">
-        <div class="diff-icon-wrap">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3zM9 9h6v6H9z"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+      <!-- ── Row 3: ROI — Concrete Metrics ── -->
+      <div class="why-feat reveal" style="transition-delay:.2s">
+        <div class="wf-body">
+          <span class="wf-kicker">// measurable results</span>
+          <h3 class="wf-title">שורה תחתונה ברורה</h3>
+          <p class="wf-desc">
+            מעבר לטכנולוגיה מתקדמת חייב לייצר ROI. מתמקדים בפתרונות שמייצרים
+            חיסכון מדיד בשעות אדם, שיפור השירות ללקוח הקצה ועלייה בתפוקה.
+          </p>
         </div>
-        <h3 class="diff-title">שורה תחתונה ברורה</h3>
-        <p class="diff-desc">
-          מעבר לטכנולוגיה מתקדמת חייב לייצר ROI. מתמקדים בפתרונות שמייצרים חיסכון מדיד
-          בשעות אדם, שיפור השירות ללקוח הקצה ועלייה בתפוקה.
-        </p>
+        <div class="wf-visual" aria-hidden="true">
+          <div class="roi-tiles">
+            <div class="roi-tile">
+              <span class="roi-val">300h</span>
+              <span class="roi-lbl">חיסכון<br/>לחודש</span>
+            </div>
+            <div class="roi-tile">
+              <span class="roi-val">+40%</span>
+              <span class="roi-lbl">עלייה<br/>בתפוקה</span>
+            </div>
+            <div class="roi-tile">
+              <span class="roi-val">×3</span>
+              <span class="roi-lbl">ROI<br/>מוכח</span>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
