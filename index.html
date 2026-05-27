@@ -1,177 +1,1433 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Click Solutions</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Click Solutions — המנוע הטכנולוגי לצמיחת הארגון</title>
+  <meta name="description" content="Click Solutions — הכשרות AI, אוטומציות חכמות ופיתוח ממשקים לארגונים. מעטפת טכנולוגית מותאמת אישית." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════
+       TOKENS
+    ═══════════════════════════════════════ */
+    :root {
+      --paper:   #FAFAF7;
+      --card:    #FFFFFF;
+      --ink:     #0A0A0A;
+      --ink2:    rgba(10,10,10,.62);
+      --ink3:    rgba(10,10,10,.38);
+      --ink4:    rgba(10,10,10,.10);
+      --neon:    #C4F12C;
+      --neon-h:  #A4D612;
+      --neon-glow: rgba(196,241,44,.35);
+      --fg:      #FAFAF7;
+      --fg2:     rgba(250,250,247,.65);
+      --fg3:     rgba(250,250,247,.38);
+      --fg4:     rgba(250,250,247,.12);
+      --font-he: 'Heebo','Rubik',system-ui,sans-serif;
+      --font-en: 'Space Grotesk',system-ui,sans-serif;
+      --font-mo: 'JetBrains Mono',ui-monospace,monospace;
+      --ease:    cubic-bezier(.22,1,.36,1);
+      --nav-h:   68px;
+      --max-w:   1140px;
+      --pad-x:   clamp(20px,4vw,56px);
+    }
+
+    /* ═══════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════ */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:var(--font-he);
+      background:var(--paper);
+      color:var(--ink);
+      line-height:1.65;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      cursor:none;
+    }
+    @media(hover:none){body{cursor:auto}}
+    a{text-decoration:none;color:inherit}
+    ul{list-style:none}
+    img{max-width:100%;display:block}
+    button,input,textarea,select{font-family:inherit;font-size:inherit}
+
+    /* ═══════════════════════════════════════
+       CUSTOM CURSOR
+    ═══════════════════════════════════════ */
+    #cursor-dot{
+      position:fixed;
+      width:8px;height:8px;
+      background:var(--neon);
+      border-radius:50%;
+      pointer-events:none;
+      z-index:9999;
+      transform:translate(-50%,-50%);
+      transition:transform .1s var(--ease),width .25s var(--ease),height .25s var(--ease),opacity .25s;
+      box-shadow:0 0 12px var(--neon-glow),0 0 24px var(--neon-glow);
+    }
+    #cursor-ring{
+      position:fixed;
+      width:36px;height:36px;
+      border:1.5px solid rgba(196,241,44,.5);
+      border-radius:50%;
+      pointer-events:none;
+      z-index:9998;
+      transform:translate(-50%,-50%);
+      transition:transform .2s var(--ease),width .3s var(--ease),height .3s var(--ease),border-color .3s;
+    }
+    body:has(a:hover,button:hover) #cursor-dot{width:12px;height:12px}
+    body:has(a:hover,button:hover) #cursor-ring{width:52px;height:52px;border-color:rgba(196,241,44,.8)}
+    @media(hover:none){#cursor-dot,#cursor-ring{display:none}}
+
+    /* ═══════════════════════════════════════
+       UTILITIES
+    ═══════════════════════════════════════ */
+    .container{max-width:var(--max-w);margin:0 auto;padding:0 var(--pad-x)}
+    .tag{
+      display:inline-block;
+      font-family:var(--font-mo);
+      font-size:11px;letter-spacing:2px;
+      text-transform:uppercase;
+      color:var(--ink3);
+      margin-bottom:14px;
+    }
+    .tag--neon{color:var(--neon)}
+    .tag--light{color:var(--fg3)}
+    .neon-hl{background:var(--neon);padding:2px 12px;display:inline}
+
+    /* ═══════════════════════════════════════
+       BUTTONS
+    ═══════════════════════════════════════ */
+    @keyframes neonPulse{
+      0%,100%{box-shadow:0 0 18px rgba(196,241,44,.3),0 0 36px rgba(196,241,44,.15)}
+      50%{box-shadow:0 0 32px rgba(196,241,44,.55),0 0 64px rgba(196,241,44,.28)}
+    }
+    @keyframes btnRipple{
+      0%{transform:scale(0);opacity:.6}
+      100%{transform:scale(2.5);opacity:0}
+    }
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      font-family:var(--font-he);font-size:.95rem;font-weight:700;
+      border:none;border-radius:0;cursor:none;
+      padding:13px 26px;
+      position:relative;overflow:hidden;
+      transition:color .25s var(--ease),box-shadow .3s var(--ease),transform .25s var(--ease);
+      text-decoration:none;white-space:nowrap;
+    }
+    .btn::after{
+      content:'';
+      position:absolute;inset:0;
+      background:rgba(255,255,255,.14);
+      transform:translateX(110%) skewX(-12deg);
+      transition:transform .45s var(--ease);
+    }
+    .btn:hover::after{transform:translateX(-110%) skewX(-12deg)}
+    .btn:active{transform:scale(.97)}
+    .btn-primary{
+      background:var(--neon);color:var(--ink);
+      box-shadow:0 0 12px rgba(196,241,44,.25);
+    }
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 28px rgba(196,241,44,.45),0 0 56px rgba(196,241,44,.2);
+      animation:neonPulse 1.8s ease-in-out infinite;
+    }
+    .btn-primary:not(:hover){animation:none}
+    .btn-ghost-light{background:transparent;color:var(--fg);border:1.5px solid rgba(250,250,247,.18)}
+    .btn-ghost-light:hover{
+      background:rgba(196,241,44,.06);
+      border-color:rgba(196,241,44,.5);
+      transform:translateY(-2px);
+      box-shadow:0 6px 20px rgba(196,241,44,.1);
+    }
+    .btn-lg{padding:17px 34px;font-size:1rem}
+    .btn-sm{padding:8px 18px;font-size:.87rem}
+
+    /* ═══════════════════════════════════════
+       NAVBAR
+    ═══════════════════════════════════════ */
+    .navbar{
+      position:fixed;top:0;left:0;right:0;
+      height:var(--nav-h);z-index:100;
+      background:rgba(10,10,10,.7);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(196,241,44,.08);
+      transition:background .3s,box-shadow .3s;
+    }
+    .navbar.light{
+      background:rgba(250,250,247,.9);
+      border-bottom-color:rgba(10,10,10,.08);
+    }
+    .navbar.scrolled{box-shadow:0 4px 32px rgba(0,0,0,.5)}
+    .nav-inner{display:flex;align-items:center;height:100%;gap:28px}
+    .logo{
+      display:inline-flex;align-items:baseline;
+      font-family:var(--font-en);font-weight:700;
+      font-size:22px;letter-spacing:-.05em;
+      color:var(--fg);flex-shrink:0;
+      transition:color .3s;
+    }
+    .navbar.light .logo{color:var(--ink)}
+    .logo-cursor{
+      display:inline-block;width:13px;height:7px;
+      background:var(--neon);
+      margin-right:3px;margin-bottom:2px;vertical-align:baseline;
+      animation:blink 1.1s step-start infinite;
+    }
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    .nav-links{display:flex;gap:26px;margin-right:auto}
+    .nav-links a{
+      font-size:14px;font-weight:500;color:var(--fg2);
+      transition:color .2s;
+    }
+    .navbar.light .nav-links a{color:var(--ink2)}
+    .nav-links a:hover,.nav-links a.nav-active{color:var(--neon)}
+    .navbar.light .nav-links a:hover,.navbar.light .nav-links a.nav-active{color:var(--ink)}
+    .nav-links a.nav-active{position:relative}
+    .nav-links a.nav-active::after{
+      content:'';position:absolute;bottom:-3px;left:0;right:0;height:1.5px;
+      background:var(--neon);
+    }
+    .navbar.light .nav-links a.nav-active::after{background:var(--ink)}
+    .nav-right{display:flex;align-items:center;gap:14px}
+    .nav-phone{font-family:var(--font-mo);font-size:12px;color:var(--fg3);direction:ltr;transition:color .3s}
+    .navbar.light .nav-phone{color:var(--ink3)}
+    .hamburger{display:none;margin-right:auto;background:none;border:none;color:var(--fg);font-size:22px;cursor:none;padding:4px 6px;line-height:1;transition:color .3s}
+    .navbar.light .hamburger{color:var(--ink)}
+
+    /* Mobile */
+    .mobile-drawer{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(10,10,10,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--fg4);z-index:99;padding:22px var(--pad-x) 28px}
+    .mobile-drawer.open{display:block}
+    .mobile-drawer ul{display:flex;flex-direction:column;gap:16px;margin-bottom:20px}
+    .mobile-drawer a{font-size:17px;font-weight:600;color:var(--fg2)}
+    .mobile-drawer a:hover{color:var(--neon)}
+
+    /* ═══════════════════════════════════════
+       HERO (dark, canvas)
+    ═══════════════════════════════════════ */
+    .hero{
+      min-height:100vh;padding-top:var(--nav-h);
+      position:relative;overflow:hidden;
+      background:#0A0A0A;display:flex;align-items:center;
+    }
+    #hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+
+    /* gradient mesh */
+    .hero-mesh{
+      position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 60% 50% at 70% 50%, rgba(196,241,44,.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 60% at 20% 80%, rgba(196,241,44,.05) 0%, transparent 60%);
+    }
+
+    /* floating shapes */
+    .shape{position:absolute;border:1.5px solid rgba(196,241,44,.2);pointer-events:none}
+    .shape-1{
+      width:120px;height:120px;
+      top:15%;right:8%;
+      animation:floatSpin1 22s linear infinite;
+      box-shadow:0 0 24px rgba(196,241,44,.15);
+    }
+    .shape-2{
+      width:72px;height:72px;border-radius:50%;
+      bottom:25%;left:6%;
+      animation:float2 9s ease-in-out infinite;
+      box-shadow:0 0 32px rgba(196,241,44,.12);
+    }
+    .shape-3{
+      width:56px;height:56px;
+      top:55%;left:22%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      animation:float3 14s ease-in-out infinite;
+    }
+    .shape-4{
+      width:88px;height:88px;
+      top:30%;left:45%;
+      clip-path:polygon(50% 0%,100% 100%,0% 100%);
+      animation:floatSpin2 18s linear infinite;
+    }
+    .shape-5{
+      width:180px;height:180px;border-radius:50%;
+      top:-40px;left:-40px;
+      border:1px solid rgba(196,241,44,.06);
+      animation:float2 26s ease-in-out infinite reverse;
+    }
+    @keyframes floatSpin1{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.15)}100%{transform:rotate(360deg) scale(1)}}
+    @keyframes floatSpin2{0%{transform:rotate(0deg)}100%{transform:rotate(-360deg)}}
+    @keyframes float2{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-32px) scale(1.08)}}
+    @keyframes float3{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(-20px) rotate(105deg)}}
+
+    /* mouse-glow */
+    #hero-glow{
+      position:absolute;width:500px;height:500px;border-radius:50%;
+      background:radial-gradient(circle,rgba(196,241,44,.12) 0%,transparent 70%);
+      filter:blur(40px);
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+      transition:none;
+      will-change:transform;
+    }
+
+    .hero-inner{position:relative;z-index:1;padding:80px 0 100px;max-width:980px}
+    .hero-eyebrow{
+      font-family:var(--font-mo);font-size:11px;
+      letter-spacing:2.4px;text-transform:uppercase;
+      color:var(--fg3);margin-bottom:22px;
+      opacity:0;animation:fadeUp .7s var(--ease) .2s forwards;
+    }
+    .hero-h1{
+      font-family:var(--font-he);font-weight:900;
+      font-size:clamp(48px,8vw,96px);
+      line-height:1.01;letter-spacing:-.035em;
+      color:var(--fg);margin-bottom:26px;
+    }
+    @keyframes wordUp{
+      from{opacity:0;transform:translateY(40px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    .hero-word{
+      display:inline-block;
+      opacity:0;
+      animation:wordUp .7s var(--ease) forwards;
+    }
+    .hero-word:nth-of-type(1){animation-delay:.4s}
+    .hero-word:nth-of-type(2){animation-delay:.55s}
+    .hero-word:nth-of-type(3){animation-delay:.7s}
+    .hero-word:nth-of-type(4){animation-delay:.85s}
+    .hero-word:nth-of-type(5){animation-delay:1.0s}
+    .hero-word.visible{opacity:1;transform:translateY(0)}
+    .neon-word{
+      background:var(--neon);
+      color:var(--ink);
+      padding:0 10px;
+    }
+    .hero-sub{
+      font-size:clamp(16px,1.8vw,19px);
+      color:var(--fg2);line-height:1.75;max-width:600px;
+      margin-bottom:36px;
+      opacity:0;animation:fadeUp .7s var(--ease) 1.1s forwards;
+    }
+    .hero-actions{
+      display:flex;gap:14px;flex-wrap:wrap;
+      opacity:0;animation:fadeUp .7s var(--ease) 1.35s forwards;
+    }
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+    /* scroll indicator */
+    .scroll-hint{
+      position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+      z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;
+      opacity:0;animation:fadeUp .6s var(--ease) 1.8s forwards;
+    }
+    .scroll-hint-text{font-family:var(--font-mo);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--fg3)}
+    .scroll-mouse{width:22px;height:36px;border:1.5px solid rgba(196,241,44,.4);border-radius:12px;display:flex;justify-content:center;padding-top:6px}
+    .scroll-dot{width:4px;height:4px;background:var(--neon);border-radius:50%;animation:scrollDot 1.8s ease-in-out infinite;box-shadow:0 0 8px var(--neon-glow)}
+    @keyframes scrollDot{0%,100%{opacity:1;transform:translateY(0)}80%{opacity:0;transform:translateY(14px)}}
+
+    /* ═══════════════════════════════════════
+       MARQUEE
+    ═══════════════════════════════════════ */
+    .marquee-strip{background:var(--neon);padding:13px 0;overflow:hidden;white-space:nowrap}
+    .marquee-track{display:inline-flex;gap:36px;animation:marquee 24s linear infinite}
+    .marquee-track:hover{animation-play-state:paused}
+    .marquee-item{font-family:var(--font-mo);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--ink);font-weight:700}
+    .marquee-sep{color:rgba(10,10,10,.35)}
+    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+    /* ═══════════════════════════════════════
+       STATS COUNTERS
+    ═══════════════════════════════════════ */
+    .stats{background:var(--ink);padding:72px 0}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--fg4)}
+    .stat-item{
+      padding:32px 28px;
+      border-left:1px solid var(--fg4);
+      position:relative;overflow:hidden;
+      transition:background .3s;
+    }
+    .stat-item:last-child{border-left:none}
+    .stat-item:hover{background:rgba(196,241,44,.04)}
+    .stat-item::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:var(--neon);
+      transform:scaleX(0);transform-origin:right;
+      transition:transform .5s var(--ease);
+    }
+    .stat-item:hover::before{transform:scaleX(1);transform-origin:left}
+    @keyframes statGlow{
+      0%{text-shadow:none}
+      50%{text-shadow:0 0 24px rgba(196,241,44,.6),0 0 48px rgba(196,241,44,.3)}
+      100%{text-shadow:0 0 12px rgba(196,241,44,.25)}
+    }
+    .stat-num{
+      font-family:var(--font-en);font-size:52px;font-weight:700;
+      letter-spacing:-.04em;color:var(--fg);line-height:1;
+      margin-bottom:8px;
+      transition:text-shadow .3s;
+    }
+    .stat-num.counted{animation:statGlow 1.2s var(--ease) forwards}
+    .stat-num span{color:var(--neon);font-size:.75em;vertical-align:super;line-height:0}
+    .stat-label{font-size:14px;color:var(--fg2);font-weight:500}
+    .stat-sub{font-family:var(--font-mo);font-size:10px;color:var(--fg3);margin-top:4px;letter-spacing:1px}
+
+    /* ═══════════════════════════════════════
+       SERVICES (dark)
+    ═══════════════════════════════════════ */
+    .services{background:#111111;padding:92px 0;border-top:1px solid var(--fg4)}
+    .sec-header{margin-bottom:52px}
+    .section-title{
+      font-family:var(--font-he);font-weight:900;
+      font-size:clamp(30px,4vw,50px);
+      line-height:1.06;letter-spacing:-.025em;
+      margin-bottom:14px;
+    }
+    .section-title--light{color:var(--fg)}
+    .section-sub{font-size:17px;line-height:1.75;max-width:560px;margin-bottom:0}
+    .section-sub--light{color:var(--fg2)}
+
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(196,241,44,.12);overflow:visible}
+    .svc-card{
+      padding:34px 30px;
+      border-left:1px solid rgba(196,241,44,.10);
+      position:relative;overflow:hidden;
+      transition:background .35s var(--ease),transform .35s var(--ease);
+      transform-style:preserve-3d;
+      will-change:transform;
+    }
+    .svc-card:first-child{border-left:none}
+    .svc-card::before{
+      content:'';
+      position:absolute;inset:0;
+      background:linear-gradient(135deg,rgba(196,241,44,.06) 0%,transparent 60%);
+      opacity:0;transition:opacity .35s;
+    }
+    .svc-card:hover::before{opacity:1}
+    .svc-card::after{
+      content:'';
+      position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,var(--neon),transparent);
+      transform:scaleX(0);
+      transition:transform .5s var(--ease);
+    }
+    .svc-card:hover::after{transform:scaleX(1)}
+    .svc-card:hover{
+      background:rgba(196,241,44,.03);
+      box-shadow:0 0 60px rgba(196,241,44,.06) inset;
+    }
+    .svc-badge{
+      display:inline-block;font-family:var(--font-mo);font-size:9px;
+      letter-spacing:1.5px;text-transform:uppercase;
+      background:var(--neon);color:var(--ink);padding:3px 8px;
+      margin-bottom:20px;font-weight:700;
+    }
+    .svc-num{
+      font-family:var(--font-en);font-size:48px;font-weight:700;
+      letter-spacing:-.05em;color:rgba(196,241,44,.2);
+      line-height:1;margin-bottom:16px;
+      transition:color .35s;
+    }
+    .svc-card:hover .svc-num{color:rgba(196,241,44,.45)}
+    .svc-icon{
+      width:44px;height:44px;margin-bottom:18px;
+      display:flex;align-items:center;justify-content:center;
+      border:1.5px solid rgba(196,241,44,.2);
+      transition:border-color .35s,box-shadow .35s,transform .35s;
+    }
+    .svc-card:hover .svc-icon{
+      border-color:rgba(196,241,44,.6);
+      box-shadow:0 0 20px rgba(196,241,44,.2);
+      transform:scale(1.08) rotate(3deg);
+    }
+    .svc-icon svg{width:22px;height:22px;stroke:var(--neon);fill:none;stroke-width:1.8;transition:stroke-dashoffset .6s var(--ease)}
+    .svc-title{font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--fg);margin-bottom:10px}
+    .svc-desc{font-size:14px;color:var(--fg2);line-height:1.7}
+
+    /* ═══════════════════════════════════════
+       PROCESS
+    ═══════════════════════════════════════ */
+    .process{background:var(--paper);padding:92px 0;border-top:1px solid var(--ink4)}
+    .process-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);
+      position:relative;gap:0;
+      border:1.5px solid var(--ink4);overflow:hidden;
+    }
+    /* animated connector line */
+    @keyframes travelDot{
+      0%{left:0;opacity:0}
+      5%{opacity:1}
+      95%{opacity:1}
+      100%{left:100%;opacity:0}
+    }
+    .process-line{
+      position:absolute;top:50%;height:1px;
+      left:33.33%;right:33.33%;
+      background:linear-gradient(90deg,transparent,var(--neon) 20%,var(--neon) 80%,transparent);
+      transform:scaleX(0) translateY(-50%);transform-origin:left;
+      transition:transform 1.2s var(--ease);
+      z-index:1;overflow:visible;
+    }
+    .process-line.visible{transform:scaleX(1) translateY(-50%)}
+    .process-line::after{
+      content:'';
+      position:absolute;top:50%;
+      width:8px;height:8px;border-radius:50%;
+      background:var(--neon);
+      box-shadow:0 0 12px var(--neon),0 0 24px rgba(196,241,44,.5);
+      transform:translateY(-50%);
+      opacity:0;
+    }
+    .process-line.visible::after{
+      animation:travelDot 2.5s var(--ease) 1.3s infinite;
+    }
+    .process-step{
+      padding:30px 26px;background:var(--paper);
+      border-left:1.5px solid var(--ink4);
+      transition:background .3s,transform .3s;
+      position:relative;
+    }
+    .process-step:first-child{border-left:none}
+    .process-step:hover{background:var(--card);transform:translateY(-4px)}
+    .step-tag{
+      display:inline-block;font-family:var(--font-mo);font-size:9px;
+      letter-spacing:1.5px;text-transform:uppercase;
+      background:var(--neon);color:var(--ink);padding:2px 7px;
+      margin-bottom:16px;font-weight:700;
+    }
+    .step-num{
+      font-family:var(--font-en);font-size:44px;font-weight:700;
+      letter-spacing:-.05em;color:rgba(10,10,10,.1);line-height:1;
+      margin-bottom:14px;transition:color .3s;
+    }
+    .process-step:hover .step-num{color:rgba(196,241,44,.5)}
+    .step-title{font-size:17px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+    .step-desc{font-size:13.5px;color:var(--ink2);line-height:1.7}
+
+    /* ═══════════════════════════════════════
+       WHY US (dark + glow cards)
+    ═══════════════════════════════════════ */
+    .why-us{background:var(--ink);padding:92px 0}
+    .diff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .diff-card{
+      background:#141414;
+      border:1px solid rgba(196,241,44,.1);
+      padding:30px 28px;
+      position:relative;overflow:hidden;
+      transition:border-color .35s var(--ease),transform .35s var(--ease),box-shadow .35s var(--ease);
+    }
+    .diff-card::before{
+      content:'';
+      position:absolute;inset:0;
+      background:radial-gradient(circle at 50% 0%, rgba(196,241,44,.08) 0%, transparent 60%);
+      opacity:0;transition:opacity .4s;
+    }
+    .diff-card:hover{
+      border-color:rgba(196,241,44,.45);
+      transform:translateY(-6px);
+      box-shadow:0 20px 60px rgba(196,241,44,.08),0 0 0 1px rgba(196,241,44,.2);
+    }
+    .diff-card:hover::before{opacity:1}
+    .diff-icon-wrap{
+      width:48px;height:48px;
+      border:1.5px solid rgba(196,241,44,.2);
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:20px;
+      transition:border-color .35s,box-shadow .35s;
+    }
+    .diff-card:hover .diff-icon-wrap{
+      border-color:var(--neon);
+      box-shadow:0 0 20px rgba(196,241,44,.25);
+    }
+    .diff-icon-wrap svg{width:22px;height:22px;stroke:var(--neon);fill:none;stroke-width:1.8}
+    .diff-title{font-size:17px;font-weight:700;color:var(--fg);margin-bottom:10px;letter-spacing:-.01em}
+    .diff-desc{font-size:13.5px;color:var(--fg2);line-height:1.72}
+
+    /* ═══════════════════════════════════════
+       CONTACT
+    ═══════════════════════════════════════ */
+    .contact{background:var(--paper);padding:92px 0;border-top:1px solid var(--ink4)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:start}
+    .contact-h2{
+      font-family:var(--font-he);font-weight:900;
+      font-size:clamp(28px,4vw,46px);line-height:1.06;
+      letter-spacing:-.025em;margin-bottom:14px;
+    }
+    .contact-sub{font-size:16px;color:var(--ink2);line-height:1.72;margin-bottom:32px;max-width:420px}
+    .wa-block{
+      background:var(--ink);color:var(--fg);
+      padding:20px 22px;position:relative;overflow:hidden;
+    }
+    .wa-block::before{content:'';position:absolute;top:0;bottom:0;right:0;width:3px;background:var(--neon)}
+    .wa-block-inner{padding-right:16px}
+    .wa-label{font-family:var(--font-mo);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--fg3);display:block;margin-bottom:8px}
+    .wa-title{font-size:17px;font-weight:700;margin-bottom:6px}
+    .wa-sub{font-size:13px;color:var(--fg2);margin-bottom:14px}
+    .btn-wa{
+      display:inline-flex;align-items:center;gap:8px;
+      background:#25D366;color:#fff;font-weight:700;font-size:14px;
+      padding:10px 18px;border-radius:0;cursor:none;
+      transition:filter .2s;
+    }
+    .btn-wa:hover{filter:brightness(1.1)}
+    .wa-svg{width:18px;height:18px;fill:#fff}
+
+    /* Form */
+    .contact-form{
+      background:var(--card);
+      border:1.5px solid var(--ink);
+      padding:30px 28px;
+      display:flex;flex-direction:column;gap:16px;
+      position:relative;
+    }
+    .contact-form::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,var(--neon),var(--neon-h));
+    }
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .form-group{display:flex;flex-direction:column;gap:5px;position:relative}
+    .form-group label{font-size:12px;font-weight:600;color:var(--ink2)}
+    .form-group label sup{color:var(--ink)}
+    .form-group input,
+    .form-group textarea,
+    .form-group select{
+      background:var(--paper);border:1.5px solid var(--ink4);
+      border-radius:0;padding:11px 14px;color:var(--ink);
+      font-size:14.5px;outline:none;width:100%;
+      transition:border-color .25s,box-shadow .25s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus{
+      border-color:var(--ink);
+      box-shadow:0 0 0 3px rgba(196,241,44,.15);
+    }
+    .form-group textarea{resize:vertical;min-height:96px}
+    .form-group select{cursor:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%230A0A0A' stroke-width='1.5' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:left 14px center}
+    .checks{display:flex;flex-direction:column;gap:8px}
+    .check{display:flex;align-items:center;gap:10px;font-size:14px;cursor:none}
+    .check input[type=checkbox]{width:16px;height:16px;accent-color:var(--ink);cursor:none}
+    .form-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
+    .form-note{font-family:var(--font-mo);font-size:10px;color:var(--ink3)}
+    .form-success{display:none;color:#2EA655;font-size:14px;font-weight:600;text-align:center;padding:10px 0}
+    .form-success.visible{display:block}
+
+    /* ═══════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════ */
+    /* ═══════════════════════════════════════
+       BACK TO TOP
+    ═══════════════════════════════════════ */
+    @keyframes bttPulse{
+      0%,100%{box-shadow:0 0 0 0 rgba(196,241,44,.4)}
+      50%{box-shadow:0 0 0 8px rgba(196,241,44,0)}
+    }
+    #back-to-top{
+      position:fixed;bottom:32px;left:32px;
+      width:48px;height:48px;
+      background:var(--neon);color:var(--ink);
+      border:none;cursor:none;
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;font-weight:900;
+      opacity:0;pointer-events:none;
+      transform:translateY(16px);
+      transition:opacity .3s var(--ease),transform .3s var(--ease);
+      z-index:200;
+    }
+    #back-to-top.visible{
+      opacity:1;pointer-events:all;transform:translateY(0);
+      animation:bttPulse 2s ease-in-out infinite;
+    }
+    #back-to-top:hover{background:var(--neon-h)}
+
+    .footer{background:var(--ink);color:var(--fg)}
+    .footer-main{padding:60px 0 48px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px}
+    .footer-brand p{font-size:13px;color:var(--fg2);line-height:1.65;margin-top:12px;max-width:240px}
+    .footer-cta{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--neon);color:var(--ink);padding:10px 18px;
+      font-weight:700;font-size:13px;margin-top:18px;
+      transition:background .25s,box-shadow .25s;
+    }
+    .footer-cta:hover{background:var(--neon-h);box-shadow:0 0 24px rgba(196,241,44,.35)}
+    .footer-col-title{font-family:var(--font-mo);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--fg3);margin-bottom:14px}
+    .footer-links{display:flex;flex-direction:column;gap:8px}
+    .footer-links a{font-size:13px;color:var(--fg2);transition:color .2s}
+    .footer-links a:hover{color:var(--neon)}
+    .footer-bottom{border-top:1px solid var(--fg4);padding:16px 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:var(--font-mo);font-size:10px;color:var(--fg3)}
+
+    /* ═══════════════════════════════════════
+       SCROLL REVEAL
+    ═══════════════════════════════════════ */
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* ═══════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════ */
+    @media(max-width:900px){
+      .nav-links,.nav-phone,.nav-cta{display:none}
+      .hamburger{display:block}
+      .services-grid,.process-grid,.diff-grid{grid-template-columns:1fr}
+      .stats-grid{grid-template-columns:1fr 1fr}
+      .svc-card,.process-step{border-left:none;border-top:1px solid rgba(196,241,44,.10)}
+      .svc-card:first-child,.process-step:first-child{border-top:none}
+      .diff-card{transform:none!important}
+      .contact-grid{grid-template-columns:1fr;gap:40px}
+      .footer-main{grid-template-columns:1fr 1fr;gap:28px}
+    }
+    @media(max-width:600px){
+      .form-row{grid-template-columns:1fr}
+      .footer-main{grid-template-columns:1fr}
+      .footer-bottom{flex-direction:column;text-align:center}
+      .form-foot{flex-direction:column;align-items:stretch}
+      .stats-grid{grid-template-columns:1fr 1fr}
+      .stat-item{border-left:none;border-top:1px solid var(--fg4)}
+      .stat-item:nth-child(odd){border-right:1px solid var(--fg4)}
+    }
+
+    /* reduced-motion */
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+      .hero-word{opacity:1;transform:none}
+      .reveal{opacity:1;transform:none}
+    }
+  </style>
 </head>
+
 <body>
+<!-- Custom cursor -->
+<div id="cursor-dot" aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <a href="#" class="logo">Click<span>Solutions</span></a>
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-      <button class="btn btn-primary nav-cta">Get Started</button>
-      <button class="hamburger" id="hamburger" aria-label="Toggle menu">&#9776;</button>
+<!-- ═══════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════ -->
+<header class="navbar" id="navbar">
+  <div class="container nav-inner">
+    <a href="#" class="logo" aria-label="Click Solutions">click<span class="logo-cursor" aria-hidden="true"></span></a>
+    <nav class="nav-links" aria-label="ניווט ראשי">
+      <a href="#services">שירותים</a>
+      <a href="#process">תהליך</a>
+      <a href="#why-us">למה אנחנו</a>
+      <a href="#contact">צרו קשר</a>
+    </nav>
+    <div class="nav-right">
+      <a href="tel:054-000-0000" class="nav-phone" dir="ltr">054-000-0000</a>
+      <a href="#contact" class="btn btn-primary btn-sm nav-cta">בואו נדבר</a>
     </div>
-  </nav>
+    <button class="hamburger" id="hamburger" aria-label="פתח תפריט" aria-expanded="false">&#9776;</button>
+  </div>
+</header>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <ul>
-      <li><a href="#about" class="mobile-link">About</a></li>
-      <li><a href="#features" class="mobile-link">Features</a></li>
-      <li><a href="#contact" class="mobile-link">Contact</a></li>
-      <li><a href="#" class="btn btn-primary" style="display:inline-block;margin-top:8px;">Get Started</a></li>
-    </ul>
+<div class="mobile-drawer" id="mobileDrawer">
+  <ul>
+    <li><a href="#services" class="mob-link">שירותים</a></li>
+    <li><a href="#process" class="mob-link">תהליך</a></li>
+    <li><a href="#why-us" class="mob-link">למה אנחנו</a></li>
+    <li><a href="#contact" class="mob-link">צרו קשר</a></li>
+  </ul>
+  <a href="#contact" class="btn btn-primary mob-link">בואו נדבר ←</a>
+</div>
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-mesh" aria-hidden="true"></div>
+  <div id="hero-glow" aria-hidden="true"></div>
+
+  <!-- Floating shapes -->
+  <div class="shape shape-1" aria-hidden="true"></div>
+  <div class="shape shape-2" aria-hidden="true"></div>
+  <div class="shape shape-3" aria-hidden="true"></div>
+  <div class="shape shape-4" aria-hidden="true"></div>
+  <div class="shape shape-5" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="hero-inner">
+      <p class="hero-eyebrow">// AI &middot; הדרכות &middot; אוטומציות &middot; פיתוח מערכות</p>
+
+      <h1 class="hero-h1" id="hero-h1">
+        <span class="hero-word" data-delay="0.4">המנוע</span>&#32;
+        <span class="hero-word" data-delay="0.55">הטכנולוגי</span><br/>
+        <span class="hero-word" data-delay="0.7">מאחורי</span>&#32;
+        <span class="hero-word neon-word" data-delay="0.85">הצמיחה</span><br/>
+        <span class="hero-word" data-delay="1.0">של הארגון שלכם.</span>
+      </h1>
+
+      <p class="hero-sub">
+        החל מהכשרת הצוותים, דרך פיתוח אוטומציות חכמות ועד לבניית ממשקי ניהול מתקדמים.
+        מעטפת טכנולוגית מותאמת אישית שחוסכת משאבים ומייעלת את סביבת העבודה מהיום הראשון.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary btn-lg">לתיאום פגישת אפיון ←</a>
+        <a href="#services" class="btn btn-ghost-light btn-lg">הפתרונות שלנו</a>
+      </div>
+    </div>
   </div>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container hero-inner">
-      <div class="hero-badge">✦ Welcome to Click Solutions</div>
-      <h1 class="hero-title">Build something <span class="gradient-text">remarkable</span> today.</h1>
-      <p class="hero-sub">A clean, modern foundation for your next big idea. Fast, responsive, and ready to customize.</p>
-      <div class="hero-actions">
-        <button class="btn btn-primary btn-lg">Get Started →</button>
-        <button class="btn btn-ghost btn-lg">Learn More</button>
+  <div class="scroll-hint" aria-hidden="true">
+    <span class="scroll-hint-text">גלול למטה</span>
+    <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     MARQUEE
+═══════════════════════════════════════ -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-item">חיסכון במשאבים</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">AI מותאם לארגון</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">אוטומציות חכמות</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">ממשקים מתקדמים</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">הדרכות מקצועיות</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">ROI מדיד</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">ליווי ארוך טווח</span>
+    <span class="marquee-sep">✦</span>
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">חיסכון במשאבים</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">AI מותאם לארגון</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">אוטומציות חכמות</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">ממשקים מתקדמים</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">הדרכות מקצועיות</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">ROI מדיד</span>
+    <span class="marquee-sep">✦</span>
+    <span class="marquee-item">ליווי ארוך טווח</span>
+    <span class="marquee-sep">✦</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     STATS COUNTERS
+═══════════════════════════════════════ -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-num" data-target="50" data-suffix="+">0<span>+</span></div>
+        <div class="stat-label">ארגונים שינו את אופן עבודתם</div>
+        <div class="stat-sub">// clients</div>
       </div>
-      <div class="hero-stats">
-        <div class="stat"><strong>100%</strong><span>Responsive</span></div>
-        <div class="divider"></div>
-        <div class="stat"><strong>0</strong><span>Dependencies</span></div>
-        <div class="divider"></div>
-        <div class="stat"><strong>∞</strong><span>Possibilities</span></div>
+      <div class="stat-item reveal" style="transition-delay:.08s">
+        <div class="stat-num" data-target="200" data-suffix="+">0<span>+</span></div>
+        <div class="stat-label">אוטומציות הושקו בהצלחה</div>
+        <div class="stat-sub">// automations deployed</div>
+      </div>
+      <div class="stat-item reveal" style="transition-delay:.16s">
+        <div class="stat-num" data-target="30" data-suffix="+">0<span>+</span></div>
+        <div class="stat-label">שעות שבועיות נחסכות לכל לקוח</div>
+        <div class="stat-sub">// hrs/week saved</div>
+      </div>
+      <div class="stat-item reveal" style="transition-delay:.24s">
+        <div class="stat-num" data-target="98" data-suffix="%">0<span>%</span></div>
+        <div class="stat-label">שביעות רצון לקוחות</div>
+        <div class="stat-sub">// satisfaction rate</div>
       </div>
     </div>
-    <div class="hero-blob blob-1"></div>
-    <div class="hero-blob blob-2"></div>
-  </section>
+  </div>
+</section>
 
-  <!-- About -->
-  <section class="about section" id="about">
-    <div class="container">
-      <div class="section-label">About Us</div>
-      <h2 class="section-title">Built for <em>real</em> results.</h2>
-      <p class="section-sub">Click Solutions is committed to delivering clean, high-performance digital experiences. We believe great design and great code go hand in hand.</p>
-      <div class="cards-grid">
-        <div class="card">
-          <div class="card-icon">🚀</div>
-          <h3>Fast &amp; Lightweight</h3>
-          <p>No frameworks, no bloat. Pure HTML, CSS, and JavaScript that loads in milliseconds.</p>
+<!-- ═══════════════════════════════════════
+     SERVICES
+═══════════════════════════════════════ -->
+<section class="services" id="services">
+  <div class="container">
+    <div class="sec-header reveal">
+      <span class="tag tag--neon">// services &middot; 3</span>
+      <h2 class="section-title section-title--light">
+        מעטפת פתרונות שלמה<br/>שסוגרת לכם את הפינה.
+      </h2>
+      <p class="section-sub section-sub--light">
+        אנו פועלים בשלוש זרועות מרכזיות שנועדו להדריך, לייעל ולשדרג את הפעילות העסקית שלכם.
+      </p>
+    </div>
+
+    <div class="services-grid">
+
+      <div class="svc-card reveal" id="svc1">
+        <span class="svc-badge">SVC-01</span>
+        <div class="svc-num">01</div>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+          </svg>
         </div>
-        <div class="card">
-          <div class="card-icon">🎨</div>
-          <h3>Beautiful Design</h3>
-          <p>Carefully crafted aesthetics with smooth animations and a polished look out of the box.</p>
+        <h3 class="svc-title">הדרכות, סדנאות וייעוץ AI</h3>
+        <p class="svc-desc">
+          העברת הרצאות, סדנאות מעשיות וייעוץ ממוקד למנהלים ועובדים. סילבוסים הנתפרים
+          במדויק לתהליכי העבודה של המחלקות השונות בארגון, מתוך הבנה ששילוב נכון של
+          כלי AI דורש הובלה מקצועית.
+        </p>
+      </div>
+
+      <div class="svc-card reveal" id="svc2" style="transition-delay:.1s">
+        <span class="svc-badge">SVC-02</span>
+        <div class="svc-num">02</div>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M15.54 8.46a5 5 0 010 7.07M8.46 8.46a5 5 0 000 7.07"/>
+          </svg>
         </div>
-        <div class="card">
-          <div class="card-icon">📱</div>
-          <h3>Fully Responsive</h3>
-          <p>Looks perfect on every device — from a 4K monitor to the smallest phone screen.</p>
+        <h3 class="svc-title">אוטומציות וייעול תהליכים</h3>
+        <p class="svc-desc">
+          חיסול "העבודה השחורה" ומשימות רוטיניות שוחקות. צ'אטבוטים חכמים, סנכרון בין
+          מערכות (CRM, דוא"ל, הנהלת חשבונות), ותהליכי זרימת מידע אוטומטיים המונעים
+          טעויות ומחסכים מאות שעות בחודש.
+        </p>
+      </div>
+
+      <div class="svc-card reveal" id="svc3" style="transition-delay:.2s">
+        <span class="svc-badge">SVC-03</span>
+        <div class="svc-num">03</div>
+        <div class="svc-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
+          </svg>
         </div>
+        <h3 class="svc-title">פיתוח ממשקים ומערכות</h3>
+        <p class="svc-desc">
+          הנוכחות הדיגיטלית שלכם, משודרגת. אתרים מתקדמים, דפי נחיתה ממירים, מערכות
+          CRM ואפליקציות פנים-ארגוניות. כל ממשק נבנה מאפס — חווית משתמש + טכנולוגיה
+          מדויקת לצרכי העסק.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PROCESS
+═══════════════════════════════════════ -->
+<section class="process" id="process">
+  <div class="container">
+    <div class="sec-header reveal">
+      <span class="tag">// process &middot; 3 steps</span>
+      <h2 class="section-title">הדרך לארגון חכם יותר:<br/>שלושה שלבים ממוקדים.</h2>
+      <p class="section-sub">תהליך שיטתי ומקצועי שלוקח אתכם משלב זיהוי הבעיה ועד לתוצאות בשטח.</p>
+    </div>
+
+    <div class="process-grid" id="processGrid">
+      <div class="process-line" id="processLine" aria-hidden="true"></div>
+
+      <div class="process-step reveal">
+        <span class="step-tag">שלב 01</span>
+        <div class="step-num">01</div>
+        <h3 class="step-title">אבחון, מיפוי ותכנון אסטרטגי</h3>
+        <p class="step-desc">
+          פגישת התנעה מקצועית להבנת "צווארי הבקבוק" של העסק. נגדיר יחד אילו מחלקות דורשות
+          הדרכה, היכן נדרשת אוטומציה, ואילו ממשקים יוכלו לשרת אתכם בצורה מיטבית.
+        </p>
+      </div>
+
+      <div class="process-step reveal" style="transition-delay:.12s">
+        <span class="step-tag">שלב 02</span>
+        <div class="step-num">02</div>
+        <h3 class="step-title">בנייה, פיתוח והטמעה</h3>
+        <p class="step-desc">
+          מעבר לביצוע בשטח. אנו מפתחים מערכות, מחברים אוטומציות, ומעבירים הכשרות לצוותים.
+          הכל מבוצע בצורה חלקה ומקצועית, תוך שמירה על רציפות תפקודית מלאה.
+        </p>
+      </div>
+
+      <div class="process-step reveal" style="transition-delay:.24s">
+        <span class="step-tag">שלב 03</span>
+        <div class="step-num">03</div>
+        <h3 class="step-title">ליווי, מדידה ושותפות</h3>
+        <p class="step-desc">
+          לא מספקים מוצר ונעלמים. נקודת קשר מקצועית שמוודאת שהצוותים מיישמים,
+          האוטומציות מתפקדות, ומתאימה את המערכות לצמיחה העתידית של הארגון.
+        </p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Features -->
-  <section class="features section" id="features">
-    <div class="container">
-      <div class="section-label">Features</div>
-      <h2 class="section-title">Everything you need to <span class="gradient-text">start building</span>.</h2>
-      <div class="features-list">
-        <div class="feature-item">
-          <div class="feature-num">01</div>
-          <div>
-            <h3>Semantic HTML5</h3>
-            <p>Structured, accessible markup that search engines and screen readers love.</p>
-          </div>
+<!-- ═══════════════════════════════════════
+     WHY US
+═══════════════════════════════════════ -->
+<section class="why-us" id="why-us">
+  <div class="container">
+    <div class="sec-header reveal">
+      <span class="tag tag--neon">// why us</span>
+      <h2 class="section-title section-title--light">
+        טכנולוגיה קיימת בכל מקום.<br/>שותפים אסטרטגיים קשה יותר למצוא.
+      </h2>
+      <p class="section-sub section-sub--light">
+        מחויבות לשקיפות ולתוצאות — זאת ההבטחה שלנו לכל ארגון.
+      </p>
+    </div>
+
+    <div class="diff-grid">
+      <div class="diff-card reveal">
+        <div class="diff-icon-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
         </div>
-        <div class="feature-item">
-          <div class="feature-num">02</div>
-          <div>
-            <h3>CSS Custom Properties</h3>
-            <p>Easily theme the entire site by changing a handful of variables.</p>
-          </div>
+        <h3 class="diff-title">מומחיות והובלה</h3>
+        <p class="diff-desc">
+          ניסיון עשיר כמרצים ומומחים מובילים בהנגשת AI. מגשרים על הפער שבין הטכנולוגיה המורכבת
+          למשתמש הקצה — סילבוסים ברורים, מקצועיים ומעוררי השראה.
+        </p>
+      </div>
+
+      <div class="diff-card reveal" style="transition-delay:.1s">
+        <div class="diff-icon-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 100-16 8 8 0 000 16zm-1-5h2v2h-2v-2zm0-8h2v6h-2V7z"/></svg>
         </div>
-        <div class="feature-item">
-          <div class="feature-num">03</div>
-          <div>
-            <h3>Smooth Animations</h3>
-            <p>Scroll-triggered fade-ins and micro-interactions for a premium feel.</p>
-          </div>
+        <h3 class="diff-title">חליפה תפורה למידותיכם</h3>
+        <p class="diff-desc">
+          אין פתרונות מדף גנריים. כל מערכת מידע, תהליך אוטומציה או סדנה נתפרים באופן ייעודי
+          לתהליכים הייחודיים ולמטרות של הארגון שלכם.
+        </p>
+      </div>
+
+      <div class="diff-card reveal" style="transition-delay:.2s">
+        <div class="diff-icon-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3zM9 9h6v6H9z"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
         </div>
-        <div class="feature-item">
-          <div class="feature-num">04</div>
-          <div>
-            <h3>Mobile-First Nav</h3>
-            <p>A collapsible hamburger menu with silky transitions on smaller screens.</p>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="feature-num">05</div>
-          <div>
-            <h3>Dark-Mode Ready</h3>
-            <p>CSS variables and media queries set up so dark mode is just a few lines away.</p>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="feature-num">06</div>
-          <div>
-            <h3>Git &amp; GitHub Integrated</h3>
-            <p>Version-controlled from day one and hosted on GitHub for easy collaboration.</p>
-          </div>
-        </div>
+        <h3 class="diff-title">שורה תחתונה ברורה</h3>
+        <p class="diff-desc">
+          מעבר לטכנולוגיה מתקדמת חייב לייצר ROI. מתמקדים בפתרונות שמייצרים חיסכון מדיד
+          בשעות אדם, שיפור השירות ללקוח הקצה ועלייה בתפוקה.
+        </p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Contact -->
-  <section class="contact section" id="contact">
-    <div class="container contact-inner">
+<!-- ═══════════════════════════════════════
+     CONTACT
+═══════════════════════════════════════ -->
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact-grid">
       <div>
-        <div class="section-label">Contact</div>
-        <h2 class="section-title">Let's work <span class="gradient-text">together</span>.</h2>
-        <p class="section-sub">Have a project in mind? We'd love to hear from you.</p>
+        <span class="tag reveal">// contact</span>
+        <h2 class="contact-h2 reveal">הגיע הזמן לקדם<br/>את הארגון לשלב הבא.</h2>
+        <p class="contact-sub reveal">
+          השאירו פרטים לתיאום פגישת היכרות וייעוץ אסטרטגי. נבחן יחד, ללא התחייבות,
+          את האפיקים בהם נוכל לייעל ולשפר את הפעילות העסקית שלכם.
+        </p>
+        <div class="wa-block reveal">
+          <div class="wa-block-inner">
+            <span class="wa-label">// preferred channel</span>
+            <p class="wa-title">מעדיפים ליצור קשר ישירות?</p>
+            <p class="wa-sub">מחלקת הייעוץ שלנו זמינה עבורכם. מענה תוך שעה.</p>
+            <a href="https://wa.me/972540000000?text=שלום%2C%20אני%20מעוניין%20לתאם%20פגישת%20אפיון"
+               target="_blank" rel="noopener noreferrer" class="btn-wa">
+              <svg class="wa-svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              פנייה ישירה דרך WhatsApp
+            </a>
+          </div>
+        </div>
       </div>
-      <form class="contact-form" id="contactForm">
+
+      <form class="contact-form reveal" id="contactForm" novalidate>
         <div class="form-group">
-          <input type="text" id="name" placeholder="Your Name" required />
+          <label for="fullName">שם מלא <sup>*</sup></label>
+          <input type="text" id="fullName" name="fullName" placeholder="ישראל ישראלי" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">טלפון</label>
+            <input type="tel" id="phone" name="phone" placeholder="054-123-4567" />
+          </div>
+          <div class="form-group">
+            <label for="orgName">שם הארגון</label>
+            <input type="text" id="orgName" name="orgName" placeholder="שם החברה" />
+          </div>
         </div>
         <div class="form-group">
-          <input type="email" id="email" placeholder="Email Address" required />
+          <label for="email">דוא"ל <sup>*</sup></label>
+          <input type="email" id="email" name="email" placeholder="israel@example.co.il" required />
         </div>
         <div class="form-group">
-          <textarea id="message" rows="4" placeholder="Your message…" required></textarea>
+          <label>סוג השירות המבוקש</label>
+          <div class="checks">
+            <label class="check"><input type="checkbox" name="svc" value="training" />הדרכות, סדנאות וייעוץ AI</label>
+            <label class="check"><input type="checkbox" name="svc" value="automation" />אוטומציות וייעול תהליכים</label>
+            <label class="check"><input type="checkbox" name="svc" value="interfaces" />פיתוח ממשקים ומערכות</label>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Send Message →</button>
-        <p class="form-success" id="formSuccess">✓ Message sent! We'll be in touch soon.</p>
+        <div class="form-group">
+          <label for="msg">ספרו לנו בקצרה על הצורך</label>
+          <textarea id="msg" name="msg" placeholder="תיאור קצר של האתגר…"></textarea>
+        </div>
+        <div class="form-foot">
+          <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">שליחת פרטים לתיאום פגישה ←</button>
+          <span class="form-note">// מענה תוך 24h</span>
+        </div>
+        <p class="form-success" id="formSuccess">✓ הפרטים התקבלו! נחזור אליכם בהקדם.</p>
+        <p class="form-note" style="margin-top:4px">// הפרטים שלכם נשארים אצלנו. בלי דיוור, בלי שיתופים.</p>
       </form>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-inner">
-      <a href="#" class="logo">Click<span>Solutions</span></a>
-      <p class="footer-copy">&copy; 2026 Click Solutions. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="#about">About</a>
-        <a href="#features">Features</a>
-        <a href="#contact">Contact</a>
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="#" class="logo" style="color:var(--fg)" aria-label="Click Solutions">click<span class="logo-cursor" aria-hidden="true"></span></a>
+        <p>בונים מעטפות טכנולוגיות לארגונים שמסרבים להישאר מאחור.</p>
+        <a href="#contact" class="footer-cta">בואו נדבר →</a>
+      </div>
+      <div>
+        <p class="footer-col-title">// שירותים</p>
+        <ul class="footer-links">
+          <li><a href="#services">הדרכות ו-AI</a></li>
+          <li><a href="#services">אוטומציות</a></li>
+          <li><a href="#services">פיתוח ממשקים</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">// תהליך</p>
+        <ul class="footer-links">
+          <li><a href="#process">אבחון ומיפוי</a></li>
+          <li><a href="#process">בנייה והטמעה</a></li>
+          <li><a href="#process">ליווי שוטף</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">// יצירת קשר</p>
+        <ul class="footer-links">
+          <li><a href="#contact">תיאום פגישה</a></li>
+          <li><a href="https://wa.me/972540000000" target="_blank" rel="noopener">WhatsApp</a></li>
+          <li><a href="mailto:hello@clicksolutions.co.il">hello@clicksolutions.co.il</a></li>
+        </ul>
       </div>
     </div>
-  </footer>
+    <div class="footer-bottom">
+      <span>// &copy; 2024–2026 Click Solutions. כל הזכויות שמורות.</span>
+      <span dir="ltr">hello@clicksolutions.co.il &middot; 054-000-0000</span>
+    </div>
+  </div>
+</footer>
 
-  <script src="main.js"></script>
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════ */
+<script>
+(function(){
+  'use strict';
+
+  /* ─── Custom Cursor ─── */
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  const hasHover = window.matchMedia('(hover:hover)').matches;
+
+  if(hasHover){
+    document.addEventListener('mousemove', e=>{
+      mx=e.clientX; my=e.clientY;
+      dot.style.left=mx+'px'; dot.style.top=my+'px';
+    });
+    (function animRing(){
+      rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
+      ring.style.left=rx+'px'; ring.style.top=ry+'px';
+      requestAnimationFrame(animRing);
+    })();
+  }
+
+  /* ─── Hero Canvas Particles ─── */
+  const canvas = document.getElementById('hero-canvas');
+  const ctx    = canvas.getContext('2d');
+  const heroEl = document.getElementById('hero');
+  let W,H,particles=[],mouse={x:-9999,y:-9999};
+  const PARTICLE_N = window.innerWidth < 700 ? 45 : 85;
+  const NEON = '#C4F12C';
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  function resize(){
+    W=canvas.width=heroEl.offsetWidth;
+    H=canvas.height=heroEl.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Particle {
+    constructor(){this.reset(true)}
+    reset(init){
+      this.x  = Math.random()*W;
+      this.y  = init ? Math.random()*H : -10;
+      this.vx = (Math.random()-.5)*.45;
+      this.vy = (Math.random()-.5)*.45;
+      this.r  = Math.random()*1.8+.5;
+      this.a  = Math.random()*.55+.15;
+    }
+    update(){
+      if(prefersReduced)return;
+      const dx=mouse.x-this.x, dy=mouse.y-this.y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<160){
+        const f=(160-d)/160*.22;
+        this.vx-=(dx/d)*f;
+        this.vy-=(dy/d)*f;
+      }
+      // dampen
+      this.vx*=.992; this.vy*=.992;
+      this.x+=this.vx; this.y+=this.vy;
+      if(this.x<0||this.x>W) this.vx*=-1;
+      if(this.y<0||this.y>H) this.vy*=-1;
+    }
+    draw(){
+      ctx.beginPath();
+      ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(196,241,44,${this.a})`;
+      ctx.fill();
+    }
+  }
+
+  for(let i=0;i<PARTICLE_N;i++) particles.push(new Particle());
+
+  function drawConnections(){
+    const MAX=110;
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x;
+        const dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<MAX){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x,particles[i].y);
+          ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(196,241,44,${.12*(1-d/MAX)})`;
+          ctx.lineWidth=.6;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  let raf;
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{p.update();p.draw()});
+    if(!prefersReduced) drawConnections();
+    raf=requestAnimationFrame(animate);
+  }
+  animate();
+
+  // Pause when hero is out of view
+  const heroObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) animate();
+      else cancelAnimationFrame(raf);
+    });
+  },{threshold:0});
+  heroObs.observe(heroEl);
+
+  // Mouse → canvas (for particle repulsion)
+  document.addEventListener('mousemove',e=>{
+    const r=canvas.getBoundingClientRect();
+    mouse.x=e.clientX-r.left;
+    mouse.y=e.clientY-r.top;
+  });
+  document.addEventListener('mouseleave',()=>{ mouse.x=-9999; mouse.y=-9999; });
+
+  // Hero glow follows mouse
+  const glowEl=document.getElementById('hero-glow');
+  document.addEventListener('mousemove',e=>{
+    const r=heroEl.getBoundingClientRect();
+    if(e.clientY>r.top && e.clientY<r.bottom){
+      glowEl.style.left=(e.clientX)+'px';
+      glowEl.style.top=(e.clientY)+'px';
+    }
+  });
+
+  /* ─── Navbar state (light when over light sections) ─── */
+  const navbar = document.getElementById('navbar');
+  const lightSections = ['services2','process','contact'];
+  // Actually simplify: change based on scroll position
+  const heroBoundary = ()=> heroEl.offsetHeight;
+  function updateNav(){
+    const y=window.scrollY;
+    navbar.classList.toggle('scrolled', y>12);
+    // switch to light after hero
+    navbar.classList.toggle('light', y > heroBoundary()-80);
+  }
+  window.addEventListener('scroll', updateNav, {passive:true});
+  updateNav();
+
+  /* ─── Mobile menu ─── */
+  const hamburger = document.getElementById('hamburger');
+  const drawer    = document.getElementById('mobileDrawer');
+  hamburger.addEventListener('click',()=>{
+    const open=drawer.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded',open);
+    hamburger.innerHTML=open?'&#x2715;':'&#9776;';
+  });
+  document.querySelectorAll('.mob-link').forEach(a=>{
+    a.addEventListener('click',()=>{
+      drawer.classList.remove('open');
+      hamburger.setAttribute('aria-expanded','false');
+      hamburger.innerHTML='&#9776;';
+    });
+  });
+  document.addEventListener('click',e=>{
+    if(!drawer.contains(e.target)&&!hamburger.contains(e.target)){
+      drawer.classList.remove('open');
+      hamburger.setAttribute('aria-expanded','false');
+      hamburger.innerHTML='&#9776;';
+    }
+  });
+
+  /* ─── Scroll Reveal (IntersectionObserver) ─── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const revObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        revObs.unobserve(e.target);
+      }
+    });
+  },{threshold:.10});
+  revealEls.forEach(el=>revObs.observe(el));
+
+  /* ─── Animated Counters ─── */
+  function easeOut(t){ return 1-(1-t)*(1-t)*(1-t) }
+  function animCounter(el){
+    const target=parseInt(el.dataset.target,10);
+    const suffix=el.dataset.suffix||'';
+    const dur=1800;
+    const start=performance.now();
+    function step(now){
+      const p=Math.min((now-start)/dur,1);
+      const val=Math.round(easeOut(p)*target);
+      el.innerHTML=val+'<span>'+suffix+'</span>';
+      if(p<1){ requestAnimationFrame(step); }
+      else { el.classList.add('counted'); }
+    }
+    requestAnimationFrame(step);
+  }
+  const counterEls=document.querySelectorAll('.stat-num[data-target]');
+  const cntObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        if(!prefersReduced) animCounter(e.target);
+        else {
+          const t=e.target.dataset.target, s=e.target.dataset.suffix||'';
+          e.target.innerHTML=t+'<span>'+s+'</span>';
+        }
+        cntObs.unobserve(e.target);
+      }
+    });
+  },{threshold:.5});
+  counterEls.forEach(el=>cntObs.observe(el));
+
+  /* ─── 3D Tilt on Service Cards ─── */
+  if(!prefersReduced && window.innerWidth>900){
+    document.querySelectorAll('.svc-card').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const cx=(e.clientX-r.left)/r.width-.5;
+        const cy=(e.clientY-r.top)/r.height-.5;
+        card.style.transform=`perspective(600px) rotateX(${-cy*8}deg) rotateY(${cx*8}deg) translateZ(6px)`;
+      });
+      card.addEventListener('mouseleave',()=>{
+        card.style.transform='perspective(600px) rotateX(0) rotateY(0) translateZ(0)';
+        card.style.transition='transform .5s cubic-bezier(.22,1,.36,1)';
+        setTimeout(()=>card.style.transition='',500);
+      });
+    });
+  }
+
+  /* ─── Process connector line ─── */
+  const pLine=document.getElementById('processLine');
+  if(pLine){
+    const pObs=new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ pLine.classList.add('visible'); pObs.unobserve(e.target); }
+      });
+    },{threshold:.3});
+    pObs.observe(document.getElementById('processGrid'));
+  }
+
+  /* ─── Contact Form ─── */
+  const form=document.getElementById('contactForm');
+  const success=document.getElementById('formSuccess');
+  const submitBtn=document.getElementById('submitBtn');
+
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    if(!form.fullName.value.trim()||!form.email.value.trim()){
+      form.fullName.focus();
+      form.fullName.style.borderColor='#D6402A';
+      return;
+    }
+    const orig=submitBtn.textContent;
+    submitBtn.textContent='שולח…';
+    submitBtn.disabled=true;
+    setTimeout(()=>{
+      form.reset();
+      submitBtn.textContent=orig;
+      submitBtn.disabled=false;
+      success.classList.add('visible');
+      setTimeout(()=>success.classList.remove('visible'),5000);
+    },1400);
+  });
+
+  form.fullName.addEventListener('input',()=>{ form.fullName.style.borderColor=''; });
+
+  /* ─── Back to Top ─── */
+  const btt = document.getElementById('back-to-top');
+  if(btt){
+    window.addEventListener('scroll',()=>{
+      btt.classList.toggle('visible', window.scrollY > 600);
+    },{passive:true});
+    btt.addEventListener('click',()=>{
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  }
+
+  /* ─── Nav active section highlight ─── */
+  const navSections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  if(navLinks.length){
+    const secObs = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){
+          navLinks.forEach(l=>l.classList.remove('nav-active'));
+          const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+          if(active) active.classList.add('nav-active');
+        }
+      });
+    },{threshold:.35,rootMargin:'-60px 0px -35% 0px'});
+    navSections.forEach(s=>secObs.observe(s));
+  }
+
+})();
+</script>
+
+<!-- Back to top -->
+<button id="back-to-top" aria-label="חזרה לראש הדף" title="חזרה לראש הדף">↑</button>
+
 </body>
 </html>
