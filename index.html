@@ -47,9 +47,12 @@
       color:var(--ink);
       line-height:1.65;
       -webkit-font-smoothing:antialiased;
-      cursor:none;
+      cursor:auto;
       max-width:100vw;
     }
+    /* custom cursor only on interactive targets */
+    a,button,.btn,[role="button"],.svc-card,.case-card,.why-feat,.roi-tile,.stat-item,.logo-bar-item{cursor:none}
+    input,textarea,select,[contenteditable]{cursor:text!important}
     @media(hover:none){body{cursor:auto}}
     a{text-decoration:none;color:inherit}
     ul{list-style:none}
@@ -463,16 +466,15 @@
     .section-sub{font-size:17px;line-height:1.75;max-width:560px;margin-bottom:0}
     .section-sub--light{color:var(--fg2)}
 
-    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(196,241,44,.12);overflow:visible}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;overflow:visible}
     .svc-card{
       padding:34px 30px;
-      border-left:1px solid rgba(196,241,44,.10);
+      border:1px solid rgba(196,241,44,.10);
       position:relative;overflow:hidden;
-      transition:background .35s var(--ease),transform .35s var(--ease);
+      transition:background .35s var(--ease),transform .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease);
       transform-style:preserve-3d;
       will-change:transform;
     }
-    .svc-card:first-child{border-left:none}
     .svc-card::before{
       content:'';
       position:absolute;inset:0;
@@ -489,8 +491,10 @@
     }
     .svc-card:hover::after{transform:scaleX(1)}
     .svc-card:hover{
-      background:rgba(196,241,44,.03);
-      box-shadow:0 0 60px rgba(196,241,44,.06) inset;
+      background:rgba(196,241,44,.04);
+      border-color:rgba(196,241,44,.35);
+      box-shadow:0 8px 40px rgba(196,241,44,.08),0 0 60px rgba(196,241,44,.05) inset;
+      transform:translateY(-5px);
     }
     .svc-title{font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--fg);margin-bottom:10px}
     .svc-desc{font-size:14px;color:var(--fg2);line-height:1.7}
@@ -716,7 +720,19 @@
     /* ═══════════════════════════════════════
        PROCESS
     ═══════════════════════════════════════ */
-    .process{background:var(--paper);padding:92px 0;border-top:1px solid var(--ink4)}
+    .process{background:var(--paper);padding:0 0 92px;border-top:1px solid var(--ink4);position:relative}
+    /* scroll progress bar */
+    .process-progress{
+      position:sticky;top:var(--nav-h);
+      height:2px;z-index:10;overflow:hidden;
+      background:var(--ink4);
+    }
+    .process-progress-fill{
+      height:100%;width:0%;
+      background:linear-gradient(90deg,var(--neon-h),var(--neon));
+      transition:width .1s linear;
+    }
+    .process-inner{padding:72px 0 0}
     .process-grid{
       display:grid;grid-template-columns:repeat(3,1fr);
       position:relative;gap:0;
@@ -730,7 +746,7 @@
       100%{left:100%;opacity:0}
     }
     .process-line{
-      position:absolute;top:50%;height:1px;
+      position:absolute;top:50%;height:2px;
       left:33.33%;right:33.33%;
       background:linear-gradient(90deg,transparent,var(--neon) 20%,var(--neon) 80%,transparent);
       transform:scaleX(0) translateY(-50%);transform-origin:left;
@@ -741,9 +757,9 @@
     .process-line::after{
       content:'';
       position:absolute;top:50%;
-      width:8px;height:8px;border-radius:50%;
+      width:12px;height:12px;border-radius:50%;
       background:var(--neon);
-      box-shadow:0 0 12px var(--neon),0 0 24px rgba(196,241,44,.5);
+      box-shadow:0 0 16px var(--neon),0 0 32px rgba(196,241,44,.5);
       transform:translateY(-50%);
       opacity:0;
     }
@@ -919,6 +935,11 @@
       position:relative;
     }
     .why-feat:last-child{border-bottom:1px solid var(--ink4)}
+    /* row 3 full-width */
+    .why-feat--full{grid-template-columns:1fr;text-align:center}
+    .why-feat--full .wf-body{max-width:600px;margin:0 auto}
+    .why-feat--full .roi-tiles{justify-content:center;margin-top:36px}
+    .why-feat--full .roi-tile{max-width:160px}
     /* text body */
     .wf-kicker{font-family:var(--font-mo);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--neon-h);margin-bottom:10px;display:block}
     .wf-title{font-size:clamp(21px,2.6vw,30px);font-weight:800;color:var(--ink);letter-spacing:-.025em;line-height:1.18;margin-bottom:12px}
@@ -1083,8 +1104,9 @@
       .hamburger{display:block}
       .services-grid,.process-grid{grid-template-columns:1fr}
       .stats-grid{grid-template-columns:1fr 1fr}
-      .svc-card,.process-step{border-left:none;border-top:1px solid rgba(196,241,44,.10)}
-      .svc-card:first-child,.process-step:first-child{border-top:none}
+      .services-grid{gap:12px}
+      .process-step{border-left:none;border-top:1px solid rgba(196,241,44,.10)}
+      .process-step:first-child{border-top:none}
       .why-feat{grid-template-columns:1fr;gap:28px;padding:36px 0}
       .wf-visual{min-height:auto}
       .roi-tiles{flex-wrap:wrap}
@@ -1515,6 +1537,12 @@
      PROCESS
 ═══════════════════════════════════════ -->
 <section class="process" id="process">
+  <!-- sticky scroll progress bar -->
+  <div class="process-progress" id="processProgress" aria-hidden="true">
+    <div class="process-progress-fill" id="processProgressFill"></div>
+  </div>
+
+  <div class="process-inner">
   <div class="container">
     <div class="sec-header reveal">
       <span class="tag">// process &middot; 3 steps</span>
@@ -1637,6 +1665,7 @@
 
     </div>
   </div>
+  </div><!-- /process-inner -->
 </section>
 
 <!-- ═══════════════════════════════════════
@@ -1754,16 +1783,9 @@
         </div>
       </div>
 
-      <!-- ── Row 2: Custom — Generic vs Tailored ── -->
+      <!-- ── Row 2: Custom — Generic vs Tailored (zigzag: visual-right / text-left) ── -->
       <div class="why-feat reveal" style="transition-delay:.1s">
-        <div class="wf-body">
-          <span class="wf-kicker">// tailored to you</span>
-          <h3 class="wf-title">חליפה תפורה למידותיכם</h3>
-          <p class="wf-desc">
-            אין פתרונות מדף גנריים. כל מערכת מידע, תהליך אוטומציה או סדנה נתפרים
-            באופן ייעודי לתהליכים הייחודיים ולמטרות של הארגון שלכם.
-          </p>
-        </div>
+        <!-- visual first → goes to right column in RTL grid -->
         <div class="wf-visual" aria-hidden="true">
           <div class="bespoke">
             <div class="bsp-no"><span class="bsp-x">✗</span> Generic off-the-shelf</div>
@@ -1774,32 +1796,39 @@
             <div class="bsp-yes"><span class="bsp-ck">✓</span> Your processes. Your goals.</div>
           </div>
         </div>
+        <!-- body second → goes to left column in RTL grid -->
+        <div class="wf-body">
+          <span class="wf-kicker">// tailored to you</span>
+          <h3 class="wf-title">חליפה תפורה למידותיכם</h3>
+          <p class="wf-desc">
+            אין פתרונות מדף גנריים. כל מערכת מידע, תהליך אוטומציה או סדנה נתפרים
+            באופן ייעודי לתהליכים הייחודיים ולמטרות של הארגון שלכם.
+          </p>
+        </div>
       </div>
 
-      <!-- ── Row 3: ROI — Concrete Metrics ── -->
-      <div class="why-feat reveal" style="transition-delay:.2s">
+      <!-- ── Row 3: ROI — full-width centered ── -->
+      <div class="why-feat why-feat--full reveal" style="transition-delay:.2s">
         <div class="wf-body">
           <span class="wf-kicker">// measurable results</span>
-          <h3 class="wf-title">שורה תחתונה ברורה</h3>
+          <h3 class="wf-title" style="font-size:clamp(26px,3.5vw,42px)">שורה תחתונה מדידה.<br/>ROI שניתן למדוד.</h3>
           <p class="wf-desc">
-            מעבר לטכנולוגיה מתקדמת חייב לייצר ROI. מתמקדים בפתרונות שמייצרים
+            מעבר לטכנולוגיה מתקדמת חייב לייצר תוצאות אמיתיות. מתמקדים בפתרונות שמייצרים
             חיסכון מדיד בשעות אדם, שיפור השירות ללקוח הקצה ועלייה בתפוקה.
           </p>
         </div>
-        <div class="wf-visual" aria-hidden="true">
-          <div class="roi-tiles">
-            <div class="roi-tile">
-              <span class="roi-val">300h</span>
-              <span class="roi-lbl">חיסכון<br/>לחודש</span>
-            </div>
-            <div class="roi-tile">
-              <span class="roi-val">+40%</span>
-              <span class="roi-lbl">עלייה<br/>בתפוקה</span>
-            </div>
-            <div class="roi-tile">
-              <span class="roi-val">×3</span>
-              <span class="roi-lbl">ROI<br/>מוכח</span>
-            </div>
+        <div class="roi-tiles" style="margin-top:36px;justify-content:center;flex-wrap:wrap">
+          <div class="roi-tile" style="min-width:140px">
+            <span class="roi-val" style="font-size:42px">300h</span>
+            <span class="roi-lbl">חיסכון<br/>לחודש</span>
+          </div>
+          <div class="roi-tile" style="min-width:140px">
+            <span class="roi-val" style="font-size:42px">+40%</span>
+            <span class="roi-lbl">עלייה<br/>בתפוקה</span>
+          </div>
+          <div class="roi-tile" style="min-width:140px">
+            <span class="roi-val" style="font-size:42px">×3</span>
+            <span class="roi-lbl">ROI<br/>מוכח</span>
           </div>
         </div>
       </div>
@@ -1955,6 +1984,10 @@ if(document.readyState === 'loading'){
     document.addEventListener('mousemove', e=>{
       mx=e.clientX; my=e.clientY;
       dot.style.left=mx+'px'; dot.style.top=my+'px';
+      // hide cursor over form fields
+      const isField = e.target.matches('input,textarea,select,[contenteditable]');
+      dot.style.opacity  = isField ? '0' : '1';
+      ring.style.opacity = isField ? '0' : '1';
     });
     (function animRing(){
       rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
@@ -2193,6 +2226,23 @@ if(document.readyState === 'loading'){
       pObs.observe(pGrid);
     }
     checkProcessLine();
+  }
+
+  /* ─── Process scroll progress bar ─── */
+  const procSection=document.getElementById('process');
+  const procFill=document.getElementById('processProgressFill');
+  if(procSection && procFill && !prefersReduced){
+    window.addEventListener('scroll',()=>{
+      const r=procSection.getBoundingClientRect();
+      const sectionH=procSection.offsetHeight;
+      const vh=window.innerHeight;
+      // how far we've scrolled INTO the section
+      const scrolled = -r.top;
+      const total = sectionH - vh;
+      if(total <= 0) return;
+      const pct = Math.min(Math.max(scrolled/total*100,0),100);
+      procFill.style.width = pct+'%';
+    },{passive:true});
   }
 
   /* ─── Contact Form ─── */
