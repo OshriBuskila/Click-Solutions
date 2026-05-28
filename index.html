@@ -237,45 +237,37 @@
       position:relative;overflow:hidden;
       background:#0A0A0A;display:flex;align-items:center;
     }
-    #hero-canvas{position:absolute;inset:0;width:100%;height:100%}
-    .hero-bg-net{
-      position:absolute;inset:0;width:100%;height:100%;
-      pointer-events:none;z-index:1;
-      opacity:.18; /* subtle — video carries the left-side visual */
-    }
-    /* gentle pulse for AI hub */
+    /* canvas + SVG network disabled — clashes with video bg (kept for later use) */
+    #hero-canvas{display:none!important}
+    .hero-bg-net{display:none!important}
+    #hero-glow{display:none!important}
+    /* animations preserved below in case we re-enable */
     @keyframes hubPulse{0%,100%{opacity:.55}50%{opacity:1}}
     @keyframes hubGlow{0%,100%{opacity:.45}50%{opacity:1}}
-    .hbn-hub-ring{animation:hubPulse 4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-    .hbn-hub-glow{animation:hubGlow 4s ease-in-out infinite}
-    @media(prefers-reduced-motion:reduce){
-      .hero-bg-net .bg-flow{display:none}
-      .hbn-hub-ring,.hbn-hub-glow{animation:none}
-    }
-    /* dim background icons on small screens so they don't crowd mobile hero */
-    @media(max-width:760px){.hero-bg-net{opacity:.55}}
 
     /* ═══════════════════════════════════════
-       HERO VIDEO — ambient looping background
+       HERO VIDEO — centred looping background
     ═══════════════════════════════════════ */
     .hero-video-bg{
-      /* Sit in the LEFT half of the hero so the title area is always clean */
       position:absolute;
-      top:0;left:0;
-      width:58%;       /* left 58% of hero */
-      height:100%;
-      pointer-events:none;z-index:0.8;
-      /* contain: show full 16:9 frame — no cropping, full workflow diagram visible */
-      object-fit:contain;
-      object-position:left top;
-      opacity:.38;
-      /* simple right-edge fade toward title zone */
-      -webkit-mask-image:linear-gradient(to right, black 55%, rgba(0,0,0,.2) 80%, transparent 96%);
-              mask-image:linear-gradient(to right, black 55%, rgba(0,0,0,.2) 80%, transparent 96%);
+      top:50%;left:50%;
+      transform:translate(-50%,-50%);
+      /* 16:9 panel — fills ~80% of hero width */
+      width:82%;
+      aspect-ratio:16/9;
+      pointer-events:none;z-index:1;
+      object-fit:cover;
+      opacity:.44;
+      /* radial vignette — centre shifted left (38%) so right edge fades
+         faster, protecting the RTL headline zone */
+      -webkit-mask-image:radial-gradient(ellipse 88% 85% at 38% 50%,
+        black 22%, rgba(0,0,0,.7) 48%, rgba(0,0,0,.15) 68%, transparent 85%);
+              mask-image:radial-gradient(ellipse 88% 85% at 38% 50%,
+        black 22%, rgba(0,0,0,.7) 48%, rgba(0,0,0,.15) 68%, transparent 85%);
       will-change:opacity;
     }
     @media(max-width:760px){
-      .hero-video-bg{width:100%;opacity:.18}
+      .hero-video-bg{width:100%;opacity:.22}
     }
     @media(prefers-reduced-motion:reduce){
       .hero-video-bg{opacity:0}
