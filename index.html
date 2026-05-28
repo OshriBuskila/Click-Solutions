@@ -192,12 +192,13 @@
       font-size:22px;letter-spacing:-.05em;
       color:var(--fg);flex-shrink:0;
       transition:color .3s;
+      direction:ltr; /* keep cursor on right side of English text */
     }
     .navbar.light .logo{color:var(--ink)}
     .logo-cursor{
       display:inline-block;width:13px;height:7px;
       background:var(--neon);
-      margin-right:3px;margin-bottom:2px;vertical-align:baseline;
+      margin-left:3px;margin-bottom:2px;vertical-align:baseline;
       animation:blink 1.1s step-start infinite;
     }
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -237,6 +238,12 @@
       background:#0A0A0A;display:flex;align-items:center;
     }
     #hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+    .hero-bg-net{
+      position:absolute;inset:0;width:100%;height:100%;
+      pointer-events:none;z-index:1;
+      opacity:.85; /* slight dim so it doesn't overpower particles */
+    }
+    @media(prefers-reduced-motion:reduce){.hero-bg-net circle[r="2"],.hero-bg-net circle[r="1.8"]{display:none}}
 
     /* gradient mesh */
     .hero-mesh{
@@ -431,201 +438,142 @@
     }
 
     /* ═══════════════════════════════════════
-       STATS COUNTERS
+       SERVICE SECTIONS (3 dedicated)
     ═══════════════════════════════════════ */
-    .stats{background:var(--paper);padding:72px 0;border-top:1px solid var(--ink4)}
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--ink4)}
-    .stat-item{
-      padding:32px 28px;
-      border-left:1px solid var(--ink4);
-      position:relative;overflow:hidden;
-      transition:background .3s;
-    }
-    .stat-item:last-child{border-left:none}
-    .stat-item:hover{background:rgba(196,241,44,.06)}
-    .stat-item::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:2px;
-      background:var(--neon);
-      transform:scaleX(0);transform-origin:right;
-      transition:transform .5s var(--ease);
-    }
-    .stat-item:hover::before{transform:scaleX(1);transform-origin:left}
-    @keyframes statGlow{
-      0%{text-shadow:none}
-      50%{text-shadow:0 0 24px rgba(196,241,44,.6),0 0 48px rgba(196,241,44,.3)}
-      100%{text-shadow:0 0 12px rgba(196,241,44,.25)}
-    }
-    .stat-num{
-      font-family:var(--font-en);font-size:52px;font-weight:300;
-      letter-spacing:-.05em;color:var(--ink);line-height:1;
-      margin-bottom:8px;
-      transition:text-shadow .3s;
-      font-feature-settings:"tnum";
-    }
-    .stat-num.counted{animation:statGlow 1.2s var(--ease) forwards}
-    .stat-num span{color:var(--neon-h);font-size:.75em;vertical-align:super;line-height:0}
-    .stat-label{font-size:14px;color:var(--ink2);font-weight:500}
-    .stat-sub{font-family:var(--font-mo);font-size:10px;color:var(--ink3);margin-top:4px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
-    /* sparklines */
-    .stat-sparkline{display:block;margin-top:10px;width:60px;height:16px;overflow:visible}
-    .spark-line{fill:none;stroke:var(--neon-h);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-    .spark-dot{fill:var(--neon);stroke:none}
-    /* live ticker */
-    .stats-ticker{
-      display:flex;align-items:center;gap:8px;
-      margin-bottom:20px;
-      font-family:var(--font-mo);font-size:9px;letter-spacing:1.5px;
-      text-transform:uppercase;color:var(--ink3);
-    }
-    .stats-ticker-dot{
-      width:6px;height:6px;border-radius:50%;
-      background:var(--neon-h);flex-shrink:0;
-      animation:livePulse 1.8s ease-in-out infinite;
-    }
-    .stat-live-dot{
-      width:6px;height:6px;border-radius:50%;
-      background:var(--neon-h);flex-shrink:0;
-      animation:livePulse 1.8s ease-in-out infinite;
-      display:inline-block;
-    }
-
-    /* ═══════════════════════════════════════
-       SERVICES (dark)
-    ═══════════════════════════════════════ */
-    .services{background:#111111;padding:92px 0;border-top:1px solid var(--fg4)}
+    /* shared section chrome */
     .sec-header{margin-bottom:52px}
     .section-title{
       font-family:var(--font-he);font-weight:900;
       font-size:clamp(30px,4vw,50px);
-      line-height:1.06;letter-spacing:-.025em;
-      margin-bottom:14px;
+      line-height:1.06;letter-spacing:-.025em;margin-bottom:14px;
     }
     .section-title--light{color:var(--fg)}
     .section-sub{font-size:17px;line-height:1.75;max-width:560px;margin-bottom:0}
     .section-sub--light{color:var(--fg2)}
 
-    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;overflow:visible}
-    .svc-card{
-      padding:34px 30px;
-      border:1px solid rgba(196,241,44,.10);
-      position:relative;overflow:hidden;
-      transition:background .35s var(--ease),transform .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease);
-      transform-style:preserve-3d;
-      will-change:transform;
+    /* ── shared 2-col layout ── */
+    .svc-section{padding:100px 0;position:relative;overflow:hidden}
+    .svc-section--paper{background:var(--paper);border-top:1px solid var(--ink4)}
+    .svc-section--dark{background:var(--ink);border-top:1px solid rgba(196,241,44,.08)}
+    .svc-section--deep{background:#0C0C0C;border-top:1px solid rgba(196,241,44,.06)}
+    .svc-2col{
+      display:grid;grid-template-columns:1fr 1fr;
+      gap:clamp(40px,6vw,88px);align-items:center;
     }
-    .svc-card::before{
-      content:'';
-      position:absolute;inset:0;
-      background:linear-gradient(135deg,rgba(196,241,44,.06) 0%,transparent 60%);
-      opacity:0;transition:opacity .35s;
+    .svc-2col--rev .svc-text{order:2}
+    .svc-2col--rev .svc-vis{order:1}
+    .svc-kicker{
+      font-family:var(--font-mo);font-size:9px;letter-spacing:2.5px;
+      text-transform:uppercase;color:var(--neon-h);margin-bottom:14px;display:block;
     }
-    .svc-card:hover::before{opacity:1}
-    .svc-card::after{
-      content:'';
-      position:absolute;top:0;left:0;right:0;height:2px;
-      background:linear-gradient(90deg,transparent,var(--neon),transparent);
-      transform:scaleX(0);
-      transition:transform .5s var(--ease);
+    .svc-h2{
+      font-family:var(--font-he);font-weight:900;
+      font-size:clamp(26px,3.2vw,44px);
+      letter-spacing:-.025em;line-height:1.1;margin-bottom:16px;
     }
-    .svc-card:hover::after{transform:scaleX(1)}
-    .svc-card:hover{
-      background:rgba(196,241,44,.04);
-      border-color:rgba(196,241,44,.35);
-      box-shadow:0 8px 40px rgba(196,241,44,.08),0 0 60px rgba(196,241,44,.05) inset;
-      transform:translateY(-5px);
+    .svc-section--paper .svc-h2{color:var(--ink)}
+    .svc-section--dark .svc-h2,.svc-section--deep .svc-h2{color:var(--fg)}
+    .svc-p{font-size:15px;line-height:1.78;max-width:460px;margin-bottom:24px}
+    .svc-section--paper .svc-p{color:var(--ink2)}
+    .svc-section--dark .svc-p,.svc-section--deep .svc-p{color:var(--fg2)}
+    .svc-feats{display:flex;flex-direction:column;gap:9px;margin-bottom:28px}
+    .svc-feat{display:flex;gap:11px;align-items:flex-start;font-size:14px;line-height:1.5}
+    .svc-section--paper .svc-feat{color:var(--ink2)}
+    .svc-section--dark .svc-feat,.svc-section--deep .svc-feat{color:var(--fg2)}
+    .svc-feat-dot{
+      width:5px;height:5px;background:var(--neon-h);border-radius:50%;
+      flex-shrink:0;margin-top:6px;
     }
-    .svc-title{font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--fg);margin-bottom:10px}
-    .svc-desc{font-size:14px;color:var(--fg2);line-height:1.7}
-    .svc-chip{
-      display:block;font-family:var(--font-mo);font-size:9px;
-      letter-spacing:1.5px;text-transform:uppercase;
-      color:rgba(196,241,44,.4);
-      margin-top:18px;border-top:1px solid rgba(196,241,44,.07);padding-top:12px;
+    .svc-badge-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .svc-badge{
+      font-family:var(--font-mo);font-size:8.5px;letter-spacing:1.5px;
+      text-transform:uppercase;border:1px solid rgba(196,241,44,.2);
+      color:rgba(196,241,44,.55);padding:5px 10px;
     }
+    .svc-vis{position:relative;min-height:360px;display:flex;align-items:center;justify-content:center}
 
-    /* ── Visual panel (top bleed on each service card) ── */
-    .svc-visual{
-      margin:-34px -30px 28px;
-      height:168px;overflow:hidden;position:relative;
-      background:#0D0D0D;
-      border-bottom:1px solid rgba(196,241,44,.08);
-    }
-    .svc-visual::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:28px;
-      background:linear-gradient(to bottom,transparent,#0D0D0D);
-      pointer-events:none;z-index:1;
-    }
+    /* ── Section 1: Training visual ── */
+    .train-svg{width:100%;max-width:480px;height:340px;display:block;overflow:visible}
+    .t-screen{fill:rgba(10,10,10,.04);stroke:rgba(10,10,10,.15);stroke-width:1.2}
+    .t-screen-hl{stroke:rgba(196,241,44,.25);stroke-width:.8;fill:none;stroke-dasharray:3 2}
+    .t-module{fill:#fff;stroke:var(--ink4);stroke-width:1}
+    .t-module-active{fill:rgba(196,241,44,.07);stroke:rgba(196,241,44,.35);stroke-width:1.2}
+    .t-module-text{font-family:'JetBrains Mono',monospace;font-size:7px;fill:rgba(10,10,10,.4);letter-spacing:.5px}
+    .t-module-label{font-family:'JetBrains Mono',monospace;font-size:6.5px;fill:rgba(196,241,44,.7);letter-spacing:1px;text-transform:uppercase}
+    .t-beam{stroke:rgba(196,241,44,.07);stroke-width:14;fill:none;stroke-linecap:round}
+    .t-beam-line{stroke:rgba(196,241,44,.18);stroke-width:.8;fill:none;stroke-dasharray:4 3}
+    .t-person-head{fill:none;stroke:rgba(10,10,10,.3);stroke-width:1.2}
+    .t-person-body{stroke:rgba(10,10,10,.18);stroke-width:1.2;fill:none;stroke-linecap:round}
+    .t-person-neon{stroke:rgba(196,241,44,.6);stroke-width:1.4;fill:none}
+    .t-check{stroke:var(--neon-h);stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .t-progress-bg{stroke:rgba(10,10,10,.08);stroke-width:2.5;fill:none;stroke-linecap:round}
+    .t-progress{stroke:var(--neon-h);stroke-width:2.5;fill:none;stroke-linecap:round}
+    .t-tag{fill:var(--paper);stroke:rgba(196,241,44,.25);stroke-width:.8}
+    .t-tag-text{font-family:'JetBrains Mono',monospace;font-size:7px;fill:rgba(196,241,44,.7);letter-spacing:.8px}
+    @keyframes tFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    .t-float{animation:tFloat 3.5s ease-in-out infinite}
+    .t-float2{animation:tFloat 4s ease-in-out infinite .6s}
+    .t-float3{animation:tFloat 3s ease-in-out infinite 1.2s}
 
-    /* ── Card 1: neural net SVG primitives ── */
-    .nn-label{
-      font-family:'JetBrains Mono',monospace;font-size:7px;
-      fill:rgba(250,250,247,.25);letter-spacing:1.5px;text-anchor:middle;
-    }
-    .synapse{stroke:rgba(196,241,44,.11);stroke-width:.8;fill:none}
-    .neuron{fill:#0D0D0D;stroke:rgba(196,241,44,.32);stroke-width:1.5}
-    .neuron--out{stroke:var(--neon);stroke-width:1.8;filter:drop-shadow(0 0 4px rgba(196,241,44,.5))}
+    /* ── Section 2: Automation node network ── */
+    .auto-svg{width:100%;height:340px;display:block;overflow:visible}
+    .a-edge{stroke:rgba(196,241,44,.10);stroke-width:1;fill:none;stroke-dasharray:5 4}
+    .a-edge--hi{stroke:rgba(196,241,44,.22);stroke-dasharray:6 3}
+    .a-node-outer{fill:none;stroke:rgba(196,241,44,.12);stroke-width:1;stroke-dasharray:3 3}
+    .a-node-core{fill:#0A0A0A;stroke:rgba(196,241,44,.28);stroke-width:1.5}
+    .a-node-core--hub{fill:rgba(196,241,44,.07);stroke:var(--neon-h);stroke-width:2;filter:drop-shadow(0 0 8px rgba(196,241,44,.3))}
+    .a-label{font-family:'JetBrains Mono',monospace;font-size:7.5px;text-anchor:middle;letter-spacing:.5px;fill:rgba(250,250,247,.4)}
+    .a-label--hub{fill:rgba(196,241,44,.85);font-size:8px;letter-spacing:1px}
+    .a-sublabel{font-family:'JetBrains Mono',monospace;font-size:6px;text-anchor:middle;fill:rgba(250,250,247,.22);letter-spacing:.3px}
+    .a-dot{fill:var(--neon)}
 
-    /* ── Card 2: automation pipeline ── */
-    .svc-visual--pipeline{
-      display:flex;flex-direction:column;justify-content:center;
-      padding:0 22px;direction:ltr;
-    }
-    .pipe-row{display:flex;align-items:center}
-    .pipe-node{
-      font-family:var(--font-mo);font-size:8.5px;
-      letter-spacing:1.5px;text-transform:uppercase;
-      color:rgba(196,241,44,.5);
-      border:1px solid rgba(196,241,44,.2);
-      padding:8px 11px;background:#0D0D0D;
-      position:relative;z-index:2;flex-shrink:0;white-space:nowrap;
-    }
-    .pipe-node--cap{
-      border-color:rgba(196,241,44,.5);color:var(--neon);
-      box-shadow:0 0 14px rgba(196,241,44,.15);
-    }
-    .pipe-edge{flex:1;height:1px;background:rgba(196,241,44,.12);position:relative;overflow:hidden}
-    .pipe-edge::after{
-      content:'';position:absolute;top:0;left:-60%;width:60%;height:1px;
-      background:linear-gradient(90deg,transparent,var(--neon),transparent);
-      animation:pipeEdge 2.4s ease-in-out infinite;
-    }
-    .pipe-edge:nth-child(2)::after{animation-delay:0s}
-    .pipe-edge:nth-child(4)::after{animation-delay:.8s}
-    @keyframes pipeEdge{0%{left:-60%}100%{left:100%}}
-    .pipe-stats{
-      display:flex;justify-content:space-around;
-      margin-top:14px;padding-top:12px;
-      border-top:1px solid rgba(196,241,44,.07);
-    }
-    .pipe-stat{display:flex;flex-direction:column;align-items:center;gap:3px}
-    .ps-val{font-family:var(--font-mo);font-size:14px;font-weight:700;color:var(--neon);letter-spacing:-.5px}
-    .ps-unit{font-family:var(--font-mo);font-size:7.5px;color:rgba(250,250,247,.28);letter-spacing:1px;text-transform:uppercase}
-
-    /* ── Card 3: code editor ── */
-    .svc-visual--code{
-      padding:14px 18px 10px;
-      font-family:var(--font-mo);font-size:10px;line-height:1.65;direction:ltr;
-    }
-    .code-bar{
-      display:flex;align-items:center;gap:5px;
-      margin-bottom:8px;padding-bottom:8px;
+    /* ── Section 3: Development visual ── */
+    .dev-split{display:grid;grid-template-columns:1.1fr .95fr;gap:14px;width:100%;max-width:520px;direction:ltr}
+    .dev-panel{background:#080808;border:1px solid rgba(196,241,44,.12);overflow:hidden}
+    .dev-topbar{
+      height:28px;background:#050505;
       border-bottom:1px solid rgba(196,241,44,.07);
+      display:flex;align-items:center;padding:0 10px;gap:5px;flex-shrink:0;
     }
-    .code-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-    .code-dot:nth-child(1){background:rgba(255,95,86,.45)}
-    .code-dot:nth-child(2){background:rgba(255,189,68,.45)}
-    .code-dot:nth-child(3){background:rgba(39,201,63,.45)}
-    .code-fname{font-size:9px;color:rgba(250,250,247,.25);letter-spacing:.5px;margin-left:auto}
-    .code-line{display:flex;gap:14px}
-    .cl-num{color:rgba(250,250,247,.15);user-select:none;min-width:14px;text-align:right;flex-shrink:0}
-    .c-kw{color:rgba(196,241,44,.85)}
-    .c-fn{color:rgba(130,200,255,.8)}
-    .c-attr{color:rgba(255,160,80,.8)}
-    .c-str{color:rgba(255,110,110,.75)}
-    .c-tx{color:rgba(250,250,247,.65)}
-    .c-cm{color:rgba(250,250,247,.22)}
-    .c-cur{display:inline-block;width:5px;height:10px;background:var(--neon);vertical-align:middle;animation:blink .9s step-end infinite}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    .dev-dot{width:7px;height:7px;border-radius:50%}
+    .dev-dot:nth-child(1){background:rgba(255,95,86,.4)}
+    .dev-dot:nth-child(2){background:rgba(255,189,68,.4)}
+    .dev-dot:nth-child(3){background:rgba(39,201,63,.4)}
+    .dev-fname{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:rgba(250,250,247,.2);margin-left:auto;letter-spacing:.3px}
+    .dev-code-body{padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:9.5px;line-height:1.7}
+    .d-ln{color:rgba(250,250,247,.12);user-select:none;display:inline-block;min-width:16px;text-align:right;margin-right:10px}
+    .d-kw{color:rgba(196,241,44,.8)}
+    .d-fn{color:rgba(130,200,255,.75)}
+    .d-attr{color:rgba(255,160,80,.75)}
+    .d-str{color:rgba(255,110,110,.7)}
+    .d-tx{color:rgba(250,250,247,.58)}
+    .d-cm{color:rgba(250,250,247,.2)}
+    .d-cur{display:inline-block;width:5px;height:9px;background:var(--neon);vertical-align:middle;animation:blink .9s step-end infinite}
+    /* wireframe panel */
+    .dev-wf-body{padding:8px 10px}
+    .dev-wf-nav{
+      height:20px;background:rgba(196,241,44,.03);
+      border-bottom:1px solid rgba(196,241,44,.05);
+      margin:-8px -10px 10px;padding:0 10px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .dev-nav-pill{height:5px;background:rgba(196,241,44,.12);flex:1}
+    .dev-nav-pill:first-child{background:rgba(196,241,44,.3);max-width:40px}
+    .dev-kpi-row{display:flex;gap:6px;margin-bottom:8px}
+    .dev-kpi{
+      flex:1;padding:5px 7px;
+      background:rgba(196,241,44,.03);border:1px solid rgba(196,241,44,.07);
+    }
+    .dev-kpi-val{font-family:'JetBrains Mono',monospace;font-size:9px;color:rgba(196,241,44,.55);display:block}
+    .dev-kpi-lbl{font-family:'JetBrains Mono',monospace;font-size:6.5px;color:rgba(250,250,247,.18);letter-spacing:.5px}
+    .dev-table{width:100%;border-collapse:collapse;margin-bottom:8px}
+    .dev-tr{height:9px}
+    .dev-tr:nth-child(odd) td{background:rgba(250,250,247,.04)}
+    .dev-tr td{border-bottom:1px solid rgba(250,250,247,.03);font-family:'JetBrains Mono',monospace;font-size:6px;color:rgba(250,250,247,.15);padding:0 3px}
+    .dev-chart{height:36px;display:block;width:100%;overflow:visible}
+    .dev-chart-area{fill:rgba(196,241,44,.05)}
+    .dev-chart-line{fill:none;stroke:rgba(196,241,44,.4);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    @keyframes spin{from{transform-origin:center;transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
     /* ═══════════════════════════════════════
        STACK MARQUEE
@@ -1306,11 +1254,17 @@
     @media(max-width:900px){
       .nav-links,.nav-phone,.nav-cta{display:none}
       .hamburger{display:block}
-      .services-grid,.process-grid{grid-template-columns:1fr}
-      .stats-grid{grid-template-columns:1fr 1fr}
-      .services-grid{gap:12px}
+      .process-grid{grid-template-columns:1fr}
       .process-step{border-left:none;border-top:1px solid rgba(196,241,44,.10)}
       .process-step:first-child{border-top:none}
+      /* service sections responsive */
+      .svc-2col{grid-template-columns:1fr;gap:40px}
+      .svc-2col--rev .svc-text{order:1}
+      .svc-2col--rev .svc-vis{order:2}
+      .svc-section{padding:72px 0}
+      .svc-vis{min-height:260px}
+      .dev-split{grid-template-columns:1fr}
+      .train-svg,.auto-svg{max-width:100%;height:260px}
       .why-feat{grid-template-columns:1fr;gap:28px;padding:36px 0}
       .wf-visual{min-height:auto}
       .roi-tiles{flex-wrap:wrap}
@@ -1384,6 +1338,107 @@
 ═══════════════════════════════════════ -->
 <section class="hero" id="hero">
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+  <!-- Atmospheric background: automation network + interface wireframes at very low opacity -->
+  <svg class="hero-bg-net" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- flow paths for animated particles -->
+      <path id="hbn1" d="M180,120 Q320,200 480,180"/>
+      <path id="hbn2" d="M480,180 Q640,160 780,240"/>
+      <path id="hbn3" d="M780,240 Q900,310 1060,290"/>
+      <path id="hbn4" d="M1060,290 Q1180,260 1300,340"/>
+      <path id="hbn5" d="M280,380 Q440,340 600,400"/>
+      <path id="hbn6" d="M600,400 Q760,460 920,420"/>
+      <path id="hbn7" d="M140,500 Q300,480 460,540"/>
+      <path id="hbn8" d="M920,120 Q1040,80 1160,150"/>
+      <path id="hbn9" d="M1060,290 Q980,400 920,420"/>
+    </defs>
+
+    <!-- automation network nodes -->
+    <circle cx="180" cy="120" r="5" fill="none" stroke="rgba(196,241,44,.12)" stroke-width="1"/>
+    <circle cx="180" cy="120" r="2" fill="rgba(196,241,44,.15)"/>
+    <circle cx="480" cy="180" r="6" fill="none" stroke="rgba(196,241,44,.14)" stroke-width="1"/>
+    <circle cx="480" cy="180" r="2.5" fill="rgba(196,241,44,.18)"/>
+    <circle cx="780" cy="240" r="5" fill="none" stroke="rgba(196,241,44,.10)" stroke-width="1"/>
+    <circle cx="780" cy="240" r="2" fill="rgba(196,241,44,.12)"/>
+    <circle cx="1060" cy="290" r="7" fill="none" stroke="rgba(196,241,44,.18)" stroke-width="1.2"/>
+    <circle cx="1060" cy="290" r="3" fill="rgba(196,241,44,.22)"/>
+    <circle cx="1300" cy="340" r="5" fill="none" stroke="rgba(196,241,44,.10)" stroke-width="1"/>
+    <circle cx="280" cy="380" r="5" fill="none" stroke="rgba(196,241,44,.10)" stroke-width="1"/>
+    <circle cx="600" cy="400" r="6" fill="none" stroke="rgba(196,241,44,.13)" stroke-width="1"/>
+    <circle cx="920" cy="420" r="6" fill="none" stroke="rgba(196,241,44,.13)" stroke-width="1"/>
+    <circle cx="140" cy="500" r="4" fill="none" stroke="rgba(196,241,44,.08)" stroke-width="1"/>
+    <circle cx="920" cy="120" r="5" fill="none" stroke="rgba(196,241,44,.12)" stroke-width="1"/>
+    <circle cx="1160" cy="150" r="5" fill="none" stroke="rgba(196,241,44,.12)" stroke-width="1"/>
+
+    <!-- connection edges -->
+    <path d="M180,120 Q320,200 480,180" fill="none" stroke="rgba(196,241,44,.07)" stroke-width=".8" stroke-dasharray="5 5"/>
+    <path d="M480,180 Q640,160 780,240" fill="none" stroke="rgba(196,241,44,.07)" stroke-width=".8" stroke-dasharray="5 5"/>
+    <path d="M780,240 Q900,310 1060,290" fill="none" stroke="rgba(196,241,44,.07)" stroke-width=".8" stroke-dasharray="5 5"/>
+    <path d="M1060,290 Q1180,260 1300,340" fill="none" stroke="rgba(196,241,44,.06)" stroke-width=".8" stroke-dasharray="5 5"/>
+    <path d="M280,380 Q440,340 600,400" fill="none" stroke="rgba(196,241,44,.06)" stroke-width=".8" stroke-dasharray="5 5"/>
+    <path d="M600,400 Q760,460 920,420" fill="none" stroke="rgba(196,241,44,.06)" stroke-width=".8" stroke-dasharray="5 5"/>
+    <path d="M140,500 Q300,480 460,540" fill="none" stroke="rgba(196,241,44,.05)" stroke-width=".8" stroke-dasharray="5 5"/>
+    <path d="M920,120 Q1040,80 1160,150" fill="none" stroke="rgba(196,241,44,.07)" stroke-width=".8" stroke-dasharray="5 5"/>
+    <path d="M1060,290 Q980,400 920,420" fill="none" stroke="rgba(196,241,44,.05)" stroke-width=".8" stroke-dasharray="4 6"/>
+    <!-- diagonal long connectors -->
+    <path d="M180,120 Q480,400 920,420" fill="none" stroke="rgba(196,241,44,.03)" stroke-width=".6"/>
+    <path d="M1160,150 Q1100,300 920,420" fill="none" stroke="rgba(196,241,44,.04)" stroke-width=".6"/>
+
+    <!-- abstract interface wireframes (very subtle) -->
+    <!-- browser/app frame top-right -->
+    <rect x="980" y="38" width="200" height="130" fill="none" stroke="rgba(196,241,44,.05)" stroke-width=".8"/>
+    <line x1="980" y1="55" x2="1180" y2="55" stroke="rgba(196,241,44,.05)" stroke-width=".8"/>
+    <rect x="992" y="62" width="80" height="12" fill="rgba(196,241,44,.025)" stroke="none"/>
+    <rect x="992" y="80" width="55" height="8" fill="rgba(196,241,44,.02)" stroke="none"/>
+    <rect x="992" y="94" width="70" height="8" fill="rgba(196,241,44,.02)" stroke="none"/>
+    <rect x="992" y="108" width="45" height="8" fill="rgba(196,241,44,.015)" stroke="none"/>
+    <rect x="1082" y="62" width="88" height="84" fill="rgba(196,241,44,.018)" stroke="rgba(196,241,44,.04)" stroke-width=".5"/>
+    <!-- mini chart inside -->
+    <polyline points="1090,136 1102,122 1114,126 1126,112 1138,108 1150,100 1162,96" fill="none" stroke="rgba(196,241,44,.08)" stroke-width=".8"/>
+
+    <!-- UI card bottom-left -->
+    <rect x="40" y="340" width="140" height="90" fill="none" stroke="rgba(196,241,44,.04)" stroke-width=".8"/>
+    <line x1="40" y1="355" x2="180" y2="355" stroke="rgba(196,241,44,.04)" stroke-width=".6"/>
+    <rect x="52" y="364" width="50" height="6" fill="rgba(196,241,44,.02)" stroke="none"/>
+    <rect x="52" y="376" width="35" height="6" fill="rgba(196,241,44,.015)" stroke="none"/>
+    <rect x="52" y="388" width="44" height="6" fill="rgba(196,241,44,.015)" stroke="none"/>
+    <rect x="110" y="362" width="58" height="58" fill="rgba(196,241,44,.015)" stroke="rgba(196,241,44,.03)" stroke-width=".5"/>
+
+    <!-- learning/knowledge element: nodes + radial -->
+    <circle cx="680" cy="580" r="24" fill="none" stroke="rgba(196,241,44,.05)" stroke-width=".8" stroke-dasharray="3 3"/>
+    <circle cx="680" cy="580" r="4" fill="rgba(196,241,44,.08)"/>
+    <line x1="680" y1="556" x2="680" y2="540" stroke="rgba(196,241,44,.05)" stroke-width=".7"/>
+    <line x1="704" y1="580" x2="720" y2="580" stroke="rgba(196,241,44,.05)" stroke-width=".7"/>
+    <line x1="695" y1="565" x2="706" y2="554" stroke="rgba(196,241,44,.04)" stroke-width=".7"/>
+    <line x1="656" y1="565" x2="645" y2="554" stroke="rgba(196,241,44,.04)" stroke-width=".7"/>
+    <circle cx="680" cy="538" r="4" fill="none" stroke="rgba(196,241,44,.07)" stroke-width=".8"/>
+    <circle cx="722" cy="580" r="3" fill="none" stroke="rgba(196,241,44,.06)" stroke-width=".7"/>
+    <circle cx="707" cy="552" r="3" fill="none" stroke="rgba(196,241,44,.06)" stroke-width=".7"/>
+
+    <!-- animated flow particles along network paths (very subtle) -->
+    <circle r="2" fill="rgba(196,241,44,.35)" opacity="0">
+      <animateMotion dur="5s" repeatCount="indefinite" begin="0s"><mpath href="#hbn1"/></animateMotion>
+      <animate attributeName="opacity" values="0;.35;.35;0" keyTimes="0;.1;.9;1" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="2" fill="rgba(196,241,44,.3)" opacity="0">
+      <animateMotion dur="5.5s" repeatCount="indefinite" begin="1s"><mpath href="#hbn2"/></animateMotion>
+      <animate attributeName="opacity" values="0;.3;.3;0" keyTimes="0;.1;.9;1" dur="5.5s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+    <circle r="1.8" fill="rgba(196,241,44,.28)" opacity="0">
+      <animateMotion dur="6s" repeatCount="indefinite" begin="2s"><mpath href="#hbn3"/></animateMotion>
+      <animate attributeName="opacity" values="0;.28;.28;0" keyTimes="0;.1;.9;1" dur="6s" repeatCount="indefinite" begin="2s"/>
+    </circle>
+    <circle r="1.8" fill="rgba(196,241,44,.25)" opacity="0">
+      <animateMotion dur="4.8s" repeatCount="indefinite" begin="1.5s"><mpath href="#hbn5"/></animateMotion>
+      <animate attributeName="opacity" values="0;.25;.25;0" keyTimes="0;.1;.9;1" dur="4.8s" repeatCount="indefinite" begin="1.5s"/>
+    </circle>
+    <circle r="1.8" fill="rgba(196,241,44,.25)" opacity="0">
+      <animateMotion dur="5.2s" repeatCount="indefinite" begin="3s"><mpath href="#hbn8"/></animateMotion>
+      <animate attributeName="opacity" values="0;.25;.25;0" keyTimes="0;.1;.9;1" dur="5.2s" repeatCount="indefinite" begin="3s"/>
+    </circle>
+  </svg>
+
   <div class="hero-mesh" aria-hidden="true"></div>
   <div id="hero-glow" aria-hidden="true"></div>
 
@@ -1454,198 +1509,467 @@
 </div>
 
 <!-- ═══════════════════════════════════════
-     STATS COUNTERS
+     SERVICE 1 — TRAINING
 ═══════════════════════════════════════ -->
-<section class="stats" id="stats">
+<section class="svc-section svc-section--paper" id="services" aria-labelledby="svc1-title">
   <div class="container">
-    <!-- live ticker -->
-    <div class="stats-ticker" aria-hidden="true">
-      <span class="stats-ticker-dot"></span>
-      <span class="stats-ticker-text">// live · last updated <span id="statsUpdated">just now</span></span>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-item reveal">
-        <div class="stat-num" data-target="50" data-suffix="+" id="stat0">0<span>+</span></div>
-        <div class="stat-label">ארגונים שינו את אופן עבודתם</div>
-        <div class="stat-sub">// clients</div>
-        <svg class="stat-sparkline" viewBox="0 0 60 16" aria-hidden="true"><polyline points="0,12 8,10 16,9 24,7 32,8 40,5 48,4 60,2" class="spark-line"/><circle cx="60" cy="2" r="2" class="spark-dot"/></svg>
-      </div>
-      <div class="stat-item reveal" style="transition-delay:.08s">
-        <div class="stat-num" data-target="200" data-suffix="+" id="stat1">0<span>+</span></div>
-        <div class="stat-label">אוטומציות הושקו בהצלחה</div>
-        <div class="stat-sub">// automations deployed</div>
-        <svg class="stat-sparkline" viewBox="0 0 60 16" aria-hidden="true"><polyline points="0,14 8,12 16,11 24,9 32,10 40,7 48,5 60,3" class="spark-line"/><circle cx="60" cy="3" r="2" class="spark-dot"/></svg>
-      </div>
-      <div class="stat-item reveal" style="transition-delay:.16s">
-        <div class="stat-num" data-target="30" data-suffix="+" id="stat2">0<span>+</span></div>
-        <div class="stat-label">שעות שבועיות נחסכות לכל לקוח</div>
-        <div class="stat-sub">// hrs/week saved</div>
-        <svg class="stat-sparkline" viewBox="0 0 60 16" aria-hidden="true"><polyline points="0,13 8,11 16,10 24,8 32,7 40,5 48,4 60,2" class="spark-line"/><circle cx="60" cy="2" r="2" class="spark-dot"/></svg>
-      </div>
-      <div class="stat-item reveal" style="transition-delay:.24s">
-        <div class="stat-num" data-target="98" data-suffix="%" id="stat3">0<span>%</span></div>
-        <div class="stat-label">שביעות רצון לקוחות</div>
-        <div class="stat-sub">
-          <span class="stat-live-dot" aria-hidden="true"></span>// satisfaction rate
+    <div class="svc-2col">
+
+      <!-- Text (right col in RTL) -->
+      <div class="svc-text reveal">
+        <span class="svc-kicker">// 01 &nbsp;·&nbsp; AI Training &amp; Advisory</span>
+        <h2 class="svc-h2" id="svc1-title">הדרכות, סדנאות<br/>וייעוץ AI</h2>
+        <p class="svc-p">
+          אנחנו מגיעים אליכם. סדנאות מעשיות, הכשרות מנהלים וסילבוסים הנתפרים
+          לתהליכי העבודה האמיתיים של הארגון — לא שקופיות גנריות.
+        </p>
+        <ul class="svc-feats" role="list">
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>ורקשופים חיים עם ChatGPT, Claude &amp; Gemini</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>סילבוס מותאם לכל מחלקה — שיווק, כספים, מכירות, R&amp;D</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>ליווי מנהלים: אסטרטגיית AI לארגון</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>מדידת פרודוקטיביות לפני ואחרי</li>
+        </ul>
+        <div class="svc-badge-row">
+          <span class="svc-badge">AI Strategy</span>
+          <span class="svc-badge">Live Workshops</span>
+          <span class="svc-badge">Hands-on</span>
         </div>
-        <svg class="stat-sparkline" viewBox="0 0 60 16" aria-hidden="true"><polyline points="0,10 8,9 16,8 24,9 32,7 40,8 48,6 60,5" class="spark-line"/><circle cx="60" cy="5" r="2" class="spark-dot"/></svg>
+        <a href="#contact" class="btn btn-primary" style="margin-top:28px;display:inline-flex">קבעו סדנה →</a>
       </div>
+
+      <!-- Visual (left col in RTL) -->
+      <div class="svc-vis reveal" style="transition-delay:.15s" aria-hidden="true">
+        <svg class="train-svg" viewBox="0 0 480 340" role="img" aria-label="אילוסטרציה של סדנת הדרכה">
+
+          <!-- background glow -->
+          <defs>
+            <radialGradient id="tGlow" cx="50%" cy="45%" r="50%">
+              <stop offset="0%" stop-color="rgba(196,241,44,.06)"/>
+              <stop offset="100%" stop-color="rgba(196,241,44,0)"/>
+            </radialGradient>
+            <path id="tb1" d="M240,200 Q200,160 160,130"/>
+            <path id="tb2" d="M240,200 Q240,155 240,120"/>
+            <path id="tb3" d="M240,200 Q280,160 320,130"/>
+            <path id="tb4" d="M240,200 Q170,170 120,155"/>
+            <path id="tb5" d="M240,200 Q310,170 360,155"/>
+          </defs>
+          <rect x="0" y="0" width="480" height="340" fill="url(#tGlow)"/>
+
+          <!-- Curriculum board -->
+          <rect x="60" y="18" width="360" height="148" rx="0" class="t-screen"/>
+          <line x1="60" y1="40" x2="420" y2="40" class="t-screen-hl"/>
+          <!-- board title -->
+          <text x="76" y="33" class="t-module-text" style="font-size:8px;fill:rgba(10,10,10,.3);letter-spacing:2px">CLICK AI CURRICULUM</text>
+          <rect x="420" y="22" width="24" height="14" rx="0" class="t-module-active"/>
+          <text x="432" y="31" class="t-module-label" style="text-anchor:middle">LIVE</text>
+
+          <!-- Module grid: row 1 -->
+          <rect x="76"  y="50" width="96" height="44" class="t-module-active"/>
+          <text x="88"  y="65" class="t-module-label">MODULE 01</text>
+          <text x="88"  y="78" class="t-module-text">ChatGPT Basics</text>
+          <polyline points="96,86 102,92 112,82" class="t-check"/>
+
+          <rect x="182" y="50" width="96" height="44" class="t-module-active"/>
+          <text x="194" y="65" class="t-module-label">MODULE 02</text>
+          <text x="194" y="78" class="t-module-text">Prompt Engineering</text>
+          <polyline points="202,86 208,92 218,82" class="t-check"/>
+
+          <rect x="288" y="50" width="96" height="44" class="t-module"/>
+          <text x="300" y="65" class="t-module-label" style="fill:rgba(10,10,10,.25)">MODULE 03</text>
+          <text x="300" y="78" class="t-module-text">AI for Workflows</text>
+          <!-- progress bar module 3 -->
+          <line x1="302" y1="87" x2="374" y2="87" class="t-progress-bg"/>
+          <line x1="302" y1="87" x2="344" y2="87" class="t-progress"/>
+
+          <!-- Module grid: row 2 -->
+          <rect x="76"  y="104" width="96" height="44" class="t-module"/>
+          <text x="88"  y="119" class="t-module-label" style="fill:rgba(10,10,10,.2)">MODULE 04</text>
+          <text x="88"  y="132" class="t-module-text">Automation AI</text>
+          <line x1="90" y1="141" x2="162" y2="141" class="t-progress-bg"/>
+          <line x1="90" y1="141" x2="117" y2="141" class="t-progress" style="stroke:rgba(196,241,44,.35)"/>
+
+          <rect x="182" y="104" width="96" height="44" class="t-module"/>
+          <text x="194" y="119" class="t-module-label" style="fill:rgba(10,10,10,.2)">MODULE 05</text>
+          <text x="194" y="132" class="t-module-text">AI + CRM</text>
+          <line x1="196" y1="141" x2="268" y2="141" class="t-progress-bg"/>
+
+          <rect x="288" y="104" width="96" height="44" class="t-module"/>
+          <text x="300" y="119" class="t-module-label" style="fill:rgba(10,10,10,.2)">MODULE 06</text>
+          <text x="300" y="132" class="t-module-text">Measurement</text>
+
+          <!-- beam light (soft glow from screen to trainer) -->
+          <path d="M150,166 L200,210" class="t-beam"/>
+          <path d="M240,166 L240,205" class="t-beam"/>
+          <path d="M330,166 L280,210" class="t-beam"/>
+
+          <!-- Instructor figure -->
+          <circle cx="240" cy="218" r="14" class="t-person-neon"/>
+          <line x1="240" y1="232" x2="240" y2="265" class="t-person-neon" stroke-width="2"/>
+          <line x1="216" y1="248" x2="264" y2="248" class="t-person-neon" stroke-width="1.8"/>
+          <line x1="240" y1="265" x2="224" y2="290" class="t-person-neon" stroke-width="1.8"/>
+          <line x1="240" y1="265" x2="256" y2="290" class="t-person-neon" stroke-width="1.8"/>
+
+          <!-- beam lines to students -->
+          <path d="M225,230 Q200,248 168,252" class="t-beam-line"/>
+          <path d="M240,232 Q240,252 240,260" class="t-beam-line"/>
+          <path d="M255,230 Q278,248 312,252" class="t-beam-line"/>
+          <path d="M220,235 Q182,252 148,262" class="t-beam-line" style="opacity:.5"/>
+          <path d="M260,235 Q298,252 332,262" class="t-beam-line" style="opacity:.5"/>
+
+          <!-- Student figures: 5 students -->
+          <g class="t-float">
+            <circle cx="130" cy="278" r="9" class="t-person-head"/>
+            <line x1="130" y1="287" x2="130" y2="308" class="t-person-body"/>
+            <line x1="115" y1="295" x2="145" y2="295" class="t-person-body"/>
+          </g>
+          <g class="t-float2">
+            <circle cx="178" cy="272" r="9" class="t-person-head"/>
+            <line x1="178" y1="281" x2="178" y2="302" class="t-person-body"/>
+            <line x1="163" y1="289" x2="193" y2="289" class="t-person-body"/>
+          </g>
+          <g>
+            <circle cx="240" cy="278" r="9" class="t-person-head"/>
+            <line x1="240" y1="287" x2="240" y2="308" class="t-person-body"/>
+            <line x1="225" y1="295" x2="255" y2="295" class="t-person-body"/>
+          </g>
+          <g class="t-float3">
+            <circle cx="302" cy="272" r="9" class="t-person-head"/>
+            <line x1="302" y1="281" x2="302" y2="302" class="t-person-body"/>
+            <line x1="287" y1="289" x2="317" y2="289" class="t-person-body"/>
+          </g>
+          <g class="t-float">
+            <circle cx="350" cy="278" r="9" class="t-person-head"/>
+            <line x1="350" y1="287" x2="350" y2="308" class="t-person-body"/>
+            <line x1="335" y1="295" x2="365" y2="295" class="t-person-body"/>
+          </g>
+
+          <!-- Animated knowledge particles from instructor to students -->
+          <circle r="2.2" fill="#C4F12C" opacity="0">
+            <animateMotion dur="1.8s" repeatCount="indefinite" begin="0s"><mpath href="#tb1"/></animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.9;1" dur="1.8s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="2.2" fill="#C4F12C" opacity="0">
+            <animateMotion dur="1.6s" repeatCount="indefinite" begin=".4s"><mpath href="#tb2"/></animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.9;1" dur="1.6s" repeatCount="indefinite" begin=".4s"/>
+          </circle>
+          <circle r="2.2" fill="#C4F12C" opacity="0">
+            <animateMotion dur="1.9s" repeatCount="indefinite" begin=".8s"><mpath href="#tb3"/></animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.1;.9;1" dur="1.9s" repeatCount="indefinite" begin=".8s"/>
+          </circle>
+          <circle r="1.8" fill="#A4D612" opacity="0">
+            <animateMotion dur="2.2s" repeatCount="indefinite" begin="1.1s"><mpath href="#tb4"/></animateMotion>
+            <animate attributeName="opacity" values="0;.7;.7;0" keyTimes="0;.1;.9;1" dur="2.2s" repeatCount="indefinite" begin="1.1s"/>
+          </circle>
+          <circle r="1.8" fill="#A4D612" opacity="0">
+            <animateMotion dur="2s" repeatCount="indefinite" begin="1.5s"><mpath href="#tb5"/></animateMotion>
+            <animate attributeName="opacity" values="0;.7;.7;0" keyTimes="0;.1;.9;1" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+          </circle>
+
+          <!-- Floating tool tags -->
+          <g class="t-float" style="animation-duration:4s">
+            <rect x="22" y="120" width="54" height="18" class="t-tag"/>
+            <text x="49" y="131" class="t-tag-text" style="text-anchor:middle">GPT-4o</text>
+          </g>
+          <g class="t-float2" style="animation-duration:3.8s">
+            <rect x="404" y="108" width="52" height="18" class="t-tag"/>
+            <text x="430" y="119" class="t-tag-text" style="text-anchor:middle">Claude</text>
+          </g>
+          <g class="t-float3" style="animation-duration:4.2s">
+            <rect x="22" y="192" width="54" height="18" class="t-tag"/>
+            <text x="49" y="203" class="t-tag-text" style="text-anchor:middle">Gemini</text>
+          </g>
+          <g class="t-float" style="animation-duration:3.6s;animation-delay:.9s">
+            <rect x="404" y="180" width="56" height="18" class="t-tag"/>
+            <text x="432" y="191" class="t-tag-text" style="text-anchor:middle">Perplexity</text>
+          </g>
+
+        </svg>
+      </div>
+
     </div>
   </div>
 </section>
 
 <!-- ═══════════════════════════════════════
-     SERVICES
+     SERVICE 2 — AUTOMATION
 ═══════════════════════════════════════ -->
-<section class="services" id="services">
+<section class="svc-section svc-section--dark" id="svc-automation" aria-labelledby="svc2-title">
   <div class="container">
-    <div class="sec-header reveal">
-      <span class="tag tag--neon">// services &middot; 3</span>
-      <h2 class="section-title section-title--light">
-        מעטפת פתרונות שלמה<br/>שסוגרת לכם את הפינה.
-      </h2>
-      <p class="section-sub section-sub--light">
-        אנו פועלים בשלוש זרועות מרכזיות שנועדו להדריך, לייעל ולשדרג את הפעילות העסקית שלכם.
-      </p>
+    <div class="svc-2col svc-2col--rev">
+
+      <!-- Text (left col in RTL via --rev) -->
+      <div class="svc-text reveal">
+        <span class="svc-kicker">// 02 &nbsp;·&nbsp; Process Automation</span>
+        <h2 class="svc-h2" id="svc2-title">אוטומציות<br/>שמשחררות אתכם</h2>
+        <p class="svc-p">
+          כל משימה שחוזרת על עצמה — יכולה לרוץ לבד. אנחנו מחברים את המערכות שלכם
+          כך שמידע זורם אוטומטית, בלי טעויות, בלי שכחות, בלי צורך בהתעסקות.
+        </p>
+        <ul class="svc-feats" role="list">
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>חיבור CRM, דוא"ל, WhatsApp, גיליונות</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>סנכרון נתונים אוטומטי בין מערכות</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>צ'אטבוטים חכמים עם AI פנים-ארגוני</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>דוחות ועדכונים שמגיעים אליכם, לא להפך</li>
+        </ul>
+        <div class="svc-badge-row">
+          <span class="svc-badge">n8n / Make</span>
+          <span class="svc-badge">Zapier</span>
+          <span class="svc-badge">AI Agents</span>
+          <span class="svc-badge">API Integrations</span>
+        </div>
+        <a href="#contact" class="btn btn-primary" style="margin-top:28px;display:inline-flex">רוצה לחסוך שעות →</a>
+      </div>
+
+      <!-- Visual: animated node network -->
+      <div class="svc-vis reveal" style="transition-delay:.15s" aria-hidden="true">
+        <svg class="auto-svg" viewBox="0 0 480 340" role="img" aria-label="רשת אוטומציות מחוברת">
+          <defs>
+            <!-- paths from hub (240,170) to each satellite node -->
+            <path id="ae1" d="M240,170 Q300,135 360,100"/>
+            <path id="ae2" d="M240,170 Q320,170 390,170"/>
+            <path id="ae3" d="M240,170 Q300,205 360,240"/>
+            <path id="ae4" d="M240,170 Q240,240 240,310"/>
+            <path id="ae5" d="M240,170 Q180,205 120,240"/>
+            <path id="ae6" d="M240,170 Q160,170 90,170"/>
+            <path id="ae7" d="M240,170 Q180,135 120,100"/>
+            <path id="ae8" d="M240,170 Q240,100 240,30"/>
+            <!-- cross connections -->
+            <path id="ac1" d="M360,100 Q375,135 390,170"/>
+            <path id="ac2" d="M360,240 Q375,205 390,170"/>
+            <path id="ac3" d="M120,100 Q105,135 90,170"/>
+            <path id="ac4" d="M120,240 Q105,205 90,170"/>
+            <radialGradient id="hubGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(196,241,44,.25)"/>
+              <stop offset="100%" stop-color="rgba(196,241,44,0)"/>
+            </radialGradient>
+          </defs>
+
+          <!-- ambient hub glow -->
+          <circle cx="240" cy="170" r="70" fill="url(#hubGlow)"/>
+
+          <!-- edges hub → satellites -->
+          <path d="M240,170 Q300,135 360,100" class="a-edge a-edge--hi"/>
+          <path d="M240,170 Q320,170 390,170" class="a-edge a-edge--hi"/>
+          <path d="M240,170 Q300,205 360,240" class="a-edge"/>
+          <path d="M240,170 Q240,240 240,310" class="a-edge"/>
+          <path d="M240,170 Q180,205 120,240" class="a-edge"/>
+          <path d="M240,170 Q160,170 90,170" class="a-edge a-edge--hi"/>
+          <path d="M240,170 Q180,135 120,100" class="a-edge"/>
+          <path d="M240,170 Q240,100 240,30" class="a-edge a-edge--hi"/>
+          <!-- cross edges -->
+          <path d="M360,100 Q375,135 390,170" class="a-edge" style="opacity:.5"/>
+          <path d="M360,240 Q375,205 390,170" class="a-edge" style="opacity:.5"/>
+          <path d="M120,100 Q105,135 90,170" class="a-edge" style="opacity:.5"/>
+          <path d="M120,240 Q105,205 90,170" class="a-edge" style="opacity:.5"/>
+
+          <!-- satellite nodes -->
+          <!-- 1: CRM top-right (360,100) -->
+          <circle cx="360" cy="100" r="30" class="a-node-outer"/>
+          <circle cx="360" cy="100" r="22" class="a-node-core"/>
+          <text x="360" y="97" class="a-label">CRM</text>
+          <text x="360" y="107" class="a-sublabel">Salesforce</text>
+
+          <!-- 2: n8n/API right (390,170) -->
+          <circle cx="390" cy="170" r="26" class="a-node-outer"/>
+          <circle cx="390" cy="170" r="19" class="a-node-core"/>
+          <text x="390" y="167" class="a-label">n8n</text>
+          <text x="390" y="177" class="a-sublabel">Automation</text>
+
+          <!-- 3: WhatsApp bot-right (360,240) -->
+          <circle cx="360" cy="240" r="28" class="a-node-outer"/>
+          <circle cx="360" cy="240" r="20" class="a-node-core"/>
+          <text x="360" y="237" class="a-label">WA</text>
+          <text x="360" y="247" class="a-sublabel">WhatsApp</text>
+
+          <!-- 4: Sheets bottom (240,310) -->
+          <circle cx="240" cy="310" r="26" class="a-node-outer"/>
+          <circle cx="240" cy="310" r="19" class="a-node-core"/>
+          <text x="240" y="307" class="a-label">Sheets</text>
+          <text x="240" y="317" class="a-sublabel">Google</text>
+
+          <!-- 5: Slack bot-left (120,240) -->
+          <circle cx="120" cy="240" r="28" class="a-node-outer"/>
+          <circle cx="120" cy="240" r="20" class="a-node-core"/>
+          <text x="120" y="237" class="a-label">Slack</text>
+          <text x="120" y="247" class="a-sublabel">Messaging</text>
+
+          <!-- 6: Gmail left (90,170) -->
+          <circle cx="90" cy="170" r="26" class="a-node-outer"/>
+          <circle cx="90" cy="170" r="19" class="a-node-core"/>
+          <text x="90" y="167" class="a-label">Gmail</text>
+          <text x="90" y="177" class="a-sublabel">Email</text>
+
+          <!-- 7: Notion top-left (120,100) -->
+          <circle cx="120" cy="100" r="28" class="a-node-outer"/>
+          <circle cx="120" cy="100" r="20" class="a-node-core"/>
+          <text x="120" y="97" class="a-label">Notion</text>
+          <text x="120" y="107" class="a-sublabel">Docs</text>
+
+          <!-- 8: Calendar top (240,30) -->
+          <circle cx="240" cy="30" r="26" class="a-node-outer"/>
+          <circle cx="240" cy="30" r="19" class="a-node-core"/>
+          <text x="240" y="27" class="a-label">Cal</text>
+          <text x="240" y="37" class="a-sublabel">Calendar</text>
+
+          <!-- HUB: CLICK AI center -->
+          <circle cx="240" cy="170" r="44" class="a-node-outer" style="stroke-dasharray:2 2;animation:spin 18s linear infinite"/>
+          <circle cx="240" cy="170" r="34" class="a-node-core--hub"/>
+          <text x="240" y="166" class="a-label--hub" style="font-size:9px">CLICK</text>
+          <text x="240" y="178" class="a-label--hub" style="font-size:7px;fill:rgba(196,241,44,.5)">AI ENGINE</text>
+
+          <!-- Animated flowing dots — hub to satellites -->
+          <circle r="2.8" class="a-dot" opacity="0">
+            <animateMotion dur="2.2s" repeatCount="indefinite" begin="0s"><mpath href="#ae1"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.05;.15;.85;1" dur="2.2s" repeatCount="indefinite"/>
+          </circle>
+          <circle r="2.8" class="a-dot" opacity="0">
+            <animateMotion dur="2s" repeatCount="indefinite" begin=".3s"><mpath href="#ae2"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.05;.15;.85;1" dur="2s" repeatCount="indefinite" begin=".3s"/>
+          </circle>
+          <circle r="2.4" class="a-dot" opacity="0">
+            <animateMotion dur="2.4s" repeatCount="indefinite" begin=".7s"><mpath href="#ae3"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.05;.15;.85;1" dur="2.4s" repeatCount="indefinite" begin=".7s"/>
+          </circle>
+          <circle r="2.4" class="a-dot" opacity="0">
+            <animateMotion dur="2.6s" repeatCount="indefinite" begin="1.1s"><mpath href="#ae4"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.05;.15;.85;1" dur="2.6s" repeatCount="indefinite" begin="1.1s"/>
+          </circle>
+          <circle r="2.4" class="a-dot" opacity="0">
+            <animateMotion dur="2.3s" repeatCount="indefinite" begin="1.4s"><mpath href="#ae5"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.05;.15;.85;1" dur="2.3s" repeatCount="indefinite" begin="1.4s"/>
+          </circle>
+          <circle r="2.8" class="a-dot" opacity="0">
+            <animateMotion dur="2.1s" repeatCount="indefinite" begin="1.8s"><mpath href="#ae6"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.05;.15;.85;1" dur="2.1s" repeatCount="indefinite" begin="1.8s"/>
+          </circle>
+          <circle r="2.4" class="a-dot" opacity="0">
+            <animateMotion dur="2.5s" repeatCount="indefinite" begin="2.1s"><mpath href="#ae7"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.05;.15;.85;1" dur="2.5s" repeatCount="indefinite" begin="2.1s"/>
+          </circle>
+          <circle r="2.8" class="a-dot" opacity="0">
+            <animateMotion dur="1.9s" repeatCount="indefinite" begin="2.5s"><mpath href="#ae8"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.05;.15;.85;1" dur="1.9s" repeatCount="indefinite" begin="2.5s"/>
+          </circle>
+          <!-- return dots satellites → hub -->
+          <circle r="2" fill="rgba(164,214,18,.5)" opacity="0">
+            <animateMotion dur="2.2s" repeatCount="indefinite" begin="1s" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#ae2"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;.6;.6;0" keyTimes="0;.05;.15;.85;1" dur="2.2s" repeatCount="indefinite" begin="1s"/>
+          </circle>
+          <circle r="2" fill="rgba(164,214,18,.5)" opacity="0">
+            <animateMotion dur="2.5s" repeatCount="indefinite" begin="2s" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#ae6"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;.6;.6;0" keyTimes="0;.05;.15;.85;1" dur="2.5s" repeatCount="indefinite" begin="2s"/>
+          </circle>
+          <circle r="2" fill="rgba(164,214,18,.5)" opacity="0">
+            <animateMotion dur="2.8s" repeatCount="indefinite" begin="1.5s" keyPoints="1;0" keyTimes="0;1" calcMode="linear"><mpath href="#ae8"/></animateMotion>
+            <animate attributeName="opacity" values="0;0;.6;.6;0" keyTimes="0;.05;.15;.85;1" dur="2.8s" repeatCount="indefinite" begin="1.5s"/>
+          </circle>
+
+        </svg>
+      </div>
+
     </div>
+  </div>
+</section>
 
-    <div class="services-grid">
+<!-- ═══════════════════════════════════════
+     SERVICE 3 — DEVELOPMENT
+═══════════════════════════════════════ -->
+<section class="svc-section svc-section--deep" id="svc-dev" aria-labelledby="svc3-title">
+  <div class="container">
+    <div class="svc-2col">
 
-      <!-- ── Card 1: AI Neural Network ── -->
-      <div class="svc-card reveal" id="svc1">
-        <div class="svc-visual" aria-hidden="true">
-          <svg viewBox="0 0 260 148" style="width:100%;height:100%;display:block">
-            <defs>
-              <path id="sp1" d="M30,40 L130,58 L236,60"/>
-              <path id="sp2" d="M30,76 L130,84 L236,60"/>
-              <path id="sp3" d="M30,112 L130,32 L236,98"/>
-              <path id="sp4" d="M30,76 L130,110 L236,98"/>
-            </defs>
-            <!-- layer labels -->
-            <text x="30"  y="14" class="nn-label">INPUT</text>
-            <text x="130" y="14" class="nn-label">HIDDEN</text>
-            <text x="236" y="14" class="nn-label">OUTPUT</text>
-            <!-- synapses: input → hidden -->
-            <line x1="30" y1="40"  x2="124" y2="32"  class="synapse"/>
-            <line x1="30" y1="40"  x2="124" y2="58"  class="synapse"/>
-            <line x1="30" y1="40"  x2="124" y2="84"  class="synapse"/>
-            <line x1="30" y1="40"  x2="124" y2="110" class="synapse"/>
-            <line x1="30" y1="76"  x2="124" y2="32"  class="synapse"/>
-            <line x1="30" y1="76"  x2="124" y2="58"  class="synapse"/>
-            <line x1="30" y1="76"  x2="124" y2="84"  class="synapse"/>
-            <line x1="30" y1="76"  x2="124" y2="110" class="synapse"/>
-            <line x1="30" y1="112" x2="124" y2="32"  class="synapse"/>
-            <line x1="30" y1="112" x2="124" y2="58"  class="synapse"/>
-            <line x1="30" y1="112" x2="124" y2="84"  class="synapse"/>
-            <line x1="30" y1="112" x2="124" y2="110" class="synapse"/>
-            <!-- synapses: hidden → output -->
-            <line x1="136" y1="32"  x2="230" y2="60" class="synapse"/>
-            <line x1="136" y1="32"  x2="230" y2="98" class="synapse"/>
-            <line x1="136" y1="58"  x2="230" y2="60" class="synapse"/>
-            <line x1="136" y1="58"  x2="230" y2="98" class="synapse"/>
-            <line x1="136" y1="84"  x2="230" y2="60" class="synapse"/>
-            <line x1="136" y1="84"  x2="230" y2="98" class="synapse"/>
-            <line x1="136" y1="110" x2="230" y2="60" class="synapse"/>
-            <line x1="136" y1="110" x2="230" y2="98" class="synapse"/>
-            <!-- input neurons -->
-            <circle cx="30" cy="40"  r="7" class="neuron"/>
-            <circle cx="30" cy="76"  r="7" class="neuron"/>
-            <circle cx="30" cy="112" r="7" class="neuron"/>
-            <!-- hidden neurons -->
-            <circle cx="130" cy="32"  r="7" class="neuron"/>
-            <circle cx="130" cy="58"  r="7" class="neuron"/>
-            <circle cx="130" cy="84"  r="7" class="neuron"/>
-            <circle cx="130" cy="110" r="7" class="neuron"/>
-            <!-- output neurons (glowing) -->
-            <circle cx="236" cy="60" r="8" class="neuron neuron--out"/>
-            <circle cx="236" cy="98" r="8" class="neuron neuron--out"/>
-            <circle cx="236" cy="60" r="3" fill="rgba(196,241,44,.35)"/>
-            <circle cx="236" cy="98" r="3" fill="rgba(196,241,44,.35)"/>
-            <!-- animated signals -->
-            <circle r="2.5" fill="#C4F12C" opacity="0">
-              <animateMotion dur="2s" repeatCount="indefinite" begin="0s"><mpath href="#sp1"/></animateMotion>
-              <animate attributeName="opacity" values="0;0;1;1;1;0" keyTimes="0;.05;.12;.88;.95;1" dur="2s" repeatCount="indefinite" begin="0s"/>
-            </circle>
-            <circle r="2.5" fill="#C4F12C" opacity="0">
-              <animateMotion dur="2s" repeatCount="indefinite" begin=".5s"><mpath href="#sp2"/></animateMotion>
-              <animate attributeName="opacity" values="0;0;1;1;1;0" keyTimes="0;.05;.12;.88;.95;1" dur="2s" repeatCount="indefinite" begin=".5s"/>
-            </circle>
-            <circle r="2.5" fill="#C4F12C" opacity="0">
-              <animateMotion dur="2s" repeatCount="indefinite" begin="1s"><mpath href="#sp3"/></animateMotion>
-              <animate attributeName="opacity" values="0;0;1;1;1;0" keyTimes="0;.05;.12;.88;.95;1" dur="2s" repeatCount="indefinite" begin="1s"/>
-            </circle>
-            <circle r="2.5" fill="#C4F12C" opacity="0">
-              <animateMotion dur="2s" repeatCount="indefinite" begin="1.5s"><mpath href="#sp4"/></animateMotion>
-              <animate attributeName="opacity" values="0;0;1;1;1;0" keyTimes="0;.05;.12;.88;.95;1" dur="2s" repeatCount="indefinite" begin="1.5s"/>
-            </circle>
-          </svg>
-        </div>
-        <h3 class="svc-title">הדרכות, סדנאות וייעוץ AI</h3>
-        <p class="svc-desc">
-          העברת הרצאות, סדנאות מעשיות וייעוץ ממוקד למנהלים ועובדים. סילבוסים הנתפרים
-          במדויק לתהליכי העבודה של המחלקות השונות בארגון, מתוך הבנה ששילוב נכון של
-          כלי AI דורש הובלה מקצועית.
+      <!-- Text (right col in RTL) -->
+      <div class="svc-text reveal">
+        <span class="svc-kicker">// 03 &nbsp;·&nbsp; Interface &amp; Systems Dev</span>
+        <h2 class="svc-h2" id="svc3-title">פיתוח ממשקים<br/>ומערכות מותאמות</h2>
+        <p class="svc-p">
+          אתרים, דפי נחיתה, CRM פנים-ארגוני ואפליקציות שנבנות מאפס עם AI.
+          כל מסך, כל כפתור, כל תהליך — מדויקים לאיך שהעסק שלכם עובד.
         </p>
-        <span class="svc-chip">AI Training &amp; Advisory</span>
+        <ul class="svc-feats" role="list">
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>אתרי תדמית ודפי נחיתה ממירים</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>מערכות CRM ו-Dashboard פנים-ארגוניות</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>אינטגרציות API עם מערכות קיימות</li>
+          <li class="svc-feat"><span class="svc-feat-dot" aria-hidden="true"></span>ממשקי AI — צ'אטבוטים ועוזרים דיגיטליים</li>
+        </ul>
+        <div class="svc-badge-row">
+          <span class="svc-badge">React / Next.js</span>
+          <span class="svc-badge">AI UX</span>
+          <span class="svc-badge">CRM Dev</span>
+          <span class="svc-badge">API First</span>
+        </div>
+        <a href="#contact" class="btn btn-primary" style="margin-top:28px;display:inline-flex">שוחחו על הפרויקט →</a>
       </div>
 
-      <!-- ── Card 2: Automation Pipeline ── -->
-      <div class="svc-card reveal" id="svc2" style="transition-delay:.1s">
-        <div class="svc-visual svc-visual--pipeline" aria-hidden="true">
-          <div class="pipe-row">
-            <div class="pipe-node pipe-node--cap">TRIGGER</div>
-            <div class="pipe-edge"></div>
-            <div class="pipe-node">EXECUTE</div>
-            <div class="pipe-edge"></div>
-            <div class="pipe-node pipe-node--cap">DELIVER</div>
-          </div>
-          <div class="pipe-stats">
-            <div class="pipe-stat">
-              <span class="ps-val">247</span>
-              <span class="ps-unit">tasks/day</span>
-            </div>
-            <div class="pipe-stat">
-              <span class="ps-val">99.8%</span>
-              <span class="ps-unit">uptime</span>
-            </div>
-            <div class="pipe-stat">
-              <span class="ps-val">&lt;3ms</span>
-              <span class="ps-unit">latency</span>
-            </div>
-          </div>
-        </div>
-        <h3 class="svc-title">אוטומציות וייעול תהליכים</h3>
-        <p class="svc-desc">
-          חיסול "העבודה השחורה" ומשימות רוטיניות שוחקות. צ'אטבוטים חכמים, סנכרון בין
-          מערכות (CRM, דוא"ל, הנהלת חשבונות), ותהליכי זרימת מידע אוטומטיים המונעים
-          טעויות ומחסכים מאות שעות בחודש.
-        </p>
-        <span class="svc-chip">Process Automation</span>
-      </div>
+      <!-- Visual: code + wireframe split -->
+      <div class="svc-vis reveal" style="transition-delay:.15s" aria-hidden="true">
+        <div class="dev-split">
 
-      <!-- ── Card 3: Code Editor ── -->
-      <div class="svc-card reveal" id="svc3" style="transition-delay:.2s">
-        <div class="svc-visual svc-visual--code" aria-hidden="true">
-          <div class="code-bar">
-            <span class="code-dot"></span>
-            <span class="code-dot"></span>
-            <span class="code-dot"></span>
-            <span class="code-fname">Dashboard.tsx</span>
+          <!-- Code panel -->
+          <div class="dev-panel">
+            <div class="dev-topbar">
+              <span class="dev-dot"></span>
+              <span class="dev-dot"></span>
+              <span class="dev-dot"></span>
+              <span class="dev-fname">CrmDashboard.tsx</span>
+            </div>
+            <div class="dev-code-body">
+              <div><span class="d-ln">1</span><span class="d-kw">import</span><span class="d-tx"> { </span><span class="d-fn">CRM</span><span class="d-tx"> }</span></div>
+              <div><span class="d-ln">2</span><span class="d-cm">// AI-powered interface</span></div>
+              <div><span class="d-ln">3</span><span class="d-kw">const</span><span class="d-tx"> </span><span class="d-fn">Dashboard</span><span class="d-tx"> = () =&gt;</span></div>
+              <div><span class="d-ln">4</span><span class="d-tx">  &lt;</span><span class="d-fn">CRM</span></div>
+              <div><span class="d-ln">5</span><span class="d-tx">    </span><span class="d-attr">ai</span><span class="d-tx">=</span><span class="d-str">true</span></div>
+              <div><span class="d-ln">6</span><span class="d-tx">    </span><span class="d-attr">lang</span><span class="d-tx">=</span><span class="d-str">"he"</span></div>
+              <div><span class="d-ln">7</span><span class="d-tx">    </span><span class="d-attr">data</span><span class="d-tx">={</span><span class="d-fn">live</span><span class="d-tx">}</span></div>
+              <div><span class="d-ln">8</span><span class="d-tx">  /&gt;</span><span class="d-cur"></span></div>
+            </div>
           </div>
-          <div class="code-line"><span class="cl-num">1</span><span class="c-kw">import</span><span class="c-tx"> { </span><span class="c-fn">Dashboard</span><span class="c-tx"> } from </span><span class="c-str">'@click/ui'</span></div>
-          <div class="code-line"><span class="cl-num">2</span><span class="c-cm">// AI-powered CRM interface</span></div>
-          <div class="code-line"><span class="cl-num">3</span><span class="c-kw">const</span><span class="c-tx"> App = () </span><span class="c-kw">=&gt;</span><span class="c-tx"> (</span></div>
-          <div class="code-line"><span class="cl-num">4</span><span class="c-tx">  &lt;</span><span class="c-fn">Dashboard</span></div>
-          <div class="code-line"><span class="cl-num">5</span><span class="c-tx">    </span><span class="c-attr">theme</span><span class="c-tx">=</span><span class="c-str">"dark"</span><span class="c-tx">  </span><span class="c-attr">data</span><span class="c-tx">={</span><span class="c-fn">live</span><span class="c-tx">}</span></div>
-          <div class="code-line"><span class="cl-num">6</span><span class="c-tx">  /&gt;</span><span class="c-cur"></span></div>
+
+          <!-- Wireframe/CRM panel -->
+          <div class="dev-panel">
+            <div class="dev-topbar">
+              <div class="dev-wf-nav" style="margin:0;flex:1;height:100%;background:transparent;border:none;padding:0">
+                <div class="dev-nav-pill"></div>
+                <div class="dev-nav-pill"></div>
+                <div class="dev-nav-pill"></div>
+                <div class="dev-nav-pill"></div>
+              </div>
+            </div>
+            <div class="dev-wf-body">
+              <div class="dev-kpi-row">
+                <div class="dev-kpi">
+                  <span class="dev-kpi-val">247</span>
+                  <span class="dev-kpi-lbl">LEADS</span>
+                </div>
+                <div class="dev-kpi">
+                  <span class="dev-kpi-val">94%</span>
+                  <span class="dev-kpi-lbl">CONV.</span>
+                </div>
+              </div>
+              <table class="dev-table">
+                <tbody>
+                  <tr class="dev-tr"><td>ישראל ישראלי</td><td style="color:rgba(196,241,44,.4)">●</td></tr>
+                  <tr class="dev-tr"><td>Sarah Cohen</td><td style="color:rgba(196,241,44,.3)">●</td></tr>
+                  <tr class="dev-tr"><td>רוני לוי</td><td style="color:rgba(196,241,44,.4)">●</td></tr>
+                  <tr class="dev-tr"><td>Eyal Peretz</td><td style="color:rgba(196,241,44,.2)">○</td></tr>
+                  <tr class="dev-tr"><td>מיה כהן</td><td style="color:rgba(196,241,44,.4)">●</td></tr>
+                </tbody>
+              </table>
+              <svg class="dev-chart" viewBox="0 0 180 36">
+                <defs>
+                  <linearGradient id="devGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="rgba(196,241,44,.15)"/>
+                    <stop offset="100%" stop-color="rgba(196,241,44,0)"/>
+                  </linearGradient>
+                </defs>
+                <polyline points="0,30 20,26 40,22 60,24 80,18 100,14 120,16 140,10 160,8 180,4" class="dev-chart-area" style="fill:none"/>
+                <path d="M0,30 L20,26 L40,22 L60,24 L80,18 L100,14 L120,16 L140,10 L160,8 L180,4 L180,36 L0,36 Z" class="dev-chart-area"/>
+                <polyline points="0,30 20,26 40,22 60,24 80,18 100,14 120,16 140,10 160,8 180,4" class="dev-chart-line"/>
+              </svg>
+            </div>
+          </div>
+
         </div>
-        <h3 class="svc-title">פיתוח ממשקים ומערכות</h3>
-        <p class="svc-desc">
-          הנוכחות הדיגיטלית שלכם, משודרגת. אתרים מתקדמים, דפי נחיתה ממירים, מערכות
-          CRM ואפליקציות פנים-ארגוניות. כל ממשק נבנה מאפס — חווית משתמש + טכנולוגיה
-          מדויקת לצרכי העסק.
-        </p>
-        <span class="svc-chip">Interface &amp; Systems Dev</span>
       </div>
 
     </div>
@@ -2457,7 +2781,7 @@ if(document.readyState === 'loading'){
 
   /* ─── Navbar state (light when over light sections) ─── */
   const navbar = document.getElementById('navbar');
-  const lightSections = ['stats','process','cases','why-us','contact'];
+  const lightSections = ['services','process','cases','why-us','contact'];
   // Actually simplify: change based on scroll position
   const heroBoundary = ()=> heroEl.offsetHeight;
   function updateNav(){
@@ -2503,64 +2827,6 @@ if(document.readyState === 'loading'){
   }
   revealCheck(); // run global function immediately too
 
-  /* ─── Animated Counters ─── */
-  function easeOut(t){ return 1-(1-t)*(1-t)*(1-t) }
-  function animCounter(el){
-    const target=parseInt(el.dataset.target,10);
-    const suffix=el.dataset.suffix||'';
-    const dur=1800;
-    const start=performance.now();
-    function step(now){
-      const p=Math.min((now-start)/dur,1);
-      const val=Math.round(easeOut(p)*target);
-      el.innerHTML=val+'<span>'+suffix+'</span>';
-      if(p<1){ requestAnimationFrame(step); }
-      else { el.classList.add('counted'); }
-    }
-    requestAnimationFrame(step);
-  }
-  const counterEls=document.querySelectorAll('.stat-num[data-target]');
-  function triggerCounter(el){
-    if(el.dataset.animated) return;
-    el.dataset.animated='1';
-    if(!prefersReduced) animCounter(el);
-    else {
-      const t=el.dataset.target, s=el.dataset.suffix||'';
-      el.innerHTML=t+'<span>'+s+'</span>';
-    }
-  }
-  function checkCounters(){
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    counterEls.forEach(el=>{
-      const r=el.getBoundingClientRect();
-      if(r.top < vh * 0.9 && r.bottom > 0) triggerCounter(el);
-    });
-  }
-  window.addEventListener('scroll', checkCounters, {passive:true});
-  if('IntersectionObserver' in window){
-    const cntObs=new IntersectionObserver(entries=>{
-      entries.forEach(e=>{ if(e.isIntersecting){ triggerCounter(e.target); cntObs.unobserve(e.target); } });
-    },{threshold:.4});
-    counterEls.forEach(el=>cntObs.observe(el));
-  }
-  checkCounters();
-
-  /* ─── 3D Tilt on Service Cards ─── */
-  if(!prefersReduced && window.innerWidth>900){
-    document.querySelectorAll('.svc-card').forEach(card=>{
-      card.addEventListener('mousemove',e=>{
-        const r=card.getBoundingClientRect();
-        const cx=(e.clientX-r.left)/r.width-.5;
-        const cy=(e.clientY-r.top)/r.height-.5;
-        card.style.transform=`perspective(600px) rotateX(${-cy*8}deg) rotateY(${cx*8}deg) translateZ(6px)`;
-      });
-      card.addEventListener('mouseleave',()=>{
-        card.style.transform='perspective(600px) rotateX(0) rotateY(0) translateZ(0)';
-        card.style.transition='transform .5s cubic-bezier(.22,1,.36,1)';
-        setTimeout(()=>card.style.transition='',500);
-      });
-    });
-  }
 
   /* ─── Process connector line ─── */
   const pLine=document.getElementById('processLine');
