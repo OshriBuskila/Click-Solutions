@@ -65,7 +65,7 @@
       outline-offset:3px;
     }
     /* custom cursor only on interactive targets */
-    a,button,.btn,[role="button"],.svc-card,.case-card,.why-feat,.roi-tile,.stat-item,.logo-bar-item,.est-chip{cursor:none}
+    a,button,.btn,[role="button"],.svc-card,.why-feat,.roi-tile,.stat-item,.logo-bar-item,.est-chip{cursor:none}
     input,textarea,select,[contenteditable]{cursor:text!important}
     @media(hover:none){body{cursor:auto}}
     a{text-decoration:none;color:inherit}
@@ -847,63 +847,6 @@
     .step-metric{display:flex;flex-direction:column;align-items:center;gap:2px}
     .metric-val{font-family:var(--font-mo);font-size:13px;font-weight:700;color:var(--neon-h);letter-spacing:-.5px}
     .metric-lbl{font-family:var(--font-mo);font-size:7.5px;color:var(--ink3);letter-spacing:.5px;text-transform:uppercase;text-align:center}
-
-    /* ═══════════════════════════════════════
-       CASE STUDIES
-    ═══════════════════════════════════════ */
-    .cases{background:var(--paper);padding:92px 0;border-top:1px solid var(--ink4)}
-    .case-grid{
-      display:grid;grid-template-columns:repeat(3,1fr);
-      gap:0;margin-top:52px;
-      border:1.5px solid var(--ink4);overflow:hidden;
-    }
-    .case-card{
-      padding:32px 28px;
-      border-left:1.5px solid var(--ink4);
-      position:relative;overflow:hidden;
-      transition:background .3s var(--ease),transform .3s var(--ease);
-    }
-    .case-card:first-child{border-left:none}
-    .case-card::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:2px;
-      background:linear-gradient(90deg,transparent,var(--neon),transparent);
-      transform:scaleX(0);transition:transform .5s var(--ease);
-    }
-    .case-card:hover::before{transform:scaleX(1)}
-    .case-card:hover{background:var(--card);transform:translateY(-3px)}
-    .case-tag{
-      font-family:var(--font-mo);font-size:9px;letter-spacing:1.8px;
-      text-transform:uppercase;color:var(--ink3);
-      border:1px solid var(--ink4);padding:4px 10px;
-      display:inline-block;margin-bottom:18px;
-    }
-    .case-metric{
-      font-family:var(--font-en);font-size:clamp(36px,5vw,52px);font-weight:300;
-      letter-spacing:-.05em;color:var(--neon-h);line-height:1;
-      margin-bottom:4px;font-feature-settings:"tnum";
-    }
-    .case-metric-sub{
-      font-family:var(--font-mo);font-size:9px;letter-spacing:1.5px;
-      text-transform:uppercase;color:var(--ink3);margin-bottom:20px;
-    }
-    .case-desc{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:16px}
-    .case-bullets{
-      border-top:1px solid var(--ink4);padding-top:14px;
-      display:flex;flex-direction:column;gap:7px;
-    }
-    .case-bullet{
-      display:flex;align-items:center;gap:9px;
-      font-family:var(--font-mo);font-size:9.5px;color:var(--ink2);
-    }
-    .case-bullet-dot{
-      width:5px;height:5px;border-radius:50%;
-      background:var(--neon);flex-shrink:0;
-    }
-    @media(max-width:900px){
-      .case-grid{grid-template-columns:1fr}
-      .case-card{border-left:none;border-top:1.5px solid var(--ink4)}
-      .case-card:first-child{border-top:none}
-    }
 
     /* ═══════════════════════════════════════
        WHY US (dark + glow cards)
@@ -2210,69 +2153,6 @@
   </div><!-- /process-inner -->
 </section>
 
-<!-- ═══════════════════════════════════════
-     CASE STUDIES
-═══════════════════════════════════════ -->
-<section class="cases" id="cases">
-  <div class="container">
-    <div class="sec-header reveal">
-      <span class="tag">// case studies &middot; 3 results</span>
-      <h2 class="section-title">תוצאות אמיתיות.<br/>מספרים אמיתיים.</h2>
-      <p class="section-sub">
-        לא מוכרים חלומות — מוכרים תוצאות. הנה מה שקרה לאחרי שנכנסנו לתמונה.
-      </p>
-    </div>
-
-    <div class="case-grid">
-
-      <!-- Case 1: Financial -->
-      <div class="case-card reveal">
-        <span class="case-tag">// ארגון פיננסי &middot; 500 עובדים</span>
-        <div class="case-metric">1,200h</div>
-        <div class="case-metric-sub">חיסכון חודשי בשעות עבודה</div>
-        <p class="case-desc">
-          אוטומציה מלאה של תהליכי עיבוד נתונים, דיווח ללקוחות וניהול פניות — ממה שלקח שבוע, הפך לתהליך שרץ לבד.
-        </p>
-        <div class="case-bullets">
-          <div class="case-bullet"><span class="case-bullet-dot"></span>10 זרימות עבודה אוטומטיות ב-n8n ו-Make</div>
-          <div class="case-bullet"><span class="case-bullet-dot"></span>אינטגרציה מלאה עם מערכת ה-CRM הקיימת</div>
-          <div class="case-bullet"><span class="case-bullet-dot"></span>ROI מוכח תוך 6 שבועות מהשקה</div>
-        </div>
-      </div>
-
-      <!-- Case 2: SaaS startup -->
-      <div class="case-card reveal" style="transition-delay:.08s">
-        <span class="case-tag">// חברת SaaS &middot; Series B</span>
-        <div class="case-metric">80</div>
-        <div class="case-metric-sub">עובדים שהוכשרו ב-AI תוך חודש</div>
-        <p class="case-desc">
-          תוכנית הכשרה מותאמת אישית ל-4 מחלקות: R&D, מכירות, שיווק ו-CS — כל אחת עם סילבוס ייעודי.
-        </p>
-        <div class="case-bullets">
-          <div class="case-bullet"><span class="case-bullet-dot"></span>12 סדנאות פרקטיות עם כלי AI אמיתיים</div>
-          <div class="case-bullet"><span class="case-bullet-dot"></span>98% שביעות רצון בסיום ההכשרה</div>
-          <div class="case-bullet"><span class="case-bullet-dot"></span>+40% עלייה בתפוקה האישית ב-30 ימים</div>
-        </div>
-      </div>
-
-      <!-- Case 3: Healthcare -->
-      <div class="case-card reveal" style="transition-delay:.16s">
-        <span class="case-tag">// רשת רפואית &middot; 12 סניפים</span>
-        <div class="case-metric">×3</div>
-        <div class="case-metric-sub">מהירות טיפול בפניות מטופלים</div>
-        <p class="case-desc">
-          מערכת triage חכמה שמסווגת פניות נכנסות, מפנה לנציג הנכון ומייצרת טיוטת תגובה — אוטומטית.
-        </p>
-        <div class="case-bullets">
-          <div class="case-bullet"><span class="case-bullet-dot"></span>אינטגרציה עם מערכת ה-EMR הקיימת</div>
-          <div class="case-bullet"><span class="case-bullet-dot"></span>ירידה של 67% בזמן ממוצע לתגובה</div>
-          <div class="case-bullet"><span class="case-bullet-dot"></span>ממשק ניהול ייעודי למנהלי הסניפים</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
 
 <!-- ═══════════════════════════════════════
      WHY US
@@ -2781,7 +2661,7 @@ if(document.readyState === 'loading'){
 
   /* ─── Navbar state (light when over light sections) ─── */
   const navbar = document.getElementById('navbar');
-  const lightSections = ['services','process','cases','why-us','contact'];
+  const lightSections = ['services','process','why-us','contact'];
   // Actually simplify: change based on scroll position
   const heroBoundary = ()=> heroEl.offsetHeight;
   function updateNav(){
