@@ -227,42 +227,69 @@
         radial-gradient(ellipse 40% 60% at 20% 80%, rgba(196,241,44,.05) 0%, transparent 60%);
     }
 
-    /* floating shapes */
-    .shape{position:absolute;border:1.5px solid rgba(196,241,44,.2);pointer-events:none}
-    .shape-1{
-      width:120px;height:120px;
-      top:15%;right:8%;
-      animation:floatSpin1 22s linear infinite;
-      box-shadow:0 0 24px rgba(196,241,44,.15);
+    /* hero terminal */
+    .hero-terminal{
+      width:420px;flex-shrink:0;
+      background:#080808;
+      border:1px solid rgba(196,241,44,.18);
+      box-shadow:0 0 60px rgba(196,241,44,.08), 0 24px 80px rgba(0,0,0,.6);
+      min-height:280px;direction:ltr;
+      opacity:0;animation:fadeUp .8s var(--ease) 1.4s forwards;
+      position:relative;overflow:hidden;
     }
-    .shape-2{
-      width:72px;height:72px;border-radius:50%;
-      bottom:25%;left:6%;
-      animation:float2 9s ease-in-out infinite;
-      box-shadow:0 0 32px rgba(196,241,44,.12);
+    .hero-terminal::before{
+      content:'';position:absolute;inset:0;pointer-events:none;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px);
     }
-    .shape-3{
-      width:56px;height:56px;
-      top:55%;left:22%;
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      animation:float3 14s ease-in-out infinite;
+    .ht-bar{
+      display:flex;align-items:center;gap:6px;
+      padding:10px 14px;border-bottom:1px solid rgba(196,241,44,.1);
+      background:rgba(196,241,44,.03);
     }
-    .shape-4{
-      width:88px;height:88px;
-      top:30%;left:45%;
-      clip-path:polygon(50% 0%,100% 100%,0% 100%);
-      animation:floatSpin2 18s linear infinite;
+    .ht-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .ht-dot:nth-child(1){background:rgba(255,95,86,.5)}
+    .ht-dot:nth-child(2){background:rgba(255,189,68,.5)}
+    .ht-dot:nth-child(3){background:rgba(39,201,63,.5)}
+    .ht-fname{font-family:var(--font-mo);font-size:9px;color:rgba(196,241,44,.3);letter-spacing:.5px;margin-left:auto}
+    .ht-body{padding:16px 18px;font-family:var(--font-mo);font-size:11px;line-height:1.85}
+    .ht-prompt{color:rgba(196,241,44,.5)}
+    .ht-q{color:rgba(250,250,247,.75)}
+    .ht-line{display:flex;gap:9px;margin-bottom:3px}
+    .ht-line--ans{padding-right:16px}
+    .ht-ans{color:rgba(250,250,247,.5)}
+    .ht-ok{color:var(--neon);font-weight:700}
+    .ht-dim{color:rgba(250,250,247,.2)}
+    .ht-cursor{
+      display:inline-block;width:6px;height:11px;
+      background:var(--neon);vertical-align:middle;
+      animation:blink .9s step-end infinite;
     }
-    .shape-5{
-      width:180px;height:180px;border-radius:50%;
-      top:-40px;left:-40px;
-      border:1px solid rgba(196,241,44,.06);
-      animation:float2 26s ease-in-out infinite reverse;
+    /* neon-word rotate */
+    .neon-word-wrap{
+      position:relative;display:inline-block;
+      overflow:hidden;vertical-align:bottom;
     }
-    @keyframes floatSpin1{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.15)}100%{transform:rotate(360deg) scale(1)}}
-    @keyframes floatSpin2{0%{transform:rotate(0deg)}100%{transform:rotate(-360deg)}}
-    @keyframes float2{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-32px) scale(1.08)}}
-    @keyframes float3{0%,100%{transform:translateY(0) rotate(45deg)}50%{transform:translateY(-20px) rotate(105deg)}}
+    .neon-word{
+      background:var(--neon);color:var(--ink);padding:0 10px;
+      display:inline-block;
+      transition:opacity .35s var(--ease),transform .35s var(--ease);
+    }
+    .neon-word.fade-out{opacity:0;transform:translateY(-14px)}
+    .neon-word.fade-in{opacity:0;transform:translateY(14px)}
+    /* hero 2-col layout */
+    .hero-inner{
+      position:relative;z-index:1;padding:80px 0 100px;
+      display:flex;align-items:center;gap:clamp(32px,4vw,72px);
+      width:100%;
+    }
+    .hero-content{flex:1;min-width:0}
+    @media(max-width:1024px){
+      .hero-terminal{width:360px}
+    }
+    @media(max-width:860px){
+      .hero-inner{flex-direction:column;align-items:flex-start;padding:64px 0 72px}
+      .hero-terminal{width:100%;min-height:220px}
+    }
 
     /* mouse-glow */
     #hero-glow{
@@ -332,28 +359,71 @@
     @keyframes scrollDot{0%,100%{opacity:1;transform:translateY(0)}80%{opacity:0;transform:translateY(14px)}}
 
     /* ═══════════════════════════════════════
-       MARQUEE
+       LOGO BAR (trusted by)
     ═══════════════════════════════════════ */
-    .marquee-strip{background:var(--neon);padding:13px 0;overflow:hidden;white-space:nowrap}
-    .marquee-track{display:inline-flex;gap:36px;animation:marquee 24s linear infinite}
-    .marquee-track:hover{animation-play-state:paused}
-    .marquee-item{font-family:var(--font-mo);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--ink);font-weight:700}
-    .marquee-sep{color:rgba(10,10,10,.35)}
-    @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .logo-bar{
+      background:#0A0A0A;
+      padding:18px 0;
+      border-top:1px solid rgba(196,241,44,.06);
+      border-bottom:1px solid rgba(196,241,44,.06);
+      overflow:hidden;
+      position:relative;
+    }
+    .logo-bar::before,.logo-bar::after{
+      content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+    }
+    .logo-bar::before{left:0;background:linear-gradient(to right,#0A0A0A,transparent)}
+    .logo-bar::after{right:0;background:linear-gradient(to left,#0A0A0A,transparent)}
+    .logo-bar-inner{
+      display:flex;align-items:center;gap:0;
+      padding:0 clamp(20px,4vw,56px);
+    }
+    .logo-bar-label{
+      font-family:var(--font-mo);font-size:9px;letter-spacing:2px;
+      text-transform:uppercase;color:rgba(250,250,247,.2);
+      white-space:nowrap;padding-left:32px;flex-shrink:0;
+    }
+    .logo-bar-divider{
+      width:1px;height:28px;background:rgba(196,241,44,.1);
+      margin:0 28px;flex-shrink:0;
+    }
+    .logo-bar-list{
+      display:flex;align-items:center;gap:0;flex:1;
+      justify-content:space-between;
+    }
+    .logo-bar-item{
+      font-family:var(--font-mo);font-size:10px;letter-spacing:1.8px;
+      text-transform:uppercase;color:rgba(250,250,247,.22);
+      white-space:nowrap;padding:6px 18px;
+      transition:color .3s var(--ease);
+      cursor:default;position:relative;
+    }
+    .logo-bar-item::after{
+      content:'';position:absolute;bottom:0;left:18px;right:18px;height:1px;
+      background:var(--neon);transform:scaleX(0);transform-origin:left;
+      transition:transform .35s var(--ease);
+    }
+    .logo-bar-item:hover{color:rgba(196,241,44,.7)}
+    .logo-bar-item:hover::after{transform:scaleX(1)}
+    @media(max-width:900px){
+      .logo-bar-list{gap:0;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
+      .logo-bar-list::-webkit-scrollbar{display:none}
+      .logo-bar-item{flex-shrink:0}
+    }
 
     /* ═══════════════════════════════════════
        STATS COUNTERS
     ═══════════════════════════════════════ */
-    .stats{background:var(--ink);padding:72px 0}
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--fg4)}
+    .stats{background:var(--paper);padding:72px 0;border-top:1px solid var(--ink4)}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--ink4)}
     .stat-item{
       padding:32px 28px;
-      border-left:1px solid var(--fg4);
+      border-left:1px solid var(--ink4);
       position:relative;overflow:hidden;
       transition:background .3s;
     }
     .stat-item:last-child{border-left:none}
-    .stat-item:hover{background:rgba(196,241,44,.04)}
+    .stat-item:hover{background:rgba(196,241,44,.06)}
     .stat-item::before{
       content:'';position:absolute;top:0;left:0;right:0;height:2px;
       background:var(--neon);
@@ -367,15 +437,16 @@
       100%{text-shadow:0 0 12px rgba(196,241,44,.25)}
     }
     .stat-num{
-      font-family:var(--font-en);font-size:52px;font-weight:700;
-      letter-spacing:-.04em;color:var(--fg);line-height:1;
+      font-family:var(--font-en);font-size:52px;font-weight:300;
+      letter-spacing:-.05em;color:var(--ink);line-height:1;
       margin-bottom:8px;
       transition:text-shadow .3s;
+      font-feature-settings:"tnum";
     }
     .stat-num.counted{animation:statGlow 1.2s var(--ease) forwards}
-    .stat-num span{color:var(--neon);font-size:.75em;vertical-align:super;line-height:0}
-    .stat-label{font-size:14px;color:var(--fg2);font-weight:500}
-    .stat-sub{font-family:var(--font-mo);font-size:10px;color:var(--fg3);margin-top:4px;letter-spacing:1px}
+    .stat-num span{color:var(--neon-h);font-size:.75em;vertical-align:super;line-height:0}
+    .stat-label{font-size:14px;color:var(--ink2);font-weight:500}
+    .stat-sub{font-family:var(--font-mo);font-size:10px;color:var(--ink3);margin-top:4px;letter-spacing:1px}
 
     /* ═══════════════════════════════════════
        SERVICES (dark)
@@ -776,9 +847,66 @@
     .metric-lbl{font-family:var(--font-mo);font-size:7.5px;color:var(--ink3);letter-spacing:.5px;text-transform:uppercase;text-align:center}
 
     /* ═══════════════════════════════════════
+       CASE STUDIES
+    ═══════════════════════════════════════ */
+    .cases{background:var(--paper);padding:92px 0;border-top:1px solid var(--ink4)}
+    .case-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);
+      gap:0;margin-top:52px;
+      border:1.5px solid var(--ink4);overflow:hidden;
+    }
+    .case-card{
+      padding:32px 28px;
+      border-left:1.5px solid var(--ink4);
+      position:relative;overflow:hidden;
+      transition:background .3s var(--ease),transform .3s var(--ease);
+    }
+    .case-card:first-child{border-left:none}
+    .case-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,transparent,var(--neon),transparent);
+      transform:scaleX(0);transition:transform .5s var(--ease);
+    }
+    .case-card:hover::before{transform:scaleX(1)}
+    .case-card:hover{background:var(--card);transform:translateY(-3px)}
+    .case-tag{
+      font-family:var(--font-mo);font-size:9px;letter-spacing:1.8px;
+      text-transform:uppercase;color:var(--ink3);
+      border:1px solid var(--ink4);padding:4px 10px;
+      display:inline-block;margin-bottom:18px;
+    }
+    .case-metric{
+      font-family:var(--font-en);font-size:clamp(36px,5vw,52px);font-weight:300;
+      letter-spacing:-.05em;color:var(--neon-h);line-height:1;
+      margin-bottom:4px;font-feature-settings:"tnum";
+    }
+    .case-metric-sub{
+      font-family:var(--font-mo);font-size:9px;letter-spacing:1.5px;
+      text-transform:uppercase;color:var(--ink3);margin-bottom:20px;
+    }
+    .case-desc{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:16px}
+    .case-bullets{
+      border-top:1px solid var(--ink4);padding-top:14px;
+      display:flex;flex-direction:column;gap:7px;
+    }
+    .case-bullet{
+      display:flex;align-items:center;gap:9px;
+      font-family:var(--font-mo);font-size:9.5px;color:var(--ink2);
+    }
+    .case-bullet-dot{
+      width:5px;height:5px;border-radius:50%;
+      background:var(--neon);flex-shrink:0;
+    }
+    @media(max-width:900px){
+      .case-grid{grid-template-columns:1fr}
+      .case-card{border-left:none;border-top:1.5px solid var(--ink4)}
+      .case-card:first-child{border-top:none}
+    }
+
+    /* ═══════════════════════════════════════
        WHY US (dark + glow cards)
     ═══════════════════════════════════════ */
-    .why-us{background:var(--ink);padding:92px 0}
+    .why-us{background:var(--paper);padding:92px 0;border-top:1px solid var(--ink4)}
     /* ── Why Us: Editorial Feature Rows (no cards) ── */
     .why-features{margin-top:52px}
     .why-feat{
@@ -787,43 +915,43 @@
       gap:clamp(28px,5vw,80px);
       align-items:center;
       padding:52px 0;
-      border-top:1px solid rgba(196,241,44,.08);
+      border-top:1px solid var(--ink4);
       position:relative;
     }
-    .why-feat:last-child{border-bottom:1px solid rgba(196,241,44,.08)}
+    .why-feat:last-child{border-bottom:1px solid var(--ink4)}
     /* text body */
-    .wf-kicker{font-family:var(--font-mo);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(196,241,44,.4);margin-bottom:10px;display:block}
-    .wf-title{font-size:clamp(21px,2.6vw,30px);font-weight:800;color:var(--fg);letter-spacing:-.025em;line-height:1.18;margin-bottom:12px}
-    .wf-desc{font-size:14px;color:rgba(250,250,247,.62);line-height:1.78}
+    .wf-kicker{font-family:var(--font-mo);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--neon-h);margin-bottom:10px;display:block}
+    .wf-title{font-size:clamp(21px,2.6vw,30px);font-weight:800;color:var(--ink);letter-spacing:-.025em;line-height:1.18;margin-bottom:12px}
+    .wf-desc{font-size:14px;color:var(--ink2);line-height:1.78}
     /* visual panel */
     .wf-visual{display:flex;align-items:center;justify-content:center;min-height:180px;position:relative}
 
     /* ── Expertise: SVG bridge diagram ── */
-    .bridge-lbl-human{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:rgba(250,250,247,.45);text-anchor:middle;letter-spacing:1px}
-    .bridge-lbl-ai{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:rgba(196,241,44,.7);text-anchor:middle;letter-spacing:1px}
-    .bridge-c-lbl{font-family:'JetBrains Mono',monospace;font-size:6.5px;fill:rgba(196,241,44,.35);text-anchor:middle;letter-spacing:1.5px}
+    .bridge-lbl-human{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:rgba(10,10,10,.5);text-anchor:middle;letter-spacing:1px}
+    .bridge-lbl-ai{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:rgba(164,214,18,.9);text-anchor:middle;letter-spacing:1px}
+    .bridge-c-lbl{font-family:'JetBrains Mono',monospace;font-size:6.5px;fill:rgba(164,214,18,.6);text-anchor:middle;letter-spacing:1.5px}
     @keyframes bdot{0%,100%{opacity:.15}50%{opacity:1}}
 
     /* ── Custom: Before/After visual ── */
     .bespoke{font-family:var(--font-mo);font-size:11.5px;line-height:2.15;direction:ltr;width:100%;max-width:290px}
-    .bsp-no{color:rgba(250,250,247,.22);text-decoration:line-through;display:flex;align-items:center;gap:9px}
-    .bsp-x{color:rgba(255,80,80,.32);flex-shrink:0;text-decoration:none;font-style:normal}
-    .bsp-div{margin:12px 0;height:1px;background:linear-gradient(90deg,transparent,rgba(196,241,44,.2),transparent);position:relative}
-    .bsp-div::after{content:'VS';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:8px;letter-spacing:3px;color:rgba(196,241,44,.3);background:var(--ink);padding:0 10px;font-family:'JetBrains Mono',monospace}
-    .bsp-yes{color:rgba(196,241,44,.9);display:flex;align-items:center;gap:9px}
+    .bsp-no{color:rgba(10,10,10,.25);text-decoration:line-through;display:flex;align-items:center;gap:9px}
+    .bsp-x{color:rgba(200,50,50,.5);flex-shrink:0;text-decoration:none;font-style:normal}
+    .bsp-div{margin:12px 0;height:1px;background:linear-gradient(90deg,transparent,rgba(164,214,18,.35),transparent);position:relative}
+    .bsp-div::after{content:'VS';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:8px;letter-spacing:3px;color:rgba(164,214,18,.6);background:var(--paper);padding:0 10px;font-family:'JetBrains Mono',monospace}
+    .bsp-yes{color:rgba(100,160,0,.9);display:flex;align-items:center;gap:9px}
     .bsp-ck{color:var(--neon);flex-shrink:0;font-weight:700}
 
     /* ── ROI: metric tiles ── */
     .roi-tiles{display:flex;gap:12px;direction:ltr}
     .roi-tile{
-      border:1px solid rgba(196,241,44,.13);
+      border:1px solid var(--ink4);
       padding:22px 14px;display:flex;flex-direction:column;
       align-items:center;gap:7px;flex:1;
       position:relative;overflow:hidden;
       transition:border-color .3s var(--ease),background .3s;
     }
-    .roi-tile:hover{border-color:rgba(196,241,44,.4);background:rgba(196,241,44,.03)}
-    .roi-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon),transparent);transform:scaleX(0);transition:transform .4s var(--ease)}
+    .roi-tile:hover{border-color:rgba(164,214,18,.5);background:rgba(196,241,44,.04)}
+    .roi-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--neon-h),transparent);transform:scaleX(0);transition:transform .4s var(--ease)}
     .roi-tile:hover::before{transform:scaleX(1)}
     .roi-val{font-family:var(--font-en);font-size:30px;font-weight:700;color:var(--neon);letter-spacing:-.04em;line-height:1}
     .roi-lbl{font-family:var(--font-mo);font-size:8px;color:rgba(250,250,247,.35);text-align:center;line-height:1.6;letter-spacing:.5px;direction:rtl}
@@ -1030,34 +1158,45 @@
   <div class="hero-mesh" aria-hidden="true"></div>
   <div id="hero-glow" aria-hidden="true"></div>
 
-  <!-- Floating shapes -->
-  <div class="shape shape-1" aria-hidden="true"></div>
-  <div class="shape shape-2" aria-hidden="true"></div>
-  <div class="shape shape-3" aria-hidden="true"></div>
-  <div class="shape shape-4" aria-hidden="true"></div>
-  <div class="shape shape-5" aria-hidden="true"></div>
-
   <div class="container">
     <div class="hero-inner">
-      <p class="hero-eyebrow">// AI &middot; הדרכות &middot; אוטומציות &middot; פיתוח מערכות</p>
 
-      <h1 class="hero-h1" id="hero-h1">
-        <span class="hero-word" data-delay="0.4">המנוע</span>&#32;
-        <span class="hero-word" data-delay="0.55">הטכנולוגי</span><br/>
-        <span class="hero-word" data-delay="0.7">מאחורי</span>&#32;
-        <span class="hero-word neon-word" data-delay="0.85">הצמיחה</span><br/>
-        <span class="hero-word" data-delay="1.0">של הארגון שלכם.</span>
-      </h1>
+      <!-- text content — right column in RTL -->
+      <div class="hero-content">
+        <p class="hero-eyebrow">// AI &middot; הדרכות &middot; אוטומציות &middot; פיתוח מערכות</p>
 
-      <p class="hero-sub">
-        החל מהכשרת הצוותים, דרך פיתוח אוטומציות חכמות ועד לבניית ממשקי ניהול מתקדמים.
-        מעטפת טכנולוגית מותאמת אישית שחוסכת משאבים ומייעלת את סביבת העבודה מהיום הראשון.
-      </p>
+        <h1 class="hero-h1" id="hero-h1">
+          <span class="hero-word" data-delay="0.4">המנוע</span>&#32;
+          <span class="hero-word" data-delay="0.55">הטכנולוגי</span><br/>
+          <span class="hero-word" data-delay="0.7">מאחורי</span>&#32;
+          <span class="hero-word" data-delay="0.85"><span class="neon-word" id="neon-rotate">הצמיחה</span></span><br/>
+          <span class="hero-word" data-delay="1.0">של הארגון שלכם.</span>
+        </h1>
 
-      <div class="hero-actions">
-        <a href="#contact" class="btn btn-primary btn-lg">לתיאום פגישת אפיון ←</a>
-        <a href="#services" class="btn btn-ghost-light btn-lg">הפתרונות שלנו</a>
+        <p class="hero-sub">
+          החל מהכשרת הצוותים, דרך פיתוח אוטומציות חכמות ועד לבניית ממשקי ניהול מתקדמים.
+          מעטפת טכנולוגית מותאמת אישית שחוסכת משאבים ומייעלת את סביבת העבודה מהיום הראשון.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary btn-lg" style="padding:19px 38px;font-size:1.05rem;box-shadow:0 0 32px rgba(196,241,44,.35)">לתיאום פגישת אפיון ←</a>
+          <a href="#services" class="btn btn-ghost-light btn-lg" style="opacity:.7">הפתרונות שלנו</a>
+        </div>
       </div>
+
+      <!-- live terminal — left column in RTL -->
+      <div class="hero-terminal" id="hero-terminal" dir="ltr" aria-label="AI demo terminal" aria-hidden="true">
+        <div class="ht-bar">
+          <span class="ht-dot"></span>
+          <span class="ht-dot"></span>
+          <span class="ht-dot"></span>
+          <span class="ht-fname">click-ai-demo.sh</span>
+        </div>
+        <div class="ht-body" id="ht-body">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1068,39 +1207,20 @@
 </section>
 
 <!-- ═══════════════════════════════════════
-     MARQUEE
+     LOGO BAR
 ═══════════════════════════════════════ -->
-<div class="marquee-strip" aria-hidden="true">
-  <div class="marquee-track">
-    <span class="marquee-item">חיסכון במשאבים</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">AI מותאם לארגון</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">אוטומציות חכמות</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">ממשקים מתקדמים</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">הדרכות מקצועיות</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">ROI מדיד</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">ליווי ארוך טווח</span>
-    <span class="marquee-sep">✦</span>
-    <!-- duplicate for seamless loop -->
-    <span class="marquee-item">חיסכון במשאבים</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">AI מותאם לארגון</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">אוטומציות חכמות</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">ממשקים מתקדמים</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">הדרכות מקצועיות</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">ROI מדיד</span>
-    <span class="marquee-sep">✦</span>
-    <span class="marquee-item">ליווי ארוך טווח</span>
-    <span class="marquee-sep">✦</span>
+<div class="logo-bar" aria-label="חלק מהארגונים שעבדנו איתם">
+  <div class="logo-bar-inner">
+    <span class="logo-bar-label">Trusted by</span>
+    <div class="logo-bar-divider" aria-hidden="true"></div>
+    <div class="logo-bar-list">
+      <span class="logo-bar-item">Fortune 500 Retailer</span>
+      <span class="logo-bar-item">Series B FinTech</span>
+      <span class="logo-bar-item">Israeli Bank</span>
+      <span class="logo-bar-item">Tech Unicorn</span>
+      <span class="logo-bar-item">Healthcare Co.</span>
+      <span class="logo-bar-item">EdTech Leader</span>
+    </div>
   </div>
 </div>
 
@@ -1520,16 +1640,80 @@
 </section>
 
 <!-- ═══════════════════════════════════════
+     CASE STUDIES
+═══════════════════════════════════════ -->
+<section class="cases" id="cases">
+  <div class="container">
+    <div class="sec-header reveal">
+      <span class="tag">// case studies &middot; 3 results</span>
+      <h2 class="section-title">תוצאות אמיתיות.<br/>מספרים אמיתיים.</h2>
+      <p class="section-sub">
+        לא מוכרים חלומות — מוכרים תוצאות. הנה מה שקרה לאחרי שנכנסנו לתמונה.
+      </p>
+    </div>
+
+    <div class="case-grid">
+
+      <!-- Case 1: Financial -->
+      <div class="case-card reveal">
+        <span class="case-tag">// ארגון פיננסי &middot; 500 עובדים</span>
+        <div class="case-metric">1,200h</div>
+        <div class="case-metric-sub">חיסכון חודשי בשעות עבודה</div>
+        <p class="case-desc">
+          אוטומציה מלאה של תהליכי עיבוד נתונים, דיווח ללקוחות וניהול פניות — ממה שלקח שבוע, הפך לתהליך שרץ לבד.
+        </p>
+        <div class="case-bullets">
+          <div class="case-bullet"><span class="case-bullet-dot"></span>10 זרימות עבודה אוטומטיות ב-n8n ו-Make</div>
+          <div class="case-bullet"><span class="case-bullet-dot"></span>אינטגרציה מלאה עם מערכת ה-CRM הקיימת</div>
+          <div class="case-bullet"><span class="case-bullet-dot"></span>ROI מוכח תוך 6 שבועות מהשקה</div>
+        </div>
+      </div>
+
+      <!-- Case 2: SaaS startup -->
+      <div class="case-card reveal" style="transition-delay:.08s">
+        <span class="case-tag">// חברת SaaS &middot; Series B</span>
+        <div class="case-metric">80</div>
+        <div class="case-metric-sub">עובדים שהוכשרו ב-AI תוך חודש</div>
+        <p class="case-desc">
+          תוכנית הכשרה מותאמת אישית ל-4 מחלקות: R&D, מכירות, שיווק ו-CS — כל אחת עם סילבוס ייעודי.
+        </p>
+        <div class="case-bullets">
+          <div class="case-bullet"><span class="case-bullet-dot"></span>12 סדנאות פרקטיות עם כלי AI אמיתיים</div>
+          <div class="case-bullet"><span class="case-bullet-dot"></span>98% שביעות רצון בסיום ההכשרה</div>
+          <div class="case-bullet"><span class="case-bullet-dot"></span>+40% עלייה בתפוקה האישית ב-30 ימים</div>
+        </div>
+      </div>
+
+      <!-- Case 3: Healthcare -->
+      <div class="case-card reveal" style="transition-delay:.16s">
+        <span class="case-tag">// רשת רפואית &middot; 12 סניפים</span>
+        <div class="case-metric">×3</div>
+        <div class="case-metric-sub">מהירות טיפול בפניות מטופלים</div>
+        <p class="case-desc">
+          מערכת triage חכמה שמסווגת פניות נכנסות, מפנה לנציג הנכון ומייצרת טיוטת תגובה — אוטומטית.
+        </p>
+        <div class="case-bullets">
+          <div class="case-bullet"><span class="case-bullet-dot"></span>אינטגרציה עם מערכת ה-EMR הקיימת</div>
+          <div class="case-bullet"><span class="case-bullet-dot"></span>ירידה של 67% בזמן ממוצע לתגובה</div>
+          <div class="case-bullet"><span class="case-bullet-dot"></span>ממשק ניהול ייעודי למנהלי הסניפים</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
      WHY US
 ═══════════════════════════════════════ -->
 <section class="why-us" id="why-us">
   <div class="container">
     <div class="sec-header reveal">
-      <span class="tag tag--neon">// why us</span>
-      <h2 class="section-title section-title--light">
+      <span class="tag">// why us</span>
+      <h2 class="section-title">
         טכנולוגיה קיימת בכל מקום.<br/>שותפים אסטרטגיים קשה יותר למצוא.
       </h2>
-      <p class="section-sub section-sub--light">
+      <p class="section-sub">
         מחויבות לשקיפות ולתוצאות — זאת ההבטחה שלנו לכל ארגון.
       </p>
     </div>
@@ -1549,21 +1733,21 @@
         <div class="wf-visual" aria-hidden="true">
           <svg viewBox="0 0 300 160" style="width:100%;max-width:340px;height:auto;display:block">
             <!-- Human side -->
-            <circle cx="58"  cy="80" r="42" fill="none" stroke="rgba(250,250,247,.14)" stroke-width="1.5"/>
-            <circle cx="58"  cy="80" r="26" fill="none" stroke="rgba(250,250,247,.07)" stroke-width="1"/>
+            <circle cx="58"  cy="80" r="42" fill="none" stroke="rgba(10,10,10,.12)" stroke-width="1.5"/>
+            <circle cx="58"  cy="80" r="26" fill="none" stroke="rgba(10,10,10,.06)" stroke-width="1"/>
             <text x="58" y="75" class="bridge-lbl-human">HUMAN</text>
             <text x="58" y="89" class="bridge-lbl-human">EXPERTISE</text>
             <!-- AI side -->
-            <circle cx="242" cy="80" r="42" fill="none" stroke="rgba(196,241,44,.35)" stroke-width="1.5"/>
-            <circle cx="242" cy="80" r="26" fill="none" stroke="rgba(196,241,44,.15)" stroke-width="1"/>
+            <circle cx="242" cy="80" r="42" fill="none" stroke="rgba(164,214,18,.5)" stroke-width="1.5"/>
+            <circle cx="242" cy="80" r="26" fill="none" stroke="rgba(164,214,18,.22)" stroke-width="1"/>
             <text x="242" y="75" class="bridge-lbl-ai">AI</text>
             <text x="242" y="89" class="bridge-lbl-ai">TOOLS</text>
             <!-- Connection line -->
-            <line x1="100" y1="80" x2="200" y2="80" stroke="rgba(196,241,44,.18)" stroke-width="1" stroke-dasharray="5 3"/>
+            <line x1="100" y1="80" x2="200" y2="80" stroke="rgba(164,214,18,.3)" stroke-width="1" stroke-dasharray="5 3"/>
             <!-- Animated bridge dots -->
-            <circle cx="125" cy="80" r="3" fill="var(--neon)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:0s;opacity:.2"/>
-            <circle cx="150" cy="80" r="4" fill="var(--neon)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:.5s;opacity:.2"/>
-            <circle cx="175" cy="80" r="3" fill="var(--neon)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:1s;opacity:.2"/>
+            <circle cx="125" cy="80" r="3" fill="var(--neon-h)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:0s;opacity:.3"/>
+            <circle cx="150" cy="80" r="4" fill="var(--neon-h)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:.5s;opacity:.3"/>
+            <circle cx="175" cy="80" r="3" fill="var(--neon-h)" style="animation:bdot 2.2s ease-in-out infinite;animation-delay:1s;opacity:.3"/>
             <!-- Bridge label -->
             <text x="150" y="67" class="bridge-c-lbl">CLICK SOLUTIONS</text>
           </svg>
@@ -1887,7 +2071,7 @@ if(document.readyState === 'loading'){
 
   /* ─── Navbar state (light when over light sections) ─── */
   const navbar = document.getElementById('navbar');
-  const lightSections = ['services2','process','contact'];
+  const lightSections = ['stats','process','cases','why-us','contact'];
   // Actually simplify: change based on scroll position
   const heroBoundary = ()=> heroEl.offsetHeight;
   function updateNav(){
@@ -2036,6 +2220,154 @@ if(document.readyState === 'loading'){
   });
 
   form.fullName.addEventListener('input',()=>{ form.fullName.style.borderColor=''; });
+
+  /* ─── Hero Terminal Typewriter ─── */
+  (function(){
+    const htBody = document.getElementById('ht-body');
+    if(!htBody||prefersReduced) return;
+
+    const scenarios = [
+      {
+        q: '> How can AI save me 30 hours/week?',
+        lines: [
+          {t:'Scanning your workflows...', ok:false},
+          {t:'Email triage agent deployed', ok:true},
+          {t:'CRM auto-sync scheduled', ok:true},
+          {t:'Report generation automated', ok:true},
+          {t:'Estimated savings: 34 hrs/week', ok:'neon'},
+        ]
+      },
+      {
+        q: '> Can you train our team on AI tools?',
+        lines: [
+          {t:'Assessing team skill level...', ok:false},
+          {t:'Custom syllabus built for 60 staff', ok:true},
+          {t:'ChatGPT · Claude · Gemini modules ready', ok:true},
+          {t:'Live Q&A sessions included', ok:true},
+          {t:'Productivity gain: +40% avg.', ok:'neon'},
+        ]
+      },
+      {
+        q: '> What does implementation take?',
+        lines: [
+          {t:'Running scope analysis...', ok:false},
+          {t:'Week 1–2: strategy & mapping', ok:true},
+          {t:'Week 3–6: build & integrations', ok:true},
+          {t:'Week 7+: training & handoff', ok:true},
+          {t:'First ROI visible within 30 days', ok:'neon'},
+        ]
+      }
+    ];
+
+    let scenarioIdx = 0;
+    let cancelled = false;
+
+    function delay(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+    async function typeLine(text, el){
+      for(let i=0;i<text.length;i++){
+        if(cancelled) return;
+        el.textContent = text.slice(0,i+1);
+        await delay(28 + Math.random()*18);
+      }
+    }
+
+    async function runScenario(){
+      if(cancelled) return;
+      const s = scenarios[scenarioIdx % scenarios.length];
+      htBody.innerHTML = '';
+
+      // prompt line
+      const promptRow = document.createElement('div');
+      promptRow.className = 'ht-line';
+      const promptSpan = document.createElement('span');
+      promptSpan.className = 'ht-q';
+      promptRow.appendChild(promptSpan);
+      htBody.appendChild(promptRow);
+
+      await typeLine(s.q, promptSpan);
+      await delay(300);
+
+      // response lines
+      for(let i=0; i<s.lines.length; i++){
+        if(cancelled) return;
+        await delay(i===0 ? 200 : 120);
+        const row = document.createElement('div');
+        row.className = 'ht-line ht-line--ans';
+        const prefix = document.createElement('span');
+        prefix.className = 'ht-dim';
+        prefix.textContent = '  ';
+        const txt = document.createElement('span');
+
+        if(s.lines[i].ok === 'neon'){
+          txt.className = 'ht-ok';
+        } else if(s.lines[i].ok){
+          txt.className = 'ht-ans';
+        } else {
+          txt.className = 'ht-dim';
+        }
+
+        row.appendChild(prefix);
+        row.appendChild(txt);
+        htBody.appendChild(row);
+
+        if(s.lines[i].ok === false){
+          txt.textContent = s.lines[i].t;
+          // add blink cursor
+          const cur = document.createElement('span');
+          cur.className = 'ht-cursor';
+          row.appendChild(cur);
+          await delay(900);
+          row.removeChild(cur);
+          if(s.lines[i].ok === false && i === 0){
+            // replace with ok after "scanning"
+          }
+        } else {
+          await typeLine(s.lines[i].t, txt);
+        }
+      }
+
+      // cursor at end
+      const curFinal = document.createElement('span');
+      curFinal.className = 'ht-cursor';
+      htBody.appendChild(curFinal);
+
+      await delay(3800);
+      if(cancelled) return;
+
+      // fade out
+      htBody.style.transition = 'opacity .4s';
+      htBody.style.opacity = '0';
+      await delay(420);
+      if(cancelled) return;
+      htBody.style.opacity = '1';
+      scenarioIdx++;
+      runScenario();
+    }
+
+    // start after hero animation settles
+    setTimeout(runScenario, 1800);
+  })();
+
+  /* ─── Rotating neon word in hero ─── */
+  (function(){
+    const el = document.getElementById('neon-rotate');
+    if(!el||prefersReduced) return;
+    const words = ['הצמיחה','החדשנות','האוטומציה','ה-AI'];
+    let idx = 0;
+    setInterval(()=>{
+      el.classList.add('fade-out');
+      setTimeout(()=>{
+        idx = (idx+1) % words.length;
+        el.textContent = words[idx];
+        el.classList.remove('fade-out');
+        el.classList.add('fade-in');
+        requestAnimationFrame(()=>{
+          el.classList.remove('fade-in');
+        });
+      }, 360);
+    }, 3200);
+  })();
 
   /* ─── Back to Top ─── */
   const btt = document.getElementById('back-to-top');
