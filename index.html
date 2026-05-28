@@ -259,19 +259,26 @@
        HERO VIDEO — ambient looping background
     ═══════════════════════════════════════ */
     .hero-video-bg{
-      position:absolute;inset:0;
-      width:100%;height:100%;
+      /* Sit in the LEFT half of the hero so the title area is always clean */
+      position:absolute;
+      top:0;left:0;
+      width:58%;       /* left 58% of hero */
+      height:100%;
       pointer-events:none;z-index:0.8;
-      object-fit:cover;object-position:left center;
-      opacity:.32;
-      /* fade from left (visible) into the title zone (invisible).
-         gradient stops align with the ~52% content right boundary. */
-      -webkit-mask-image:linear-gradient(to left, transparent 0%, rgba(0,0,0,.08) 25%, black 52%);
-              mask-image:linear-gradient(to left, transparent 0%, rgba(0,0,0,.08) 25%, black 52%);
+      /* contain: show full 16:9 frame — no cropping, full workflow diagram visible */
+      object-fit:contain;
+      object-position:left top;
+      opacity:.38;
+      /* simple right-edge fade toward title zone */
+      -webkit-mask-image:linear-gradient(to right, black 55%, rgba(0,0,0,.2) 80%, transparent 96%);
+              mask-image:linear-gradient(to right, black 55%, rgba(0,0,0,.2) 80%, transparent 96%);
       will-change:opacity;
     }
     @media(max-width:760px){
-      .hero-video-bg{opacity:.14}
+      .hero-video-bg{width:100%;opacity:.18}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .hero-video-bg{opacity:0}
     }
     @media(prefers-reduced-motion:reduce){
       .hero-video-bg{opacity:0}
@@ -500,9 +507,9 @@
     }
     .hero-h1{
       font-family:var(--font-he);font-weight:900;
-      font-size:clamp(48px,8vw,96px);
-      line-height:1.01;letter-spacing:-.035em;
-      color:var(--fg);margin-bottom:26px;
+      font-size:clamp(34px,5vw,68px);
+      line-height:1.06;letter-spacing:-.03em;
+      color:var(--fg);margin-bottom:22px;
     }
     @keyframes wordUp{
       from{opacity:0;transform:translateY(40px)}
