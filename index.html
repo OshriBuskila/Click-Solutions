@@ -51,7 +51,7 @@
       max-width:100vw;
     }
     /* custom cursor only on interactive targets */
-    a,button,.btn,[role="button"],.svc-card,.case-card,.why-feat,.roi-tile,.stat-item,.logo-bar-item{cursor:none}
+    a,button,.btn,[role="button"],.svc-card,.case-card,.why-feat,.roi-tile,.stat-item,.logo-bar-item,.est-chip{cursor:none}
     input,textarea,select,[contenteditable]{cursor:text!important}
     @media(hover:none){body{cursor:auto}}
     a{text-decoration:none;color:inherit}
@@ -1172,6 +1172,96 @@
     }
     #back-to-top:hover{background:var(--neon-h)}
 
+    /* ═══════════════════════════════════════
+       PRICING ESTIMATOR
+    ═══════════════════════════════════════ */
+    .estimator{
+      background:var(--ink);
+      padding:92px 0;
+      border-top:1px solid rgba(196,241,44,.08);
+      overflow:hidden;
+      position:relative;
+    }
+    .estimator::before{
+      content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+      width:600px;height:600px;border-radius:50%;
+      background:radial-gradient(circle,rgba(196,241,44,.04) 0%,transparent 70%);
+      pointer-events:none;
+    }
+    .est-header{text-align:center;margin-bottom:56px}
+    .est-title{
+      font-family:var(--font-he);font-weight:900;
+      font-size:clamp(28px,3.5vw,48px);
+      color:var(--fg);letter-spacing:-.02em;line-height:1.1;
+      margin-bottom:12px;
+    }
+    .est-sub{font-size:15px;color:var(--fg2);max-width:480px;margin:0 auto}
+
+    /* Filter chips row */
+    .est-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px}
+    .est-filter-group{display:flex;flex-direction:column;gap:8px;flex:1;min-width:160px}
+    .est-filter-label{
+      font-family:var(--font-mo);font-size:9px;letter-spacing:1.8px;
+      text-transform:uppercase;color:var(--fg3);margin-bottom:2px;
+    }
+    .est-chips{display:flex;gap:8px;flex-wrap:wrap}
+    .est-chip{
+      font-family:var(--font-he);font-size:13px;font-weight:600;
+      padding:10px 16px;background:transparent;
+      border:1px solid rgba(250,250,247,.12);
+      color:rgba(250,250,247,.55);
+      cursor:none;transition:border-color .2s,color .2s,background .2s;
+      white-space:nowrap;
+    }
+    .est-chip:hover{border-color:rgba(250,250,247,.3);color:var(--fg)}
+    .est-chip.active{
+      border-color:var(--neon-h);
+      color:var(--ink);
+      background:var(--neon);
+    }
+    .est-chip.active:hover{background:var(--neon-h)}
+
+    /* Result display */
+    .est-result{
+      text-align:center;
+      padding:48px 0 24px;
+      border-top:1px solid rgba(250,250,247,.06);
+      position:relative;
+    }
+    .est-range-label{
+      font-family:var(--font-mo);font-size:10px;letter-spacing:2px;
+      text-transform:uppercase;color:var(--fg3);margin-bottom:16px;
+    }
+    .est-price{
+      font-family:var(--font-en);font-weight:300;
+      font-size:clamp(56px,8vw,96px);
+      letter-spacing:-.04em;line-height:1;
+      color:var(--neon);
+      transition:opacity .25s var(--ease),transform .25s var(--ease);
+      font-feature-settings:"tnum";
+    }
+    .est-price.changing{opacity:0;transform:translateY(12px)}
+    .est-price-unit{
+      font-size:.32em;
+      color:var(--fg2);
+      vertical-align:super;
+      margin-right:4px;
+      font-weight:400;
+    }
+    .est-disclaimer{
+      font-family:var(--font-mo);font-size:9px;
+      color:var(--fg3);letter-spacing:.5px;
+      margin-top:20px;
+    }
+    .est-cta{margin-top:28px}
+
+    /* Layout grid */
+    .est-body{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+    @media(max-width:720px){
+      .est-body{grid-template-columns:1fr}
+      .est-price{font-size:clamp(48px,14vw,80px)}
+    }
+
     .footer{background:var(--ink);color:var(--fg)}
     .footer-main{padding:60px 0 48px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:32px}
     .footer-brand p{font-size:13px;color:var(--fg2);line-height:1.65;margin-top:12px;max-width:240px}
@@ -1947,6 +2037,71 @@
 </section>
 
 <!-- ═══════════════════════════════════════
+     PRICING ESTIMATOR
+═══════════════════════════════════════ -->
+<section class="estimator" id="estimator" aria-label="מחשבון הערכת עלות">
+  <div class="container">
+
+    <div class="est-header reveal">
+      <span class="tag" style="margin-bottom:18px">// הערכת השקעה</span>
+      <h2 class="est-title">כמה עולה לעשות סדר?</h2>
+      <p class="est-sub">בחרו את הפרמטרים — ותקבלו הערכה ראשונית כדי להתחיל לתכנן.</p>
+    </div>
+
+    <div class="est-body reveal">
+
+      <!-- Left: filters -->
+      <div class="est-filters-wrap">
+
+        <div class="est-filter-group">
+          <span class="est-filter-label">// מה הצורך העיקרי</span>
+          <div class="est-chips" role="group" aria-label="סוג פרויקט" id="estFocus">
+            <button type="button" class="est-chip active" data-focus="training" aria-pressed="true">הדרכות AI</button>
+            <button type="button" class="est-chip" data-focus="automation" aria-pressed="false">אוטומציות</button>
+            <button type="button" class="est-chip" data-focus="dev" aria-pressed="false">פיתוח מערכות</button>
+          </div>
+        </div>
+
+        <div class="est-filter-group" style="margin-top:28px">
+          <span class="est-filter-label">// גודל הארגון</span>
+          <div class="est-chips" role="group" aria-label="גודל ארגון" id="estSize">
+            <button type="button" class="est-chip" data-size="small" aria-pressed="false">1–50</button>
+            <button type="button" class="est-chip active" data-size="mid" aria-pressed="true">50–200</button>
+            <button type="button" class="est-chip" data-size="large" aria-pressed="false">200+</button>
+          </div>
+        </div>
+
+        <div class="est-filter-group" style="margin-top:28px">
+          <span class="est-filter-label">// טווח הפרויקט</span>
+          <div class="est-chips" role="group" aria-label="טווח פרויקט" id="estScope">
+            <button type="button" class="est-chip" data-scope="pilot" aria-pressed="false">פיילוט</button>
+            <button type="button" class="est-chip active" data-scope="standard" aria-pressed="true">סטנדרטי</button>
+            <button type="button" class="est-chip" data-scope="full" aria-pressed="false">מקיף</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right: result -->
+      <div class="est-result">
+        <p class="est-range-label">// הערכת טווח השקעה</p>
+        <div class="est-price" id="estPrice" aria-live="polite" aria-atomic="true">
+          <span class="est-price-unit">₪</span><span id="estLow">18,000</span>
+          <span style="font-size:.4em;color:var(--fg3);margin:0 8px">–</span>
+          <span id="estHigh">32,000</span>
+        </div>
+        <p class="est-disclaimer" id="estNote">// הדרכה לצוות 50–200 איש · מודול אחד · 4–6 שבועות</p>
+        <div class="est-cta">
+          <a href="#contact" class="btn btn-primary">קבלו הצעת מחיר מדויקת ←</a>
+          <p style="font-family:var(--font-mo);font-size:9px;color:var(--fg3);margin-top:12px;letter-spacing:.5px">// אין התחייבות · ייעוץ ראשוני ללא עלות</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
      CONTACT
 ═══════════════════════════════════════ -->
 <section class="contact" id="contact">
@@ -2689,6 +2844,87 @@ if(document.readyState === 'loading'){
         });
       }, 360);
     }, 3200);
+  })();
+
+  /* ─── Pricing Estimator ─── */
+  (function(){
+    // Price matrix: [low, high] in ILS (thousands notation)
+    // Keys: focus × size × scope
+    const prices = {
+      training: {
+        small:  { pilot:[6,12],   standard:[14,22],  full:[22,38]  },
+        mid:    { pilot:[10,18],  standard:[18,32],  full:[35,58]  },
+        large:  { pilot:[16,28],  standard:[30,52],  full:[55,90]  },
+      },
+      automation: {
+        small:  { pilot:[8,16],   standard:[20,36],  full:[38,65]  },
+        mid:    { pilot:[14,24],  standard:[32,56],  full:[60,100] },
+        large:  { pilot:[22,38],  standard:[48,80],  full:[90,150] },
+      },
+      dev: {
+        small:  { pilot:[12,22],  standard:[28,50],  full:[55,90]  },
+        mid:    { pilot:[20,36],  standard:[45,75],  full:[85,140] },
+        large:  { pilot:[32,55],  standard:[65,110], full:[120,200]},
+      },
+    };
+
+    const notes = {
+      training: {
+        small:  { pilot:'// סדנת AI ל-1–50 איש · 1–2 ימים',          standard:'// הדרכה לצוות 1–50 · 3–4 שבועות',         full:'// מסלול מקיף + ליווי שוטף' },
+        mid:    { pilot:'// ורקשופ ל-50–200 · יום אחד',              standard:'// הדרכה לצוות 50–200 איש · 4–6 שבועות',   full:'// מסלול AI מלא עם מנטורינג' },
+        large:  { pilot:'// פיילוט מחלקתי ל-200+',                    standard:'// רול-אאוט ל-200+ עם מנהלים',             full:'// תוכנית AI לכלל הארגון' },
+      },
+      automation: {
+        small:  { pilot:'// אוטומציה לתהליך אחד',                     standard:'// 3–5 זרימות עבודה אוטומטיות',           full:'// מעטפת אוטומציה מלאה' },
+        mid:    { pilot:'// POC אוטומציה ל-50–200',                    standard:'// 5–10 תהליכים · Zapier/n8n',             full:'// אוטומציה מלאה + תחזוקה' },
+        large:  { pilot:'// פיילוט מחלקתי',                           standard:'// אינטגרציות ארגוניות מורכבות',           full:'// טרנספורמציה דיגיטלית מלאה' },
+      },
+      dev: {
+        small:  { pilot:'// MVP AI ראשוני',                            standard:'// ממשק AI מותאם + API',                   full:'// מוצר AI מלא + הטמעה' },
+        mid:    { pilot:'// פרוטוטייפ פנימי',                          standard:'// מערכת AI פנים-ארגונית',                 full:'// פלטפורמה מלאה + תמיכה' },
+        large:  { pilot:'// POC ארגוני',                               standard:'// מערכת ל-200+ משתמשים',                  full:'// פלטפורמת AI ארגונית' },
+      },
+    };
+
+    let sel = { focus:'training', size:'mid', scope:'standard' };
+
+    const priceEl  = document.getElementById('estPrice');
+    const lowEl    = document.getElementById('estLow');
+    const highEl   = document.getElementById('estHigh');
+    const noteEl   = document.getElementById('estNote');
+
+    function fmt(n){ return (n*1000).toLocaleString('he-IL'); }
+
+    function update(){
+      const [lo, hi] = prices[sel.focus][sel.size][sel.scope];
+      const note     = notes[sel.focus][sel.size][sel.scope];
+
+      priceEl.classList.add('changing');
+      setTimeout(()=>{
+        lowEl.textContent  = fmt(lo);
+        highEl.textContent = fmt(hi);
+        noteEl.textContent = note;
+        priceEl.classList.remove('changing');
+      },220);
+    }
+
+    function bindGroup(groupId, key){
+      const grp = document.getElementById(groupId);
+      if(!grp) return;
+      grp.addEventListener('click', e=>{
+        const chip = e.target.closest('.est-chip');
+        if(!chip) return;
+        grp.querySelectorAll('.est-chip').forEach(c=>{ c.classList.remove('active'); c.setAttribute('aria-pressed','false'); });
+        chip.classList.add('active');
+        chip.setAttribute('aria-pressed','true');
+        sel[key] = chip.dataset[key];
+        update();
+      });
+    }
+
+    bindGroup('estFocus','focus');
+    bindGroup('estSize','size');
+    bindGroup('estScope','scope');
   })();
 
   /* ─── Back to Top ─── */
