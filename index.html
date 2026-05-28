@@ -241,7 +241,7 @@
     .hero-bg-net{
       position:absolute;inset:0;width:100%;height:100%;
       pointer-events:none;z-index:1;
-      opacity:1;
+      opacity:.35; /* ambient background under the cinema layer */
     }
     /* gentle pulse for AI hub */
     @keyframes hubPulse{0%,100%{opacity:.55}50%{opacity:1}}
@@ -255,6 +255,139 @@
     /* dim background icons on small screens so they don't crowd mobile hero */
     @media(max-width:760px){.hero-bg-net{opacity:.55}}
 
+    /* ═══════════════════════════════════════
+       HERO CINEMA — 3-scene cycling background
+    ═══════════════════════════════════════ */
+    .hero-cinema{
+      position:absolute;inset:0;
+      pointer-events:none;z-index:1;
+      overflow:hidden;opacity:.88;
+      /* soft right fade so any stray content doesn't reach the H1 area */
+      -webkit-mask-image:linear-gradient(to left, transparent 0%, rgba(0,0,0,.4) 30%, black 50%);
+              mask-image:linear-gradient(to left, transparent 0%, rgba(0,0,0,.4) 30%, black 50%);
+    }
+    .cine-scene{
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;will-change:opacity,transform,filter;
+      animation-duration:27s;animation-iteration-count:infinite;
+      animation-timing-function:cubic-bezier(.4,0,.2,1);
+    }
+    /* Master 3-scene cycle — 9s per scene (8s visible + 1s crossfade) */
+    @keyframes cine1{
+      0%,3%   {opacity:1;transform:scale(1);filter:blur(0)}
+      30%     {opacity:1;transform:scale(1.05);filter:blur(0)}
+      36%,93% {opacity:0;transform:scale(1.15);filter:blur(8px)}
+      99%,100%{opacity:1;transform:scale(1);filter:blur(0)}
+    }
+    @keyframes cine2{
+      0%,30%  {opacity:0;transform:scale(.92);filter:blur(8px)}
+      36%,55% {opacity:1;transform:scale(1);filter:blur(0)}
+      63%     {opacity:1;transform:scale(1.05);filter:blur(0)}
+      69%,100%{opacity:0;transform:scale(1.15);filter:blur(8px)}
+    }
+    @keyframes cine3{
+      0%,63%  {opacity:0;transform:scale(.92);filter:blur(8px)}
+      69%,88% {opacity:1;transform:scale(1);filter:blur(0)}
+      96%,100%{opacity:0;transform:scale(1.08);filter:blur(6px)}
+    }
+    .cine-1{animation-name:cine1}
+    .cine-2{animation-name:cine2}
+    .cine-3{animation-name:cine3}
+
+    /* ── Scene 1: CODE — positioned on the LEFT side (where the terminal was), not full-width ── */
+    .cine-1{justify-content:flex-start;direction:ltr}
+    .cine-code-wrap{
+      direction:ltr;text-align:left;
+      font-family:var(--font-mo);font-size:clamp(13px,1.35vw,20px);
+      line-height:1.7;color:rgba(250,250,247,.85);
+      max-width:560px;padding:0 4% 0 6%;
+      letter-spacing:-.01em;
+    }
+    .cine-code-wrap .ln{
+      display:block;opacity:0;
+      animation:codeReveal .5s var(--ease) forwards;
+    }
+    .cine-code-wrap .kw{color:#A4D612;font-weight:600}
+    .cine-code-wrap .fn{color:#F2F49E}
+    .cine-code-wrap .attr{color:#FAFAF7;opacity:.95}
+    .cine-code-wrap .str{color:#C4F12C}
+    .cine-code-wrap .num{color:#FAFAF7}
+    .cine-code-wrap .cm{color:rgba(196,241,44,.55);font-style:italic}
+    .cine-code-wrap .ok{color:var(--neon)}
+    .cine-code-wrap .cursor-blink{
+      display:inline-block;width:.55em;height:1em;background:var(--neon);
+      vertical-align:text-bottom;animation:blink 1s steps(1) infinite;margin-left:2px;
+    }
+    @keyframes codeReveal{
+      from{opacity:0;transform:translateY(8px)}
+      to  {opacity:1;transform:translateY(0)}
+    }
+    /* Stagger each line — only within scene-1's visible window (0–9s of 27s cycle) */
+    .cine-1 .ln:nth-child(1) {animation-delay:.4s}
+    .cine-1 .ln:nth-child(2) {animation-delay:.9s}
+    .cine-1 .ln:nth-child(3) {animation-delay:1.4s}
+    .cine-1 .ln:nth-child(4) {animation-delay:1.9s}
+    .cine-1 .ln:nth-child(5) {animation-delay:2.4s}
+    .cine-1 .ln:nth-child(6) {animation-delay:2.9s}
+    .cine-1 .ln:nth-child(7) {animation-delay:3.4s}
+    .cine-1 .ln:nth-child(8) {animation-delay:4.0s}
+    .cine-1 .ln:nth-child(9) {animation-delay:4.5s}
+    .cine-1 .ln:nth-child(10){animation-delay:5.0s}
+    .cine-1 .ln:nth-child(11){animation-delay:5.5s}
+
+    /* ── Scene 2: AUTOMATION FLOW — pushed LEFT (LTR) to live in the unmasked zone ── */
+    .cine-2,.cine-3{justify-content:flex-start;direction:ltr;padding-left:2vw}
+    .cine-flow{width:100%;height:100%;max-width:520px;max-height:560px}
+    /* CSS transform would clobber the SVG translate(...) attribute, so animate opacity only */
+    @keyframes flowPulse{
+      0%,100%{opacity:.55}
+      50%    {opacity:1}
+    }
+    .cine-flow .flow-pulse-1{animation:flowPulse 2.4s ease-in-out infinite}
+    .cine-flow .flow-pulse-2{animation:flowPulse 2.4s ease-in-out .4s infinite}
+    .cine-flow .flow-pulse-3{animation:flowPulse 2.4s ease-in-out .8s infinite}
+    .cine-flow .flow-pulse-4{animation:flowPulse 2.4s ease-in-out 1.2s infinite}
+    .cine-flow .flow-pulse-5{animation:flowPulse 2.4s ease-in-out 1.6s infinite}
+
+    /* ── Scene 3: CLASSROOM (also LEFT-aligned via .cine-2,.cine-3 rule above) ── */
+    .cine-class{width:100%;height:100%;max-width:520px;max-height:560px}
+    @keyframes classLight{
+      0%,100%{opacity:.18}
+      50%    {opacity:.85}
+    }
+    .cine-class .desk-1{animation:classLight 3.2s ease-in-out infinite}
+    .cine-class .desk-2{animation:classLight 3.2s ease-in-out .3s infinite}
+    .cine-class .desk-3{animation:classLight 3.2s ease-in-out .6s infinite}
+    .cine-class .desk-4{animation:classLight 3.2s ease-in-out .9s infinite}
+    .cine-class .desk-5{animation:classLight 3.2s ease-in-out 1.2s infinite}
+    .cine-class .desk-6{animation:classLight 3.2s ease-in-out 1.5s infinite}
+    .cine-class .desk-7{animation:classLight 3.2s ease-in-out 1.8s infinite}
+    .cine-class .desk-8{animation:classLight 3.2s ease-in-out 2.1s infinite}
+    .cine-class .desk-9{animation:classLight 3.2s ease-in-out 2.4s infinite}
+    @keyframes beamFlow{
+      0%  {stroke-dashoffset:0}
+      100%{stroke-dashoffset:-30}
+    }
+    .cine-class .beam{animation:beamFlow 1.8s linear infinite}
+
+    /* Scene labels removed — kept here as anchor for future use */
+    .cine-label{display:none}
+
+    /* Performance + accessibility */
+    @media(max-width:760px){
+      .hero-cinema{opacity:.32}
+      .cine-scene{filter:none!important}
+      .cine-code-wrap{font-size:13px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .cine-scene,.cine-code-wrap .ln,.cine-flow .flow-node,.cine-class [class^="desk-"],.cine-class .beam{
+        animation:none
+      }
+      .cine-1{opacity:1}
+      .cine-2,.cine-3{display:none}
+    }
+
     /* gradient mesh */
     .hero-mesh{
       position:absolute;inset:0;pointer-events:none;
@@ -263,8 +396,8 @@
         radial-gradient(ellipse 40% 60% at 20% 80%, rgba(196,241,44,.05) 0%, transparent 60%);
     }
 
-    /* hero terminal */
-    .hero-terminal{
+    /* hero terminal — hidden; the cinema layer now provides the dynamic code/automation/classroom visuals */
+    .hero-terminal{display:none!important;
       width:420px;flex-shrink:0;
       background:#080808;
       border:1px solid rgba(196,241,44,.18);
@@ -338,7 +471,7 @@
       will-change:transform;
     }
 
-    .hero-inner{position:relative;z-index:1;padding:80px 0 100px;max-width:980px}
+    .hero-inner{position:relative;z-index:5;padding:80px 0 100px;max-width:980px}
     .hero-eyebrow{
       font-family:var(--font-mo);font-size:11px;
       letter-spacing:2.4px;text-transform:uppercase;
@@ -1481,6 +1614,297 @@
       <animate attributeName="opacity" values="0;.4;.4;0" keyTimes="0;.12;.88;1" dur="6s" repeatCount="indefinite" begin="4.2s"/>
     </circle>
   </svg>
+
+  <!-- ═══════════════════════════════════════
+       CINEMA: 3-scene background cycle
+       Scene 1 (0-9s)   — code being written
+       Scene 2 (9-18s)  — automation flow
+       Scene 3 (18-27s) — computer classroom
+  ═══════════════════════════════════════ -->
+  <div class="hero-cinema" aria-hidden="true">
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         SCENE 1 — CODE
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <div class="cine-scene cine-1">
+      <div class="cine-code-wrap">
+        <span class="ln"><span class="cm">// click-ai-demo.sh</span></span>
+        <span class="ln"><span class="kw">const</span> agents = <span class="kw">await</span> ClickSolutions.<span class="fn">init</span>({</span>
+        <span class="ln">  <span class="attr">channels</span>: [<span class="str">'whatsapp'</span>, <span class="str">'email'</span>, <span class="str">'crm'</span>],</span>
+        <span class="ln">  <span class="attr">team</span>: <span class="num">200</span>,</span>
+        <span class="ln">  <span class="attr">workflows</span>: <span class="num">14</span>,</span>
+        <span class="ln">});</span>
+        <span class="ln">&nbsp;</span>
+        <span class="ln"><span class="cm">→ connecting agents...</span></span>
+        <span class="ln"><span class="cm">→ training models...</span></span>
+        <span class="ln"><span class="cm">→ deploying automation...</span></span>
+        <span class="ln"><span class="ok">✓ ready.</span><span class="cursor-blink"></span></span>
+      </div>
+      <div class="cine-label">scene 01 · code</div>
+    </div>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         SCENE 2 — AUTOMATION FLOW
+         Vertical workflow with icon nodes + flowing particles
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <div class="cine-scene cine-2">
+      <svg class="cine-flow" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <!-- vertical pipeline path -->
+          <path id="cf-pipe" d="M600,80 L600,520"/>
+          <!-- branch paths -->
+          <path id="cf-br1" d="M600,260 L380,360"/>
+          <path id="cf-br2" d="M600,260 L820,360"/>
+          <path id="cf-br3" d="M380,360 L600,480"/>
+          <path id="cf-br4" d="M820,360 L600,480"/>
+        </defs>
+
+        <!-- Main vertical pipeline (faint background spine) -->
+        <line x1="600" y1="80" x2="600" y2="520"
+              stroke="rgba(196,241,44,.18)" stroke-width="1.5" stroke-dasharray="6 6"/>
+        <line x1="600" y1="260" x2="380" y2="360"
+              stroke="rgba(196,241,44,.15)" stroke-width="1.2" stroke-dasharray="5 6"/>
+        <line x1="600" y1="260" x2="820" y2="360"
+              stroke="rgba(196,241,44,.15)" stroke-width="1.2" stroke-dasharray="5 6"/>
+        <line x1="380" y1="360" x2="600" y2="480"
+              stroke="rgba(196,241,44,.13)" stroke-width="1.2" stroke-dasharray="5 6"/>
+        <line x1="820" y1="360" x2="600" y2="480"
+              stroke="rgba(196,241,44,.13)" stroke-width="1.2" stroke-dasharray="5 6"/>
+
+        <!-- ─── NODE 1 — Trigger (top) ─── -->
+        <g class="flow-node flow-pulse-1" transform="translate(600,80)">
+          <circle r="46" fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.45)" stroke-width="1.4"/>
+          <circle r="34" fill="rgba(196,241,44,.08)"/>
+          <!-- WhatsApp bubble -->
+          <path d="M-12,-9 a12,12 0 1,1 5,20 L-14,15 l2,-7 a12,12 0 0,1 -3,-16 z"
+                fill="none" stroke="rgba(196,241,44,.85)" stroke-width="1.6"
+                stroke-linejoin="round" stroke-linecap="round"/>
+          <circle cx="-5" cy="0" r="1.4" fill="rgba(196,241,44,.85)"/>
+          <circle cx="0"  cy="0" r="1.4" fill="rgba(196,241,44,.85)"/>
+          <circle cx="5"  cy="0" r="1.4" fill="rgba(196,241,44,.85)"/>
+          <text x="0" y="68" text-anchor="middle" fill="rgba(196,241,44,.7)"
+                font-family="'JetBrains Mono',monospace" font-size="11" letter-spacing="2" font-weight="700">TRIGGER</text>
+        </g>
+
+        <!-- ─── NODE 2 — AI Hub (center, largest) ─── -->
+        <g class="flow-node flow-pulse-2" transform="translate(600,260)">
+          <circle r="60" fill="none" stroke="rgba(196,241,44,.18)" stroke-dasharray="2 5"/>
+          <circle r="48" fill="rgba(10,10,10,.55)" stroke="rgba(196,241,44,.5)" stroke-width="1.4"/>
+          <polygon points="0,-26 22,-13 22,13 0,26 -22,13 -22,-13"
+                   fill="rgba(196,241,44,.1)" stroke="rgba(196,241,44,.85)" stroke-width="1.8"/>
+          <text x="0" y="6" text-anchor="middle" fill="rgba(196,241,44,.95)"
+                font-family="'JetBrains Mono',monospace" font-size="18" font-weight="700">AI</text>
+          <text x="0" y="82" text-anchor="middle" fill="rgba(196,241,44,.7)"
+                font-family="'JetBrains Mono',monospace" font-size="11" letter-spacing="2" font-weight="700">CLICK · AI</text>
+        </g>
+
+        <!-- ─── NODE 3 — CRM (left branch) ─── -->
+        <g class="flow-node flow-pulse-3" transform="translate(380,360)">
+          <circle r="38" fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.4)" stroke-width="1.3"/>
+          <!-- CRM grid -->
+          <rect x="-13" y="-13" width="11" height="11" rx="1" fill="none" stroke="rgba(196,241,44,.8)" stroke-width="1.4"/>
+          <rect x="2"   y="-13" width="11" height="11" rx="1" fill="rgba(196,241,44,.35)" stroke="rgba(196,241,44,.8)" stroke-width="1.4"/>
+          <rect x="-13" y="2"   width="11" height="11" rx="1" fill="rgba(196,241,44,.18)" stroke="rgba(196,241,44,.8)" stroke-width="1.4"/>
+          <rect x="2"   y="2"   width="11" height="11" rx="1" fill="none" stroke="rgba(196,241,44,.8)" stroke-width="1.4"/>
+          <text x="0" y="60" text-anchor="middle" fill="rgba(196,241,44,.65)"
+                font-family="'JetBrains Mono',monospace" font-size="10" letter-spacing="2" font-weight="700">CRM</text>
+        </g>
+
+        <!-- ─── NODE 4 — Email (right branch) ─── -->
+        <g class="flow-node flow-pulse-4" transform="translate(820,360)">
+          <circle r="38" fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.4)" stroke-width="1.3"/>
+          <rect x="-14" y="-9" width="28" height="18" rx=".8" fill="none" stroke="rgba(196,241,44,.8)" stroke-width="1.5"/>
+          <polyline points="-14,-9 0,3 14,-9" fill="none" stroke="rgba(196,241,44,.8)" stroke-width="1.5" stroke-linejoin="round"/>
+          <text x="0" y="60" text-anchor="middle" fill="rgba(196,241,44,.65)"
+                font-family="'JetBrains Mono',monospace" font-size="10" letter-spacing="2" font-weight="700">EMAIL</text>
+        </g>
+
+        <!-- ─── NODE 5 — Database (bottom) ─── -->
+        <g class="flow-node flow-pulse-5" transform="translate(600,480)">
+          <circle r="40" fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.4)" stroke-width="1.3"/>
+          <ellipse cx="0" cy="-10" rx="14" ry="4" fill="none" stroke="rgba(196,241,44,.85)" stroke-width="1.5"/>
+          <path d="M-14,-10 L-14,10 a14,4 0 0,0 28,0 L14,-10" fill="none" stroke="rgba(196,241,44,.85)" stroke-width="1.5"/>
+          <ellipse cx="0" cy="0" rx="14" ry="4" fill="none" stroke="rgba(196,241,44,.5)" stroke-width="1.1"/>
+          <text x="0" y="65" text-anchor="middle" fill="rgba(196,241,44,.65)"
+                font-family="'JetBrains Mono',monospace" font-size="10" letter-spacing="2" font-weight="700">DATA</text>
+        </g>
+
+        <!-- ─── Flowing particles along pipeline ─── -->
+        <circle r="4" fill="rgba(196,241,44,.95)">
+          <animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#cf-pipe"/></animateMotion>
+        </circle>
+        <circle r="3" fill="rgba(196,241,44,.7)">
+          <animateMotion dur="2.6s" repeatCount="indefinite" begin=".8s"><mpath href="#cf-pipe"/></animateMotion>
+        </circle>
+        <circle r="3" fill="rgba(196,241,44,.6)">
+          <animateMotion dur="2.6s" repeatCount="indefinite" begin="1.6s"><mpath href="#cf-pipe"/></animateMotion>
+        </circle>
+        <circle r="3.5" fill="rgba(196,241,44,.85)">
+          <animateMotion dur="2.2s" repeatCount="indefinite" begin=".4s"><mpath href="#cf-br1"/></animateMotion>
+        </circle>
+        <circle r="3.5" fill="rgba(196,241,44,.85)">
+          <animateMotion dur="2.2s" repeatCount="indefinite" begin="1.2s"><mpath href="#cf-br2"/></animateMotion>
+        </circle>
+        <circle r="3" fill="rgba(196,241,44,.7)">
+          <animateMotion dur="2s" repeatCount="indefinite" begin="1s"><mpath href="#cf-br3"/></animateMotion>
+        </circle>
+        <circle r="3" fill="rgba(196,241,44,.7)">
+          <animateMotion dur="2s" repeatCount="indefinite" begin="1.8s"><mpath href="#cf-br4"/></animateMotion>
+        </circle>
+      </svg>
+      <div class="cine-label">scene 02 · automation flow</div>
+    </div>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         SCENE 3 — COMPUTER CLASSROOM
+         3×3 grid of student stations + central instructor + knowledge beams
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <div class="cine-scene cine-3">
+      <svg class="cine-class" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid meet">
+
+        <!-- ─── Floor perspective lines (subtle depth) ─── -->
+        <g stroke="rgba(196,241,44,.08)" stroke-width=".6" fill="none">
+          <line x1="100" y1="540" x2="0"    y2="600"/>
+          <line x1="600" y1="540" x2="600"  y2="600"/>
+          <line x1="1100" y1="540" x2="1200" y2="600"/>
+          <line x1="0" y1="600" x2="1200" y2="600"/>
+        </g>
+
+        <!-- ─── Instructor / Teacher Hub (top center) ─── -->
+        <g transform="translate(600,90)">
+          <!-- podium glow -->
+          <ellipse cx="0" cy="56" rx="80" ry="8" fill="rgba(196,241,44,.06)"/>
+          <!-- instructor screen / lectern -->
+          <rect x="-58" y="-40" width="116" height="72" rx="2"
+                fill="rgba(10,10,10,.55)" stroke="rgba(196,241,44,.55)" stroke-width="1.4"/>
+          <!-- screen content: AI lesson -->
+          <line x1="-50" y1="-30" x2="-26" y2="-30" stroke="rgba(196,241,44,.7)" stroke-width="1.4"/>
+          <line x1="-50" y1="-22" x2="-10" y2="-22" stroke="rgba(196,241,44,.5)" stroke-width="1"/>
+          <line x1="-50" y1="-14" x2="-30" y2="-14" stroke="rgba(196,241,44,.5)" stroke-width="1"/>
+          <!-- mini AI hex -->
+          <g transform="translate(28,-12)">
+            <polygon points="0,-12 10,-6 10,6 0,12 -10,6 -10,-6"
+                     fill="rgba(196,241,44,.15)" stroke="rgba(196,241,44,.85)" stroke-width="1.3"/>
+            <text x="0" y="3" text-anchor="middle" fill="rgba(196,241,44,.95)"
+                  font-family="'JetBrains Mono',monospace" font-size="9" font-weight="700">AI</text>
+          </g>
+          <!-- bottom progress bar -->
+          <rect x="-50" y="18" width="100" height="3" fill="rgba(196,241,44,.12)"/>
+          <rect x="-50" y="18" width="64" height="3" fill="rgba(196,241,44,.7)"/>
+          <!-- label -->
+          <text x="0" y="68" text-anchor="middle" fill="rgba(196,241,44,.7)"
+                font-family="'JetBrains Mono',monospace" font-size="10" letter-spacing="2" font-weight="700">INSTRUCTOR</text>
+        </g>
+
+        <!-- ─── Knowledge beams from instructor to each desk ─── -->
+        <g stroke="rgba(196,241,44,.4)" stroke-width="1.2" fill="none" stroke-dasharray="5 4">
+          <line class="beam" x1="600" y1="158" x2="200" y2="310"/>
+          <line class="beam" x1="600" y1="158" x2="600" y2="310"/>
+          <line class="beam" x1="600" y1="158" x2="1000" y2="310"/>
+          <line class="beam" x1="600" y1="158" x2="200" y2="430"/>
+          <line class="beam" x1="600" y1="158" x2="600" y2="430"/>
+          <line class="beam" x1="600" y1="158" x2="1000" y2="430"/>
+        </g>
+
+        <!-- ─── ROW 1: 3 student desks (mid) ─── -->
+        <!-- desk template: monitor + base -->
+        <g class="desk-1" transform="translate(200,310)">
+          <rect x="-44" y="-30" width="88" height="56" rx="2"
+                fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.5)" stroke-width="1.2"/>
+          <line x1="-36" y1="-20" x2="-12" y2="-20" stroke="rgba(196,241,44,.55)" stroke-width="1"/>
+          <line x1="-36" y1="-13" x2="2" y2="-13" stroke="rgba(196,241,44,.4)" stroke-width=".9"/>
+          <line x1="-36" y1="-6"  x2="-18" y2="-6" stroke="rgba(196,241,44,.4)" stroke-width=".9"/>
+          <rect x="-36" y="4" width="32" height="14" fill="rgba(196,241,44,.18)"/>
+          <rect x="6" y="4" width="22" height="14" fill="rgba(196,241,44,.06)" stroke="rgba(196,241,44,.3)" stroke-width=".8"/>
+          <!-- desk base -->
+          <rect x="-50" y="28" width="100" height="3" fill="rgba(196,241,44,.25)"/>
+          <line x1="-40" y1="31" x2="-40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+          <line x1="40" y1="31" x2="40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+        </g>
+
+        <g class="desk-2" transform="translate(600,310)">
+          <rect x="-44" y="-30" width="88" height="56" rx="2"
+                fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.5)" stroke-width="1.2"/>
+          <!-- chart sparkline -->
+          <polyline points="-36,12 -28,4 -20,7 -12,-3 -4,-6 4,-12 12,-9 20,-14 28,-10 36,-16"
+                    fill="none" stroke="rgba(196,241,44,.7)" stroke-width="1.3"/>
+          <line x1="-36" y1="18" x2="36" y2="18" stroke="rgba(196,241,44,.2)" stroke-width=".7"/>
+          <rect x="-50" y="28" width="100" height="3" fill="rgba(196,241,44,.25)"/>
+          <line x1="-40" y1="31" x2="-40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+          <line x1="40" y1="31" x2="40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+        </g>
+
+        <g class="desk-3" transform="translate(1000,310)">
+          <rect x="-44" y="-30" width="88" height="56" rx="2"
+                fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.5)" stroke-width="1.2"/>
+          <!-- code lines -->
+          <line x1="-36" y1="-20" x2="-20" y2="-20" stroke="rgba(196,241,44,.7)" stroke-width="1"/>
+          <line x1="-15" y1="-20" x2="0" y2="-20" stroke="rgba(196,241,44,.45)" stroke-width="1"/>
+          <line x1="-30" y1="-12" x2="-10" y2="-12" stroke="rgba(196,241,44,.55)" stroke-width="1"/>
+          <line x1="-30" y1="-4" x2="10" y2="-4" stroke="rgba(196,241,44,.4)" stroke-width="1"/>
+          <line x1="-30" y1="4" x2="-8" y2="4" stroke="rgba(196,241,44,.55)" stroke-width="1"/>
+          <line x1="-30" y1="12" x2="20" y2="12" stroke="rgba(196,241,44,.35)" stroke-width="1"/>
+          <rect x="-50" y="28" width="100" height="3" fill="rgba(196,241,44,.25)"/>
+          <line x1="-40" y1="31" x2="-40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+          <line x1="40" y1="31" x2="40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+        </g>
+
+        <!-- ─── ROW 2: 3 student desks (back) ─── -->
+        <g class="desk-4" transform="translate(200,430)">
+          <rect x="-44" y="-30" width="88" height="56" rx="2"
+                fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.5)" stroke-width="1.2"/>
+          <!-- workflow nodes -->
+          <circle cx="-26" cy="-6" r="5" fill="none" stroke="rgba(196,241,44,.7)" stroke-width="1"/>
+          <circle cx="0"   cy="-6" r="5" fill="rgba(196,241,44,.3)" stroke="rgba(196,241,44,.7)" stroke-width="1"/>
+          <circle cx="26"  cy="-6" r="5" fill="none" stroke="rgba(196,241,44,.7)" stroke-width="1"/>
+          <line x1="-21" y1="-6" x2="-5" y2="-6" stroke="rgba(196,241,44,.45)" stroke-width="1"/>
+          <line x1="5"   y1="-6" x2="21" y2="-6" stroke="rgba(196,241,44,.45)" stroke-width="1"/>
+          <line x1="-30" y1="10" x2="30" y2="10" stroke="rgba(196,241,44,.2)" stroke-width=".7"/>
+          <rect x="-50" y="28" width="100" height="3" fill="rgba(196,241,44,.25)"/>
+          <line x1="-40" y1="31" x2="-40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+          <line x1="40" y1="31" x2="40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+        </g>
+
+        <g class="desk-5" transform="translate(600,430)">
+          <rect x="-44" y="-30" width="88" height="56" rx="2"
+                fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.5)" stroke-width="1.2"/>
+          <!-- mini KPI cards -->
+          <rect x="-36" y="-20" width="20" height="14" fill="rgba(196,241,44,.18)" stroke="rgba(196,241,44,.5)" stroke-width=".8"/>
+          <rect x="-12" y="-20" width="20" height="14" fill="rgba(196,241,44,.08)" stroke="rgba(196,241,44,.5)" stroke-width=".8"/>
+          <rect x="12"  y="-20" width="20" height="14" fill="rgba(196,241,44,.12)" stroke="rgba(196,241,44,.5)" stroke-width=".8"/>
+          <line x1="-36" y1="-2" x2="32" y2="-2" stroke="rgba(196,241,44,.2)" stroke-width=".7"/>
+          <line x1="-36" y1="6" x2="20" y2="6" stroke="rgba(196,241,44,.4)" stroke-width=".9"/>
+          <line x1="-36" y1="14" x2="10" y2="14" stroke="rgba(196,241,44,.3)" stroke-width=".9"/>
+          <rect x="-50" y="28" width="100" height="3" fill="rgba(196,241,44,.25)"/>
+          <line x1="-40" y1="31" x2="-40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+          <line x1="40" y1="31" x2="40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+        </g>
+
+        <g class="desk-6" transform="translate(1000,430)">
+          <rect x="-44" y="-30" width="88" height="56" rx="2"
+                fill="rgba(10,10,10,.5)" stroke="rgba(196,241,44,.5)" stroke-width="1.2"/>
+          <!-- terminal prompt -->
+          <text x="-34" y="-14" fill="rgba(196,241,44,.7)" font-family="'JetBrains Mono',monospace" font-size="9">&gt;_</text>
+          <line x1="-22" y1="-15" x2="0" y2="-15" stroke="rgba(196,241,44,.55)" stroke-width=".9"/>
+          <line x1="-34" y1="-4" x2="8" y2="-4" stroke="rgba(196,241,44,.4)" stroke-width=".9"/>
+          <line x1="-34" y1="4" x2="22" y2="4" stroke="rgba(196,241,44,.55)" stroke-width=".9"/>
+          <line x1="-34" y1="12" x2="-6" y2="12" stroke="rgba(196,241,44,.4)" stroke-width=".9"/>
+          <rect x="-50" y="28" width="100" height="3" fill="rgba(196,241,44,.25)"/>
+          <line x1="-40" y1="31" x2="-40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+          <line x1="40" y1="31" x2="40" y2="50" stroke="rgba(196,241,44,.18)" stroke-width="1"/>
+        </g>
+
+        <!-- Small chair indicators between rows -->
+        <g fill="none" stroke="rgba(196,241,44,.12)" stroke-width="1">
+          <line x1="200" y1="370" x2="200" y2="380"/>
+          <line x1="600" y1="370" x2="600" y2="380"/>
+          <line x1="1000" y1="370" x2="1000" y2="380"/>
+        </g>
+      </svg>
+      <div class="cine-label">scene 03 · learn · classroom</div>
+    </div>
+
+  </div>
 
   <div class="hero-mesh" aria-hidden="true"></div>
   <div id="hero-glow" aria-hidden="true"></div>
