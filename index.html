@@ -449,7 +449,29 @@
     .stat-num.counted{animation:statGlow 1.2s var(--ease) forwards}
     .stat-num span{color:var(--neon-h);font-size:.75em;vertical-align:super;line-height:0}
     .stat-label{font-size:14px;color:var(--ink2);font-weight:500}
-    .stat-sub{font-family:var(--font-mo);font-size:10px;color:var(--ink3);margin-top:4px;letter-spacing:1px}
+    .stat-sub{font-family:var(--font-mo);font-size:10px;color:var(--ink3);margin-top:4px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
+    /* sparklines */
+    .stat-sparkline{display:block;margin-top:10px;width:60px;height:16px;overflow:visible}
+    .spark-line{fill:none;stroke:var(--neon-h);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+    .spark-dot{fill:var(--neon);stroke:none}
+    /* live ticker */
+    .stats-ticker{
+      display:flex;align-items:center;gap:8px;
+      margin-bottom:20px;
+      font-family:var(--font-mo);font-size:9px;letter-spacing:1.5px;
+      text-transform:uppercase;color:var(--ink3);
+    }
+    .stats-ticker-dot{
+      width:6px;height:6px;border-radius:50%;
+      background:var(--neon-h);flex-shrink:0;
+      animation:livePulse 1.8s ease-in-out infinite;
+    }
+    .stat-live-dot{
+      width:6px;height:6px;border-radius:50%;
+      background:var(--neon-h);flex-shrink:0;
+      animation:livePulse 1.8s ease-in-out infinite;
+      display:inline-block;
+    }
 
     /* ═══════════════════════════════════════
        SERVICES (dark)
@@ -1045,6 +1067,82 @@
     .form-note{font-family:var(--font-mo);font-size:10px;color:var(--ink3)}
     .form-success{display:none;color:#2EA655;font-size:14px;font-weight:600;text-align:center;padding:10px 0}
     .form-success.visible{display:block}
+    /* Multi-step form */
+    .ms-progress{display:flex;align-items:center;gap:0;margin-bottom:28px}
+    .ms-prog-dot{
+      width:8px;height:8px;border-radius:50%;
+      border:1.5px solid var(--ink3);background:transparent;
+      flex-shrink:0;transition:background .3s,border-color .3s;
+    }
+    .ms-prog-dot.active,.ms-prog-dot.done{background:var(--neon-h);border-color:var(--neon-h)}
+    .ms-prog-line{flex:1;height:1px;background:var(--ink4);transition:background .3s}
+    .ms-prog-line.done{background:var(--neon-h)}
+    .ms-step{display:none;flex-direction:column;gap:14px;will-change:transform,opacity}
+    .ms-step.active{display:flex}
+    .ms-q{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.01em;margin-bottom:4px}
+    .ms-q-sub{font-family:var(--font-mo);font-size:10px;color:var(--ink3);letter-spacing:1px;text-transform:uppercase;margin-top:-8px}
+    .ms-chips{display:flex;flex-wrap:wrap;gap:10px}
+    .ms-chip{
+      font-family:var(--font-he);font-size:14px;font-weight:600;
+      padding:12px 18px;border:1.5px solid var(--ink4);
+      background:transparent;color:var(--ink2);
+      cursor:none;transition:border-color .25s,color .25s,background .25s;
+      text-align:right;
+    }
+    .ms-chip:hover{border-color:var(--neon-h);color:var(--ink);background:rgba(196,241,44,.05)}
+    .ms-chip.selected{border-color:var(--neon-h);background:rgba(196,241,44,.1);color:var(--ink)}
+    .ms-chip-full{width:100%}
+    .ms-back{
+      background:none;border:none;font-family:var(--font-mo);
+      font-size:10px;letter-spacing:1px;color:var(--ink3);
+      cursor:none;padding:0;margin-top:4px;
+      transition:color .2s;text-align:right;direction:rtl;
+    }
+    .ms-back:hover{color:var(--ink)}
+    .ms-success-icon{
+      width:44px;height:44px;border-radius:50%;
+      background:rgba(196,241,44,.15);border:1.5px solid var(--neon-h);
+      display:flex;align-items:center;justify-content:center;
+      font-size:20px;
+    }
+    .ms-chip-tag{
+      display:block;
+      font-family:var(--font-mo);
+      font-size:9px;
+      letter-spacing:1.2px;
+      color:var(--ink3);
+      margin-bottom:4px;
+    }
+    .ms-chip:hover .ms-chip-tag,
+    .ms-chip.selected .ms-chip-tag{color:var(--neon-h)}
+    .ms-foot{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-top:4px;
+    }
+    .ms-success{background:transparent}
+    .ms-success-inner{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      gap:14px;
+      padding:32px 0;
+    }
+    .ms-success-title{
+      font-family:var(--font-he);
+      font-size:22px;
+      font-weight:700;
+      color:var(--ink);
+      letter-spacing:-.02em;
+    }
+    .ms-success-sub{
+      font-size:14px;
+      color:var(--ink2);
+      line-height:1.6;
+    }
 
     /* ═══════════════════════════════════════
        FOOTER
@@ -1249,28 +1347,39 @@
 <!-- ═══════════════════════════════════════
      STATS COUNTERS
 ═══════════════════════════════════════ -->
-<section class="stats">
+<section class="stats" id="stats">
   <div class="container">
+    <!-- live ticker -->
+    <div class="stats-ticker" aria-hidden="true">
+      <span class="stats-ticker-dot"></span>
+      <span class="stats-ticker-text">// live · last updated <span id="statsUpdated">just now</span></span>
+    </div>
     <div class="stats-grid">
       <div class="stat-item reveal">
-        <div class="stat-num" data-target="50" data-suffix="+">0<span>+</span></div>
+        <div class="stat-num" data-target="50" data-suffix="+" id="stat0">0<span>+</span></div>
         <div class="stat-label">ארגונים שינו את אופן עבודתם</div>
         <div class="stat-sub">// clients</div>
+        <svg class="stat-sparkline" viewBox="0 0 60 16" aria-hidden="true"><polyline points="0,12 8,10 16,9 24,7 32,8 40,5 48,4 60,2" class="spark-line"/><circle cx="60" cy="2" r="2" class="spark-dot"/></svg>
       </div>
       <div class="stat-item reveal" style="transition-delay:.08s">
-        <div class="stat-num" data-target="200" data-suffix="+">0<span>+</span></div>
+        <div class="stat-num" data-target="200" data-suffix="+" id="stat1">0<span>+</span></div>
         <div class="stat-label">אוטומציות הושקו בהצלחה</div>
         <div class="stat-sub">// automations deployed</div>
+        <svg class="stat-sparkline" viewBox="0 0 60 16" aria-hidden="true"><polyline points="0,14 8,12 16,11 24,9 32,10 40,7 48,5 60,3" class="spark-line"/><circle cx="60" cy="3" r="2" class="spark-dot"/></svg>
       </div>
       <div class="stat-item reveal" style="transition-delay:.16s">
-        <div class="stat-num" data-target="30" data-suffix="+">0<span>+</span></div>
+        <div class="stat-num" data-target="30" data-suffix="+" id="stat2">0<span>+</span></div>
         <div class="stat-label">שעות שבועיות נחסכות לכל לקוח</div>
         <div class="stat-sub">// hrs/week saved</div>
+        <svg class="stat-sparkline" viewBox="0 0 60 16" aria-hidden="true"><polyline points="0,13 8,11 16,10 24,8 32,7 40,5 48,4 60,2" class="spark-line"/><circle cx="60" cy="2" r="2" class="spark-dot"/></svg>
       </div>
       <div class="stat-item reveal" style="transition-delay:.24s">
-        <div class="stat-num" data-target="98" data-suffix="%">0<span>%</span></div>
+        <div class="stat-num" data-target="98" data-suffix="%" id="stat3">0<span>%</span></div>
         <div class="stat-label">שביעות רצון לקוחות</div>
-        <div class="stat-sub">// satisfaction rate</div>
+        <div class="stat-sub">
+          <span class="stat-live-dot" aria-hidden="true"></span>// satisfaction rate
+        </div>
+        <svg class="stat-sparkline" viewBox="0 0 60 16" aria-hidden="true"><polyline points="0,10 8,9 16,8 24,9 32,7 40,8 48,6 60,5" class="spark-line"/><circle cx="60" cy="5" r="2" class="spark-dot"/></svg>
       </div>
     </div>
   </div>
@@ -1864,44 +1973,105 @@
         </div>
       </div>
 
-      <form class="contact-form reveal" id="contactForm" novalidate>
-        <div class="form-group">
-          <label for="fullName">שם מלא <sup>*</sup></label>
-          <input type="text" id="fullName" name="fullName" placeholder="ישראל ישראלי" required />
+      <div class="contact-form reveal" id="contactForm" role="form" aria-label="טופס יצירת קשר">
+
+        <!-- Progress indicator -->
+        <div class="ms-progress" id="msProgress" role="progressbar" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1">
+          <div class="ms-prog-dot active" data-step="1" aria-label="שלב 1"></div>
+          <div class="ms-prog-line"></div>
+          <div class="ms-prog-dot" data-step="2" aria-label="שלב 2"></div>
+          <div class="ms-prog-line"></div>
+          <div class="ms-prog-dot" data-step="3" aria-label="שלב 3"></div>
         </div>
-        <div class="form-row">
+
+        <!-- Step 1: Service type -->
+        <div class="ms-step active" data-step="1">
+          <p class="ms-q">מה הכאב הכי דחוף שלכם?</p>
+          <div class="ms-chips" role="group" aria-label="סוג שירות">
+            <button type="button" class="ms-chip" data-value="training" aria-pressed="false">
+              <span class="ms-chip-tag">// 01</span>
+              הדרכות ו-AI
+            </button>
+            <button type="button" class="ms-chip" data-value="automation" aria-pressed="false">
+              <span class="ms-chip-tag">// 02</span>
+              אוטומציות
+            </button>
+            <button type="button" class="ms-chip" data-value="interfaces" aria-pressed="false">
+              <span class="ms-chip-tag">// 03</span>
+              פיתוח ממשקים
+            </button>
+          </div>
+          <button type="button" class="btn btn-primary ms-next" id="msNext1" disabled aria-label="המשך לשלב הבא">המשך →</button>
+        </div>
+
+        <!-- Step 2: Team size -->
+        <div class="ms-step" data-step="2">
+          <p class="ms-q">כמה אנשים בצוות?</p>
+          <div class="ms-chips" role="group" aria-label="גודל צוות">
+            <button type="button" class="ms-chip" data-value="1-20" aria-pressed="false">
+              <span class="ms-chip-tag">// XS</span>
+              1 – 20
+            </button>
+            <button type="button" class="ms-chip" data-value="20-100" aria-pressed="false">
+              <span class="ms-chip-tag">// S</span>
+              20 – 100
+            </button>
+            <button type="button" class="ms-chip" data-value="100-500" aria-pressed="false">
+              <span class="ms-chip-tag">// M</span>
+              100 – 500
+            </button>
+            <button type="button" class="ms-chip" data-value="500+" aria-pressed="false">
+              <span class="ms-chip-tag">// L</span>
+              500+
+            </button>
+          </div>
+          <div class="ms-foot">
+            <button type="button" class="ms-back" id="msBack2" aria-label="חזור לשלב הקודם">← חזור</button>
+            <button type="button" class="btn btn-primary ms-next" id="msNext2" disabled aria-label="המשך לשלב הבא">המשך →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Contact details -->
+        <div class="ms-step" data-step="3">
+          <p class="ms-q">ואיך ניצור איתכם קשר?</p>
           <div class="form-group">
-            <label for="phone">טלפון</label>
-            <input type="tel" id="phone" name="phone" placeholder="054-123-4567" />
+            <label for="fullName">שם מלא <sup>*</sup></label>
+            <input type="text" id="fullName" name="fullName" placeholder="ישראל ישראלי" required autocomplete="name" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">דוא"ל <sup>*</sup></label>
+              <input type="email" id="email" name="email" placeholder="israel@example.co.il" required autocomplete="email" />
+            </div>
+            <div class="form-group">
+              <label for="phone">טלפון</label>
+              <input type="tel" id="phone" name="phone" placeholder="054-123-4567" autocomplete="tel" />
+            </div>
           </div>
           <div class="form-group">
-            <label for="orgName">שם הארגון</label>
-            <input type="text" id="orgName" name="orgName" placeholder="שם החברה" />
+            <label for="msg">ספרו לנו בקצרה על האתגר</label>
+            <textarea id="msg" name="msg" placeholder="מה מעכב אתכם כרגע?"></textarea>
+          </div>
+          <div class="ms-foot">
+            <button type="button" class="ms-back" id="msBack3" aria-label="חזור לשלב הקודם">← חזור</button>
+            <button type="button" class="btn btn-primary btn-lg" id="msSubmit" aria-label="שליחת פרטים">שליחה לתיאום פגישה ←</button>
+          </div>
+          <p class="form-note" style="margin-top:12px">// הפרטים שלכם נשארים אצלנו · בלי דיוור · בלי שיתופים</p>
+        </div>
+
+        <!-- Step 4: Success -->
+        <div class="ms-step ms-success" data-step="4">
+          <div class="ms-success-inner">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+              <circle cx="20" cy="20" r="19" stroke="var(--neon-h)" stroke-width="1.5"/>
+              <polyline points="12,20 18,26 28,14" stroke="var(--neon)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <p class="ms-success-title">הפרטים התקבלו ✓</p>
+            <p class="ms-success-sub">נחזור אליכם תוך 24 שעות. נשמח לשמוע עוד!</p>
           </div>
         </div>
-        <div class="form-group">
-          <label for="email">דוא"ל <sup>*</sup></label>
-          <input type="email" id="email" name="email" placeholder="israel@example.co.il" required />
-        </div>
-        <div class="form-group">
-          <label>סוג השירות המבוקש</label>
-          <div class="checks">
-            <label class="check"><input type="checkbox" name="svc" value="training" />הדרכות, סדנאות וייעוץ AI</label>
-            <label class="check"><input type="checkbox" name="svc" value="automation" />אוטומציות וייעול תהליכים</label>
-            <label class="check"><input type="checkbox" name="svc" value="interfaces" />פיתוח ממשקים ומערכות</label>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="msg">ספרו לנו בקצרה על הצורך</label>
-          <textarea id="msg" name="msg" placeholder="תיאור קצר של האתגר…"></textarea>
-        </div>
-        <div class="form-foot">
-          <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">שליחת פרטים לתיאום פגישה ←</button>
-          <span class="form-note">// מענה תוך 24h</span>
-        </div>
-        <p class="form-success" id="formSuccess">✓ הפרטים התקבלו! נחזור אליכם בהקדם.</p>
-        <p class="form-note" style="margin-top:4px">// הפרטים שלכם נשארים אצלנו. בלי דיוור, בלי שיתופים.</p>
-      </form>
+
+      </div>
     </div>
   </div>
 </section>
@@ -2245,31 +2415,133 @@ if(document.readyState === 'loading'){
     },{passive:true});
   }
 
-  /* ─── Contact Form ─── */
-  const form=document.getElementById('contactForm');
-  const success=document.getElementById('formSuccess');
-  const submitBtn=document.getElementById('submitBtn');
+  /* ─── Multi-Step Contact Form ─── */
+  (function(){
+    const LS_KEY = 'cs_form_state';
+    const formWrap = document.getElementById('contactForm');
+    if(!formWrap) return;
 
-  form.addEventListener('submit',e=>{
-    e.preventDefault();
-    if(!form.fullName.value.trim()||!form.email.value.trim()){
-      form.fullName.focus();
-      form.fullName.style.borderColor='#D6402A';
-      return;
+    /* State */
+    const state = { step: 1, svc: null, size: null };
+
+    /* Helpers */
+    const getStep  = n => formWrap.querySelector(`.ms-step[data-step="${n}"]`);
+    const getDots  = () => formWrap.querySelectorAll('.ms-prog-dot');
+    const getLines = () => formWrap.querySelectorAll('.ms-prog-line');
+
+    function showStep(n, dir){
+      const prev = getStep(state.step);
+      const next = getStep(n);
+      if(!next) return;
+
+      /* Animate out */
+      if(prev){
+        prev.style.transform = dir>0 ? 'translateX(-32px)' : 'translateX(32px)';
+        prev.style.opacity = '0';
+        setTimeout(()=>{ prev.classList.remove('active'); prev.style.transform=''; prev.style.opacity=''; },260);
+      }
+
+      /* Animate in */
+      setTimeout(()=>{
+        next.style.transform = dir>0 ? 'translateX(32px)' : 'translateX(-32px)';
+        next.style.opacity   = '0';
+        next.classList.add('active');
+        requestAnimationFrame(()=>{
+          requestAnimationFrame(()=>{
+            next.style.transition = 'transform .28s var(--ease), opacity .28s var(--ease)';
+            next.style.transform  = 'translateX(0)';
+            next.style.opacity    = '1';
+          });
+        });
+        /* Focus first interactive el */
+        const first = next.querySelector('button.ms-chip, input, textarea');
+        if(first) first.focus();
+      },prev ? 180 : 0);
+
+      state.step = n;
+      updateProgress();
+
+      /* Persist */
+      try{ localStorage.setItem(LS_KEY, JSON.stringify({svc:state.svc,size:state.size})); }catch(e){}
     }
-    const orig=submitBtn.textContent;
-    submitBtn.textContent='שולח…';
-    submitBtn.disabled=true;
-    setTimeout(()=>{
-      form.reset();
-      submitBtn.textContent=orig;
-      submitBtn.disabled=false;
-      success.classList.add('visible');
-      setTimeout(()=>success.classList.remove('visible'),5000);
-    },1400);
-  });
 
-  form.fullName.addEventListener('input',()=>{ form.fullName.style.borderColor=''; });
+    function updateProgress(){
+      const dots  = getDots();
+      const lines = getLines();
+      const prog  = formWrap.querySelector('#msProgress');
+      if(prog) prog.setAttribute('aria-valuenow', Math.min(state.step,3));
+
+      dots.forEach((d,i)=>{
+        const s = i+1;
+        d.classList.toggle('active', s === state.step);
+        d.classList.toggle('done',   s <  state.step);
+      });
+      lines.forEach((l,i)=>{
+        l.classList.toggle('done', state.step > i+1);
+      });
+    }
+
+    /* Chip selection */
+    formWrap.querySelectorAll('.ms-chips').forEach(group=>{
+      group.addEventListener('click', e=>{
+        const chip = e.target.closest('.ms-chip');
+        if(!chip) return;
+        group.querySelectorAll('.ms-chip').forEach(c=>{ c.classList.remove('selected'); c.setAttribute('aria-pressed','false'); });
+        chip.classList.add('selected');
+        chip.setAttribute('aria-pressed','true');
+
+        const stepEl = chip.closest('.ms-step');
+        const stepN  = parseInt(stepEl.dataset.step);
+        if(stepN===1){ state.svc  = chip.dataset.value; formWrap.querySelector('#msNext1').disabled=false; }
+        if(stepN===2){ state.size = chip.dataset.value; formWrap.querySelector('#msNext2').disabled=false; }
+      });
+    });
+
+    /* Navigation */
+    const next1 = formWrap.querySelector('#msNext1');
+    const next2 = formWrap.querySelector('#msNext2');
+    const back2 = formWrap.querySelector('#msBack2');
+    const back3 = formWrap.querySelector('#msBack3');
+    const sub   = formWrap.querySelector('#msSubmit');
+
+    if(next1) next1.addEventListener('click',()=>showStep(2,1));
+    if(next2) next2.addEventListener('click',()=>showStep(3,1));
+    if(back2) back2.addEventListener('click',()=>showStep(1,-1));
+    if(back3) back3.addEventListener('click',()=>showStep(2,-1));
+
+    /* Submit */
+    if(sub) sub.addEventListener('click',()=>{
+      const nameEl  = formWrap.querySelector('#fullName');
+      const emailEl = formWrap.querySelector('#email');
+      if(!nameEl.value.trim()){ nameEl.focus(); nameEl.style.borderColor='rgba(196,241,44,.7)'; return; }
+      if(!emailEl.value.trim()||!emailEl.value.includes('@')){ emailEl.focus(); emailEl.style.borderColor='rgba(196,241,44,.7)'; return; }
+
+      sub.textContent = 'שולח…';
+      sub.disabled    = true;
+
+      setTimeout(()=>{
+        /* Hide progress bar */
+        const prog = formWrap.querySelector('#msProgress');
+        if(prog){ prog.style.opacity='0'; prog.style.pointerEvents='none'; }
+        showStep(4,1);
+        try{ localStorage.removeItem(LS_KEY); }catch(e){}
+      },1200);
+    });
+
+    /* Input border reset */
+    formWrap.querySelectorAll('input,textarea').forEach(el=>{
+      el.addEventListener('input',()=>{ el.style.borderColor=''; });
+    });
+
+    /* Restore from localStorage */
+    try{
+      const saved = JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+      if(saved.svc){
+        const chip = formWrap.querySelector(`.ms-step[data-step="1"] .ms-chip[data-value="${saved.svc}"]`);
+        if(chip){ chip.click(); }
+      }
+    }catch(e){}
+  })();
 
   /* ─── Hero Terminal Typewriter ─── */
   (function(){
